@@ -1,10 +1,7 @@
-#' @import SingleCellExperiment
-#' @import SummarizedExperiment
 #' Merge SummarizedExperiment object
 #'
-#' This function merges a SummarizedExperiment object using a method specified
-#' by the method parameter and returns the merged object as a SummarizedExperiment
-#' object
+#' @import SingleCellExperiment
+#' @import SummarizedExperiment
 #'
 #' @param x SummarizedExpirement object containing single cell counts matrix
 #' @return returns a SummarizedExperiment object of the integrated data
@@ -19,8 +16,8 @@ setMethod("Merge", "SummarizedExperiment", function(x, split.by = NULL, batch_la
     if(!(method %in% availableMethods)){
       stop(sprintf("method must be the following: %s", paste(availableMethods, collapse = ", ")))
     }
-    if(!(batch_label %in% names(SingleCellExperiment::colData(x)))){
-      stop(sprintf("must merge by: %s", paste(names(SingleCellExperiment::colData(x)), collapse = ", ")))
+    if(!(batch_label %in% names(colData(x)))){
+      stop(sprintf("must merge by: %s", paste(names(colData(x)), collapse = ", ")))
     }
 
     ### running integration ###

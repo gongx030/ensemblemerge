@@ -1,6 +1,6 @@
-#' @import Seurat
 #' Run Seurat V3 functions
 #'
+#' @import Seurat
 #'
 #' @param x SummarizedExpirement object containing single cell counts matrix
 #' @return returns a SummarizedExperiment object of the integrated data
