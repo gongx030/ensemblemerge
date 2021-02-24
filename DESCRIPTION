@@ -9,13 +9,15 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Depends:
     R (>= 3.6.0),
-    SummarizedExperiment,
-    SingleCellExperiment,
-    Seurat,
-    magrittr
+    methods
 Imports:
     Matrix,
-    dplyr
+    dplyr,
+    Seurat,
+    magrittr
+Suggests:
+    SummarizedExperiment,
+    SingleCellExperiment
 Description: What the package does (one paragraph).
 License: MIT License
 Encoding: UTF-8
