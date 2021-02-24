@@ -6,7 +6,7 @@
 #' @param x SummarizedExpirement object containing single cell counts matrix
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
-setMethod("Merge", "SummarizedExperiment", function(x, split.by = NULL, batch_label = NULL, merge.which = NULL, method="Seurat") {
+setMethod("Merge", "SummarizedExperiment", function(x, split.by = NULL, batch_label = NULL, cell_label = NULL, merge.which = NULL, method="Seurat") {
 
     x = as(x, "SingleCellExperiment") # set x as SingleCellExperiment
 
@@ -19,12 +19,15 @@ setMethod("Merge", "SummarizedExperiment", function(x, split.by = NULL, batch_la
     if(!(batch_label %in% names(colData(x)))){
       stop(sprintf("must merge by: %s", paste(names(colData(x)), collapse = ", ")))
     }
+    if(!(cell_label %in% names(colData(x)))){
+      stop(sprintf("must pick cell data from the following: %s", paste(names(colData(x)), collapse = ", ")))
+    }
 
     ### running integration ###
     x = switch(method,
-              "Seurat" = run_Seurat(x, batch_label),
-              "Scanorama" = run_Scanorama(x),
-              "Harmony" = run_Harmony(x),
-              "LIGER" = run_LIGER(x))
+              "Seurat" = run_Seurat(x, batch_label, cell_label),
+              "Scanorama" = run_Scanorama(x, batch_label, cell_label),
+              "Harmony" = run_Harmony(x, batch_label, cell_label),
+              "LIGER" = run_LIGER(x, batch_label, cell_label))
     return(x)
 })

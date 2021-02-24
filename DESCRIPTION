@@ -13,10 +13,12 @@ Imports:
     Matrix,
     dplyr,
     Seurat,
-    magrittr
-Suggests:
+    magrittr,
     SummarizedExperiment,
-    SingleCellExperiment  
+    SingleCellExperiment,
+    harmony,
+    kBET,
+    rliger
 Description: What the package does (one paragraph).
 License: MIT License
 Encoding: UTF-8

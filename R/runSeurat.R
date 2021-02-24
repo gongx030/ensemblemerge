@@ -45,15 +45,18 @@ call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, see
 
   Seurat::DefaultAssay(batches) <- "integrated"
 
+  print(Datascaling)
   if(regressUMI && Datascaling) {
     batches <- Seurat::ScaleData(object = batches, vars.to.regress = c("nUMI"))  # in case of read count data
-  } else if (Datascaling) { # default option
+  } else if(Datascaling) { # default option
     batches <- Seurat::ScaleData(object = batches)
   }
 
   batches <- Seurat::RunPCA(object = batches, npcs = npcs, verbose = FALSE)
 
   batches <- Seurat::RunUMAP(batches, reduction = "pca", dims = 1:npcs, k.seed = seed)
+
+  return(batches)
 }
 #' @export
 run_Seurat <- function(x, 
@@ -71,7 +74,8 @@ run_Seurat <- function(x,
                               scale_factor, 
                               numVG, nhvg, 
                               batch_label, celltype_label)
-                        integrated = call_seurat3(batch_list, batch_label, celltype_label, npcs, seed, regressUMI, Datascaling)
+                        integrated = call_seurat3(batch_list, batch_label = batch_label, celltype_label = celltype_label, 
+                                                  npcs = npcs, seed = seed, regressUMI = regressUMI, Datascaling = TRUE)
                         integrated = Seurat::as.SingleCellExperiment(integrated)
                         return(integrated)
                       }
