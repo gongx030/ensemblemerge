@@ -1,4 +1,3 @@
-#' @import Seurat
 #' Run Seurat V3 functions
 #'
 #'

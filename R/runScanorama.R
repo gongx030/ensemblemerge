@@ -1,4 +1,3 @@
-#' @import reticulate
 #' Run Seurat V3 functions
 #'
 #'

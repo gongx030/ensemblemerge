@@ -1,8 +1,3 @@
-#' @import SummarizedExperiment
-#' @import dplyr
-#' @import magrittr
-#' @import SingleCellExperiment
-#' @importFrom ensemblemerge runSeurat
 #' Merge SummarizedExperiment object
 #'
 #' This function merges a SummarizedExperiment object using a method specified
