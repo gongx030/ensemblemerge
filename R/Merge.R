@@ -1,3 +1,5 @@
+#' @import SingleCellExperiment
+#' @import SummarizedExperiment
 #' Merge SummarizedExperiment object
 #'
 #' This function merges a SummarizedExperiment object using a method specified
