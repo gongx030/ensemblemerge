@@ -17,15 +17,15 @@ seurat3_preprocess <- function(x,
   ##########################################################
   # preprocessing
 
-  batches <- as.Seurat(x, counts = "counts", data = NULL)
+  batches <- Seurat::as.Seurat(x, counts = "counts", data = NULL)
 
-  batch_list <- SplitObject(batches, split.by = batch_label)
+  batch_list <- Seurat::SplitObject(batches, split.by = batch_label)
   for(i in 1:length(batch_list)) {
     if(normData == TRUE){
       batch_list[[i]] <- NormalizeData(batch_list[[i]],normalization.method = norm_method, scale.factor = scale_factor)
     }
     if(hvg){
-      batch_list[[i]] <- FindVariableFeatures(batch_list[[i]], selection.method = "vst", nfeatures = nhvg, 
+      batch_list[[i]] <- Seurat::FindVariableFeatures(batch_list[[i]], selection.method = "vst", nfeatures = nhvg, 
                                               verbose = FALSE)
       #print(dim(batch_list[[i]]))
     }
@@ -38,21 +38,21 @@ seurat3_preprocess <- function(x,
 #' @export
 call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, seed = 1, regressUMI = TRUE, Datascaling = TRUE)
 {
-  cell_anchors <- FindIntegrationAnchors(object.list = batch_list, dims = 1:npcs)
-  batches <- IntegrateData(anchorset = cell_anchors, dims = 1:npcs)
+  cell_anchors <- Seurat::FindIntegrationAnchors(object.list = batch_list, dims = 1:npcs)
+  batches <- Seurat::IntegrateData(anchorset = cell_anchors, dims = 1:npcs)
   dim(batches)
 
-  DefaultAssay(batches) <- "integrated"
+  Seurat::DefaultAssay(batches) <- "integrated"
 
   if(regressUMI && Datascaling) {
-    batches <- ScaleData(object = batches, vars.to.regress = c("nUMI"))  # in case of read count data
+    batches <- Seurat::ScaleData(object = batches, vars.to.regress = c("nUMI"))  # in case of read count data
   } else if (Datascaling) { # default option
-    batches <- ScaleData(object = batches)
+    batches <- Seurat::ScaleData(object = batches)
   }
 
-  batches <- RunPCA(object = batches, npcs = npcs, verbose = FALSE)
+  batches <- Seurat::RunPCA(object = batches, npcs = npcs, verbose = FALSE)
 
-  batches <- RunUMAP(batches, reduction = "pca", dims = 1:npcs, k.seed = seed)
+  batches <- Seurat::RunUMAP(batches, reduction = "pca", dims = 1:npcs, k.seed = seed)
 }
 #' @export
 run_Seurat <- function(x, 
@@ -71,6 +71,6 @@ run_Seurat <- function(x,
                               numVG, nhvg, 
                               batch_label, celltype_label)
                         integrated = call_seurat3(batch_list, batch_label, celltype_label, npcs, seed, regressUMI, Datascaling)
-                        integrated = as.SingleCellExperiment(integrated)
+                        integrated = Seurat::as.SingleCellExperiment(integrated)
                         return(integrated)
                       }

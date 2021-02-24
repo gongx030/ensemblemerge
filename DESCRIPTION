@@ -8,14 +8,12 @@ Authors@R:
            email = "skiex003@umn.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Depends:
-    R (>= 3.6.0),
-    methods
+    R (>= 3.6.0)
 Imports:
     Matrix,
     dplyr,
     Seurat,
-    magrittr
-Suggests:
+    magrittr,
     SummarizedExperiment,
     SingleCellExperiment
 Description: What the package does (one paragraph).
