@@ -44,7 +44,7 @@ call_harmony_2 <- function(b_seurat, batch_label, celltype_label, npcs = 20, see
 
   b_seurat <- RunPCA(object = b_seurat, npcs = npcs, pc.genes = b_seurat@var.genes, verbose = FALSE)
 
-  b_seurat <- RunHarmony(object = b_seurat, batch_label, theta = theta_harmony, plot_convergence = TRUE, 
+  b_seurat <- RunHarmony(object = b_seurat, batch_label, theta = theta_harmony, plot_convergence = FALSE, 
                           nclust = numclust, max.iter.cluster = max_iter_cluster)
 
 
