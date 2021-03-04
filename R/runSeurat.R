@@ -31,7 +31,7 @@ seurat3_preprocess <- function(x,
       #print(dim(batch_list[[i]]))
     }
     else{
-      batch_list[[i]]@assays$RNA@var.features <- rownames(expr_mat_seurat)
+      batch_list[[i]]@assays$RNA@var.features <- rownames(batch_list[[i]])
     }
   }
   return(batch_list)
