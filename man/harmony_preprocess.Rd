@@ -11,14 +11,23 @@ harmony_preprocess(
   regressUMI = FALSE,
   norm_method = "LogNormalize",
   scale_factor = 10000,
-  nfeatures = 300,
-  npcs = 20,
-  batch_label = "batchlb",
-  celltype_label = "CellType"
+  nfeatures = 300
 )
 }
 \arguments{
 \item{x}{SingleCellExperiment object containing single cell counts matrix}
+
+\item{normData}{boolean check to normalize data}
+
+\item{Datascaling}{boolean check to scale data}
+
+\item{regressUMI}{boolean check to regress data}
+
+\item{norm_method}{character vector specifying which normalization method to use}
+
+\item{scale_factor}{numeric indicating what value to scale to}
+
+\item{nfeatures}{numeric indicating how many genes to select as highly variable}
 }
 \value{
 returns a SingleCellExperiment object of the integrated data
