@@ -48,7 +48,7 @@ call_harmony_2 <- function(b_seurat, batch_label, celltype_label, npcs = 20, see
                           nclust = numclust, max.iter.cluster = max_iter_cluster)
 
 
-  b_seurat <- RunUMAP(b_seurat, reduction.use = "harmony", dims = 1:npcs, k.seed = seed)
+#  b_seurat <- RunUMAP(b_seurat, reduction.use = "harmony", dims = 1:npcs, k.seed = seed)
 
   return(b_seurat)
 }
