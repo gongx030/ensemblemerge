@@ -7,9 +7,6 @@
 #' @export
 setMethod("Score", "SingleCellExperiment", function(x, batch_label = NULL, method="kBET") {
   score = switch(method, 
-                "kBET" = run_kBET(x, batch_label = batch_label),
-                "ARI" = run_ARI(x, batch_label = batch_label),
-                "LSI" = run_LSI(x, batch_label = batch_label),
-                "ASW" = run_ASW(x, batch_label = batch_label))
+                "kBET" = run_kBET(x, batch_label = batch_label))
   return(score)
 })

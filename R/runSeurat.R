@@ -6,7 +6,7 @@
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 seurat3_preprocess <- function(x, 
-                              normData = TRUE, Datascaling = TRUE, regressUMI = FALSE, 
+                              normData = TRUE, Datascaling = TRUE, 
                               min_cells = 10, min_genes = 300, 
                               norm_method = "LogNormalize", 
                               scale_factor = 10000, 
@@ -31,7 +31,7 @@ seurat3_preprocess <- function(x,
       #print(dim(batch_list[[i]]))
     }
     else{
-      batch_list[[i]]@assays$RNA@var.features <- rownames(expr_mat_seurat)
+      batch_list[[i]]@assays$RNA@var.features <- rownames(batch_list[[i]])
     }
   }
   return(batch_list)
@@ -45,7 +45,6 @@ call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, see
 
   Seurat::DefaultAssay(batches) <- "integrated"
 
-  print(Datascaling)
   if(regressUMI && Datascaling) {
     batches <- Seurat::ScaleData(object = batches, vars.to.regress = c("nUMI"))  # in case of read count data
   } else if(Datascaling) { # default option
@@ -59,23 +58,16 @@ call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, see
   return(batches)
 }
 #' @export
-run_Seurat <- function(x, 
-                      normData = TRUE, Datascaling = TRUE, regressUMI = FALSE, 
-                      min_cells = 10, min_genes = 300, 
-                      norm_method = "LogNormalize", 
-                      scale_factor = 10000, 
-                      numVG = 300, nhvg = 2000, 
-                      batch_label = "batchlb", celltype_label = "CellType",
-                      hvg = T, npcs = 20, seed = 1){
-                        batch_list = seurat3_preprocess(x, 
-                              normData, Datascaling, regressUMI, 
-                              min_cells, min_genes, 
-                              norm_method, 
-                              scale_factor, 
-                              numVG, nhvg, 
-                              batch_label, celltype_label)
-                        integrated = call_seurat3(batch_list, batch_label = batch_label, celltype_label = celltype_label, 
-                                                  npcs = npcs, seed = seed, regressUMI = regressUMI, Datascaling = TRUE)
+run_Seurat <- function(params, data){
+                        batch_list = seurat3_preprocess(x = data, 
+                              normData = params@norm_data, Datascaling = params@scaling, 
+                              min_cells = params@min_cells, min_genes = params@min_genes, 
+                              norm_method = params@norm_method, 
+                              scale_factor = params@scale_factor, 
+                              numVG = params@numVG, nhvg = params@numHVG, 
+                              batch_label = params@batch)
+                        integrated = call_seurat3(batch_list, batch_label = params@batch, 
+                                                  npcs = params@npcs, seed = params@seed, regressUMI = params@regressUMI, Datascaling = params@scaling)
                         integrated = Seurat::as.SingleCellExperiment(integrated)
                         return(integrated)
                       }

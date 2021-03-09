@@ -4,13 +4,18 @@
 #' @import Seurat
 #'
 #' @param x SingleCellExperiment object containing single cell counts matrix
+#' @param normData boolean check to normalize data
+#' @param Datascaling boolean check to scale data
+#' @param regressUMI boolean check to regress data
+#' @param norm_method character vector specifying which normalization method to use
+#' @param scale_factor numeric indicating what value to scale to
+#' @param nfeatures numeric indicating how many genes to select as highly variable
 #' @return returns a SingleCellExperiment object of the integrated data
 #' @export
 harmony_preprocess <- function(x,
                               normData = TRUE, Datascaling = TRUE, regressUMI = FALSE, 
                               norm_method = "LogNormalize", scale_factor = 10000, 
-                              nfeatures = 300, npcs = 20, 
-                              batch_label = "batchlb", celltype_label = "CellType")
+                              nfeatures = 300)
 {
 
   b_seurat <- as.Seurat(x, counts = "counts", data = NULL)
@@ -33,7 +38,7 @@ harmony_preprocess <- function(x,
 }
 
 #' @export
-call_harmony_2 <- function(b_seurat, batch_label, celltype_label, npcs = 20, seed = 1)
+call_harmony_2 <- function(b_seurat, batch_label, npcs = 20, seed = 1)
 {
 
   #Harmony settings
@@ -54,18 +59,11 @@ call_harmony_2 <- function(b_seurat, batch_label, celltype_label, npcs = 20, see
 }
 
 #' @export
-run_Harmony <- function(x,
-                        normData = TRUE, Datascaling = TRUE, regressUMI = FALSE, 
-                        norm_method = "LogNormalize", scale_factor = 10000, 
-                        numVG = 300, npcs = 20, 
-                        batch_label = "batchlb", celltype_label = "CellType",
-                        seed = 1){
-  b_seurat = harmony_preprocess(x,
-                              normData = TRUE, Datascaling = TRUE, regressUMI = FALSE, 
-                              norm_method, scale_factor, 
-                              numVG, npcs, 
-                              batch_label, celltype_label)
-  integrated = call_harmony_2(b_seurat, batch_label, celltype_label, npcs, seed)
+run_Harmony <- function(params, data){
+  b_seurat = harmony_preprocess(x = data,
+                              normData = params@norm_data, Datascaling = params@scaling, regressUMI = params@regressUMI, 
+                              norm_method = params@norm_method, scale_factor = params@scale_factor, nfeatures = params@numHVG)
+  integrated = call_harmony_2(b_seurat, batch_label = params@batch, npcs = params@npcs, seed = params@seed)
   integrated = as.SingleCellExperiment(integrated)
   return(integrated)
 }
