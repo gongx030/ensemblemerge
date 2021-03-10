@@ -2,10 +2,8 @@ import numpy as np
 import bbknn
 import scanpy as sc
 
-adata
 sc.pp.filter_cells(adata, min_genes=300)
 sc.pp.filter_genes(adata, min_cells=5)
-adata
 
 sc.pp.log1p(adata)
 sc.pp.scale(adata)
