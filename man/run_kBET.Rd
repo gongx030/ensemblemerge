@@ -7,7 +7,7 @@
 run_kBET(x, batch_label)
 }
 \arguments{
-\item{x}{SummarizedExpirement object containing an integrated single cell counts matrix}
+\item{x}{SummarizedExperiment object containing an integrated single cell counts matrix}
 }
 \value{
 returns a kBET score object

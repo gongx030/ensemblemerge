@@ -8,7 +8,7 @@ setClass(
 	representation(
 		batch = "character"
 	),
-  prototype(batch = "batch1b")
+  prototype(batch = "batchlb")
 )
 
 #' SeuratMerge
@@ -160,12 +160,20 @@ setClass(
 	representation(
     min_genes = "numeric",
     min_cells = "numeric",
-    svd_solver = "character"
+    svd_solver = "character",
+    scale_factor = "numeric",
+    npcs = "numeric",
+    nhvg = "numeric",
+    n_neighbors = "numeric"
 	),
 	contains = c('parent'),
   prototype(min_genes = 300,
             min_genes = 5,
-            svd_solver = "arpack")
+            svd_solver = "arpack",
+            scale_factor = 10000,
+            npcs = 20,
+            nhvg = 2000,
+            n_neighbors = 10)
 )
 
 #' BBKNNMerge
@@ -195,7 +203,8 @@ setClass(
 	'BBKNNParams', 
 	representation(),
 	contains = c('BBKNNNormalize',
-                'BBKNNMerge')
+              'SeuratNormalize',
+              'BBKNNMerge')
 )
 
 #' ScanoramaParams
@@ -203,6 +212,28 @@ setClass(
 #' @export
 setClass(
 	'ScanoramaParams', 
+	representation(min_cells = "numeric",
+          min_genes = "numeric",
+          batch_size = "numeric",
+          return_dense = "logical",
+          knn = "numeric",
+          svd_solver = "character",
+          npcs = "numeric"),
+	contains = c('parent'),
+  prototype(min_genes = 300,
+            min_cells = 5,
+            batch_size = 30,
+            return_dense = TRUE,
+            knn = 10,
+            svd_solver = "arpack",
+            npcs = 20)
+)
+
+#' SMILEParams
+#'
+#' @export
+setClass(
+	'SMILEParams', 
 	representation(min_cells = "numeric",
           min_genes = "numeric",
           batch_size = "numeric",

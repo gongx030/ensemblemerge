@@ -8,7 +8,6 @@ seurat3_preprocess(
   x,
   normData = TRUE,
   Datascaling = TRUE,
-  regressUMI = FALSE,
   min_cells = 10,
   min_genes = 300,
   norm_method = "LogNormalize",

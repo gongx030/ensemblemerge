@@ -18,7 +18,8 @@ Imports:
     SingleCellExperiment,
     harmony,
     kBET,
-    rliger
+    reticulate,
+    methods
 Description: What the package does (one paragraph).
 License: MIT License
 Encoding: UTF-8
