@@ -18,6 +18,9 @@ setMethod("Merge", "SeuratParams", function(params, data) {
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
     }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
+    }
 
     integrated = run_Seurat(params, data)
 
@@ -45,6 +48,9 @@ setMethod("Merge", "HarmonyParams", function(params, data) {
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+    }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
     }
 
     integrated = run_Harmony(params, data)
@@ -74,6 +80,9 @@ setMethod("Merge", "BBKNNParams", function(params, data) {
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
     }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
+    }
 
     integrated = run_BBKNN(params, data)
 
@@ -99,6 +108,9 @@ setMethod("Merge", "SMILEParams", function(params, data) {
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+    }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
     }
 
     integrated = run_SMILE(params, data)
@@ -126,6 +138,9 @@ setMethod("Merge", "ScanoramaParams", function(params, data) {
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
     }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
+    }
 
     integrated = run_Scanorama(params, data)
 
@@ -151,6 +166,9 @@ setMethod("Merge", "UncorrectedParams", function(params, data) {
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+    }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
     }
 
     integrated = run_Uncorrected(params, data)

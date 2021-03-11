@@ -20,7 +20,7 @@ run_Scanorama <- function(params, data){
 
   ### run BBKNN integration ###
   filepath = system.file("R/runScanorama.py", package = "ensemblemerge")
-  data = sceasy::convertFormat(data, from = "sce", to = "anndata")
+  data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py$adata = data
   Sys.sleep(3)
   source_python(filepath)

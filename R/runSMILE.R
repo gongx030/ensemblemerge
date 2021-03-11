@@ -9,7 +9,7 @@
 #' @export
 run_SMILE <- function(params, data){
   filepath = system.file("R/runSMILE.py", package = "ensemblemerge")
-  py$adata = sceasy::convertFormat(data, from = "sce", to = "anndata")
+  py$adata = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
   return(integrated)

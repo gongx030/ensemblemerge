@@ -37,9 +37,14 @@ seurat3_preprocess <- function(x,
   return(batch_list)
 }
 #' @export
-call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, seed = 1, regressUMI = TRUE, Datascaling = TRUE)
+call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, seed = 1, regressUMI = TRUE, Datascaling = TRUE, dims = 20, pca_name = "PCA")
 {
-  cell_anchors <- Seurat::FindIntegrationAnchors(object.list = batch_list, dims = 1:npcs)
+  for(batch in batch_list){
+    if(nrow(batch) < npcs){
+      stop(sprintf("batch: %s has %i cells, all batches must have more cells than dimensions for anchor weighting (dims:%i)", unique(batch@meta.data[[batch_label]]), nrow(batch), dims))
+    }
+  }
+  cell_anchors <- Seurat::FindIntegrationAnchors(object.list = batch_list, dims = 1:dims)
   batches <- Seurat::IntegrateData(anchorset = cell_anchors, dims = 1:npcs)
   dim(batches)
 
@@ -51,9 +56,7 @@ call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, see
     batches <- Seurat::ScaleData(object = batches)
   }
 
-  batches <- Seurat::RunPCA(object = batches, npcs = npcs, verbose = FALSE)
-
-  batches <- Seurat::RunUMAP(batches, reduction = "pca", dims = 1:npcs, k.seed = seed)
+  batches <- Seurat::RunPCA(object = batches, npcs = npcs, verbose = FALSE, reduction.name = pca_name)
 
   return(batches)
 }
@@ -67,7 +70,7 @@ run_Seurat <- function(params, data){
                               numVG = params@numVG, nhvg = params@numHVG, 
                               batch_label = params@batch)
                         integrated = call_seurat3(batch_list, batch_label = params@batch, 
-                                                  npcs = params@npcs, seed = params@seed, regressUMI = params@regressUMI, Datascaling = params@scaling)
+                                                  npcs = params@npcs, seed = params@seed, regressUMI = params@regressUMI, Datascaling = params@scaling, dims = params@dims, pca_name = params@dimreduc_names[["PCA"]])
                         integrated = Seurat::as.SingleCellExperiment(integrated)
                         return(integrated)
                       }

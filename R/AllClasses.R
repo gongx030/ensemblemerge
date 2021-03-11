@@ -6,9 +6,13 @@
 setClass(
 	'parent', 
 	representation(
-		batch = "character"
+		batch = "character",
+    dimreduc_names = "character"
 	),
-  prototype(batch = "batchlb")
+  prototype(batch = "batchlb",
+            dimreduc_names = c("PCA" = "pca",
+                              "UMAP" = "umap",
+                              "tSNE" = "tsne"))
 )
 
 #' SeuratMerge
@@ -18,11 +22,13 @@ setClass(
 	'SeuratMerge', 
 	representation(
 		npcs = "numeric",
-    seed = "numeric"
+    seed = "numeric",
+    dims = "numeric"
 	),
 	contains = c('parent'),
   prototype(npcs = 20, 
-            seed = 10)
+            seed = 10,
+            dims = 20)
 )
 
 #' SeuratNormalize
