@@ -6,7 +6,8 @@
 #' @return returns a params S4 class depending on input
 #' @export
 setParams <- function(method = "Seurat", ...){
-    availableMethods = c("Seurat", "Scanorama", "Harmony", "LIGER", "BBKNN", "SMILE") # list available availableMethods
+    availableMethods = c("Seurat", "Scanorama", "Harmony", 
+                        "LIGER", "BBKNN", "SMILE", "Uncorrected") # list available availableMethods
 
     ### checking valid parameters ###
     if(!(method %in% availableMethods)){
@@ -20,6 +21,7 @@ setParams <- function(method = "Seurat", ...){
               "Harmony" = new("HarmonyParams", ...),
               "LIGER" = new("LigerParams", ...),
               "BBKNN" = new("BBKNNParams", ...),
-              "SMILE" = new("SMILEParams", ...))
+              "SMILE" = new("SMILEParams", ...),
+              "Uncorrected" = new("UncorrectedParams", ...))
     return(x)
 }

@@ -250,3 +250,17 @@ setClass(
             svd_solver = "arpack",
             npcs = 20)
 )
+
+#' UncorrectedParams
+#'
+#' @export
+setClass(
+	'UncorrectedParams', 
+	representation(vars_to_regress = "character",
+                hvg = "logical"),
+	contains = c('SeuratNormalize',
+                'SeuratHVG',
+                'SeuratMerge'),
+  prototype(vars_to_regress = c("nUMI"),
+                                hvg = TRUE)
+)
