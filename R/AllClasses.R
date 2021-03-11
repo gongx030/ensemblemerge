@@ -9,7 +9,7 @@ setClass(
 		batch = "character",
     dimreduc_names = "character"
 	),
-  prototype(batch = "batchlb",
+  prototype(batch = "batch",
             dimreduc_names = c("PCA" = "pca",
                               "UMAP" = "umap",
                               "tSNE" = "tsne"))

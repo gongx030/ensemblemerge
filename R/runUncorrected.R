@@ -10,10 +10,12 @@
 run_Uncorrected <- function(params, data){
   data = as.Seurat(data, counts = "counts", data = NULL)
   if(params@norm_data){
+    print("Normalizing data")
     data <- NormalizeData(data, normalization.method = params@norm_method, 
                         scale.factor = params@scale_factor)
   }
   if(params@hvg){
+    print("finding variable features")
     data <- Seurat::FindVariableFeatures(data, 
                                       selection.method = "vst", nfeatures = params@numHVG, 
                                       verbose = FALSE)
@@ -26,6 +28,7 @@ run_Uncorrected <- function(params, data){
   } else if(params@scaling) { # default option
     data <- ScaleData(object = data)
   }
+  data <- RunPCA(data, npcs = params@npcs, verbose = FALSE)
   data <- as.SingleCellExperiment(data)
   return(data)
 }

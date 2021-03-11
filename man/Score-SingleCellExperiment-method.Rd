@@ -4,7 +4,7 @@
 \alias{Score,SingleCellExperiment-method}
 \title{score SingleCellExperiment object}
 \usage{
-\S4method{Score}{SingleCellExperiment}(x, batch_label = NULL, method = "kBET")
+\S4method{Score}{SingleCellExperiment}(x, batch_label = NULL, method = "kBET", ...)
 }
 \arguments{
 \item{x}{SingleCellExperiment object containing an integrated single cell counts matrix}

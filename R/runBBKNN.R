@@ -31,7 +31,8 @@ run_BBKNN <- function(params, data){
   filepath = system.file("R/runBBKNN.py", package = "ensemblemerge")
   data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py$adata = data
-  Sys.sleep(3)
+  Sys.sleep(10)
+  print(py)
   source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
   integrated = as.SingleCellExperiment(integrated)
