@@ -20,7 +20,8 @@ Imports:
     kBET,
     reticulate,
     methods,
-    rliger
+    rliger,
+    sceasy
 Description: What the package does (one paragraph).
 License: MIT License
 Encoding: UTF-8
