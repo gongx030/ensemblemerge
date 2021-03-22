@@ -44,7 +44,7 @@ sc.pp.scale(adata)
 sc.tl.pca(adata, svd_solver=svd_solver)
 sc.pp.neighbors(adata,n_neighbors=int(n_neighbors), n_pcs=int(npcs))
 
-adata_bbknn.obsm['X_pca'] *= -1  # multiply by -1 to match Seurat
+adata.obsm['X_pca'] *= -1  # multiply by -1 to match Seurat
 
 adata_bbknn = bbknn.bbknn(adata, copy=copy, neighbors_within_batch=int(neighbors_within_batch),
                           approx=approx,trim=int(trim), batch_key = batch, n_pcs = int(npcs), use_faiss=False)
