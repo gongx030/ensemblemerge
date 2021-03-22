@@ -20,7 +20,7 @@ run_Scanorama <- function(params, data){
   py$nhvg = params@nhvg
 
   ### run BBKNN integration ###
-  filepath = system.file("R/runScanorama.py", package = "ensemblemerge")
+  #filepath = system.file("R/runScanorama.py", package = "ensemblemerge")
   data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py$adata = data
   py_run_string("import numpy as np

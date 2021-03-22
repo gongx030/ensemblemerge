@@ -19,7 +19,8 @@ Imports:
     harmony,
     kBET,
     reticulate,
-    methods
+    methods,
+    rliger
 Description: What the package does (one paragraph).
 License: MIT License
 Encoding: UTF-8

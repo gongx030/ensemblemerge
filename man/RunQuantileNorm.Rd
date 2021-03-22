@@ -28,10 +28,6 @@ RunQuantileNorm(
 
 \item{split.by}{Attribute for splitting, defaults to "orig.ident"}
 
-\item{reduction.name}{Name to store resulting DimReduc object as}
-
-\item{reduction.key}{Key for resulting DimReduc}
-
 \item{quantiles}{Number of quantiles to use for quantile normalization (default 50).}
 
 \item{ref_dataset}{Name of dataset to use as a "reference" for normalization. By default,

@@ -28,7 +28,7 @@ run_BBKNN <- function(params, data){
   py$n_neighbors = params@n_neighbors
 
   ### run BBKNN integration ###
-  filepath = system.file("R/runBBKNN.py", package = "ensemblemerge")
+  #filepath = system.file("R/runBBKNN.py", package = "ensemblemerge")
   data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py$adata = data
   Sys.sleep(10)

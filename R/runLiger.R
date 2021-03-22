@@ -2,7 +2,6 @@
 #'
 #' @import Seurat
 #' @import rliger
-#' @import SeuratWrappers
 #'
 #' @param data SingleCellExpirement object containing single cell counts matrix
 #' @param params LigerParams object
@@ -54,7 +53,6 @@ run_Liger <- function(params, data){
 #' Run optimizeALS on a Seurat object
 #'
 #' @inheritParams rliger::optimizeALS
-#' @inheritParams SeuratWrappers::RunFastMNN
 #' @param object A merged Seurat object
 #' @param split.by Attribute for splitting, defaults to "orig.ident"
 #' @param ... Arguments passed to other methods
@@ -151,7 +149,7 @@ RunOptimizeALS <- function(
 #' @return A Seurat object with embeddings from \code{\link[liger]{quantile_norm}}
 #' stored as a DimReduc object with name \code{reduction.name} (key set to \code{reduction.key})
 #'
-# @importFrom rliger quantile_norm
+#' @importFrom rliger quantile_norm
 #' @importFrom Seurat Tool SplitObject Embeddings CreateDimReducObject
 #' DefaultAssay Tool<- Idents<- LogSeuratCommand
 #'

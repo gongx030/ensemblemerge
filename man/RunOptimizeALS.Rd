@@ -31,8 +31,6 @@ RunOptimizeALS(
 appropriate value; a general rule of thumb is that a higher k will be needed for datasets with
 more sub-structure.}
 
-\item{assay}{Assay to use, defaults to the default assay of the first object}
-
 \item{split.by}{Attribute for splitting, defaults to "orig.ident"}
 
 \item{lambda}{Regularization parameter. Larger values penalize dataset-specific effects more
@@ -43,10 +41,6 @@ most appropriate value for balancing dataset alignment and agreement (default 5.
 (default 1e-6)}
 
 \item{max.iters}{Maximum number of block coordinate descent iterations to perform (default 30).}
-
-\item{reduction.name}{Name to store resulting DimReduc object as}
-
-\item{reduction.key}{Key for resulting DimReduc}
 
 \item{nrep}{Number of restarts to perform (iNMF objective function is non-convex, so taking the
 best objective from multiple successive initializations is recommended). For easier
