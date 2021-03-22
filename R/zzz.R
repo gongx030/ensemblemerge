@@ -13,10 +13,6 @@ install_python_packages <- function(){
   system("pip3 install scanorama")
   system("pip3 install anndata")
   system("pip3 install bbknn")
-  system("pip3 install torch==1.8.0+cpu torchvision==0.9.0+cpu torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html")
-  system("pip3 install -U scikit-learn")
-  system("pip3 install SMILE")
-  system("pip3 install torch")
 }
 
 .onLoad <- function(libname, pkgname) {
