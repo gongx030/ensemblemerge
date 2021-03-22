@@ -32,8 +32,26 @@ run_BBKNN <- function(params, data){
   data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py$adata = data
   Sys.sleep(10)
-  print(py)
-  source_python(filepath)
+  py_run_string("import numpy as np
+import bbknn
+import scanpy as sc
+
+sc.pp.filter_cells(adata, min_genes=300)
+sc.pp.filter_genes(adata, min_cells=5)
+
+sc.pp.log1p(adata)
+sc.pp.scale(adata)
+sc.tl.pca(adata, svd_solver=svd_solver)
+sc.pp.neighbors(adata,n_neighbors=int(n_neighbors), n_pcs=int(npcs))
+
+adata_bbknn.obsm['X_pca'] *= -1  # multiply by -1 to match Seurat
+
+adata_bbknn = bbknn.bbknn(adata, copy=copy, neighbors_within_batch=int(neighbors_within_batch),
+                          approx=approx,trim=int(trim), batch_key = batch, n_pcs = int(npcs), use_faiss=False)
+
+sc.tl.pca(adata_bbknn, svd_solver=svd_solver,n_comps=int(npcs))
+adata_bbknn.write(filename = 'temp.h5ad')")
+  #source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
   integrated = as.SingleCellExperiment(integrated)
   file.remove("temp.h5ad")
