@@ -6,9 +6,13 @@
 setClass(
 	'parent', 
 	representation(
-		batch = "character"
+		batch = "character",
+    dimreduc_names = "character"
 	),
-  prototype(batch = "batchlb")
+  prototype(batch = "batch",
+            dimreduc_names = c("PCA" = "pca",
+                              "UMAP" = "umap",
+                              "tSNE" = "tsne"))
 )
 
 #' SeuratMerge
@@ -18,11 +22,13 @@ setClass(
 	'SeuratMerge', 
 	representation(
 		npcs = "numeric",
-    seed = "numeric"
+    seed = "numeric",
+    dims = "numeric"
 	),
 	contains = c('parent'),
   prototype(npcs = 20, 
-            seed = 10)
+            seed = 10,
+            dims = 20)
 )
 
 #' SeuratNormalize
@@ -105,6 +111,20 @@ setClass(
                 'HarmonyMerge')
 )
 
+#' UncorrectedParams
+#'
+#' @export
+setClass(
+	'UncorrectedParams', 
+	representation(vars_to_regress = "character",
+                hvg = "logical"),
+	contains = c('SeuratNormalize',
+                'SeuratHVG',
+                'SeuratMerge'),
+  prototype(vars_to_regress = c("nUMI"),
+                                hvg = TRUE)
+)
+
 #' LigerNormalize
 #'
 #' @export
@@ -134,11 +154,13 @@ setClass(
 	'LigerMerge', 
 	representation(
     k = "numeric",
-    nrep = "numeric"
+    nrep = "numeric",
+    lambda = "numeric"
 	),
 	contains = c('parent'),
   prototype(k = 20,
-            nrep = 3)
+            nrep = 3,
+            lambda = 5)
 )
 
 #' LigerParams
@@ -149,7 +171,8 @@ setClass(
 	representation(),
 	contains = c('LigerNormalize',
                 'LigerHVG',
-                'LigerMerge')
+                'LigerMerge',
+                'UncorrectedParams')
 )
 
 #' BBKNNNormalize
@@ -160,12 +183,20 @@ setClass(
 	representation(
     min_genes = "numeric",
     min_cells = "numeric",
-    svd_solver = "character"
+    svd_solver = "character",
+    scale_factor = "numeric",
+    npcs = "numeric",
+    nhvg = "numeric",
+    n_neighbors = "numeric"
 	),
 	contains = c('parent'),
   prototype(min_genes = 300,
             min_genes = 5,
-            svd_solver = "arpack")
+            svd_solver = "arpack",
+            scale_factor = 10000,
+            npcs = 20,
+            nhvg = 2000,
+            n_neighbors = 10)
 )
 
 #' BBKNNMerge
@@ -195,7 +226,8 @@ setClass(
 	'BBKNNParams', 
 	representation(),
 	contains = c('BBKNNNormalize',
-                'BBKNNMerge')
+              'SeuratNormalize',
+              'BBKNNMerge')
 )
 
 #' ScanoramaParams
@@ -203,6 +235,30 @@ setClass(
 #' @export
 setClass(
 	'ScanoramaParams', 
+	representation(min_cells = "numeric",
+          min_genes = "numeric",
+          batch_size = "numeric",
+          return_dense = "logical",
+          knn = "numeric",
+          svd_solver = "character",
+          npcs = "numeric",
+          nhvg = "numeric"),
+	contains = c('parent'),
+  prototype(min_genes = 300,
+            min_cells = 5,
+            batch_size = 30,
+            return_dense = TRUE,
+            knn = 10,
+            svd_solver = "arpack",
+            npcs = 20,
+            nhvg = 2000)
+)
+
+#' SMILEParams
+#'
+#' @export
+setClass(
+	'SMILEParams', 
 	representation(min_cells = "numeric",
           min_genes = "numeric",
           batch_size = "numeric",

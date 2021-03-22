@@ -5,8 +5,9 @@
 #' @param x SingleCellExperiment object containing an integrated single cell counts matrix
 #' @return returns an output score statistic
 #' @export
-setMethod("Score", "SingleCellExperiment", function(x, batch_label = NULL, method="kBET") {
+setMethod("Score", "SingleCellExperiment", function(x, batch_label = NULL, method="kBET", ...) {
   score = switch(method, 
-                "kBET" = run_kBET(x, batch_label = batch_label))
+                "kBET" = run_kBET(x, batch_label = batch_label),
+                "ARI" = run_ARI(x, group1 = "batch", group2 = "CellType"))
   return(score)
 })

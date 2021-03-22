@@ -38,7 +38,7 @@ harmony_preprocess <- function(x,
 }
 
 #' @export
-call_harmony_2 <- function(b_seurat, batch_label, npcs = 20, seed = 1)
+call_harmony_2 <- function(b_seurat, batch_label, npcs = 20, seed = 1, pca_name = "PCA")
 {
 
   #Harmony settings
@@ -47,13 +47,11 @@ call_harmony_2 <- function(b_seurat, batch_label, npcs = 20, seed = 1)
   max_iter_cluster = 100
 
 
-  b_seurat <- RunPCA(object = b_seurat, npcs = npcs, pc.genes = b_seurat@var.genes, verbose = FALSE)
+  b_seurat <- RunPCA(object = b_seurat, npcs = npcs, pc.genes = b_seurat@var.genes, verbose = FALSE, reduction.name = pca_name)
 
   b_seurat <- RunHarmony(object = b_seurat, batch_label, theta = theta_harmony, plot_convergence = FALSE, 
                           nclust = numclust, max.iter.cluster = max_iter_cluster)
 
-
-#  b_seurat <- RunUMAP(b_seurat, reduction.use = "harmony", dims = 1:npcs, k.seed = seed)
 
   return(b_seurat)
 }
@@ -63,7 +61,7 @@ run_Harmony <- function(params, data){
   b_seurat = harmony_preprocess(x = data,
                               normData = params@norm_data, Datascaling = params@scaling, regressUMI = params@regressUMI, 
                               norm_method = params@norm_method, scale_factor = params@scale_factor, nfeatures = params@numHVG)
-  integrated = call_harmony_2(b_seurat, batch_label = params@batch, npcs = params@npcs, seed = params@seed)
+  integrated = call_harmony_2(b_seurat, batch_label = params@batch, npcs = params@npcs, seed = params@seed, pca_name = params@dimreduc_names[["PCA"]])
   integrated = as.SingleCellExperiment(integrated)
   return(integrated)
 }
