@@ -17,12 +17,12 @@ run_Scanorama <- function(params, data){
   py$svd_solver = params@svd_solver
   py$npcs = params@npcs
   py$batch = params@batch
+  py$nhvg = params@nhvg
 
   ### run BBKNN integration ###
   filepath = system.file("R/runScanorama.py", package = "ensemblemerge")
   data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py$adata = data
-  Sys.sleep(3)
   source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
   integrated = as.SingleCellExperiment(integrated)

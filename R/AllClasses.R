@@ -111,6 +111,20 @@ setClass(
                 'HarmonyMerge')
 )
 
+#' UncorrectedParams
+#'
+#' @export
+setClass(
+	'UncorrectedParams', 
+	representation(vars_to_regress = "character",
+                hvg = "logical"),
+	contains = c('SeuratNormalize',
+                'SeuratHVG',
+                'SeuratMerge'),
+  prototype(vars_to_regress = c("nUMI"),
+                                hvg = TRUE)
+)
+
 #' LigerNormalize
 #'
 #' @export
@@ -140,11 +154,13 @@ setClass(
 	'LigerMerge', 
 	representation(
     k = "numeric",
-    nrep = "numeric"
+    nrep = "numeric",
+    lambda = "numeric"
 	),
 	contains = c('parent'),
   prototype(k = 20,
-            nrep = 3)
+            nrep = 3,
+            lambda = 5)
 )
 
 #' LigerParams
@@ -155,7 +171,8 @@ setClass(
 	representation(),
 	contains = c('LigerNormalize',
                 'LigerHVG',
-                'LigerMerge')
+                'LigerMerge',
+                'UncorrectedParams')
 )
 
 #' BBKNNNormalize
@@ -224,7 +241,8 @@ setClass(
           return_dense = "logical",
           knn = "numeric",
           svd_solver = "character",
-          npcs = "numeric"),
+          npcs = "numeric",
+          nhvg = "numeric"),
 	contains = c('parent'),
   prototype(min_genes = 300,
             min_cells = 5,
@@ -232,7 +250,8 @@ setClass(
             return_dense = TRUE,
             knn = 10,
             svd_solver = "arpack",
-            npcs = 20)
+            npcs = 20,
+            nhvg = 2000)
 )
 
 #' SMILEParams
@@ -255,18 +274,4 @@ setClass(
             knn = 10,
             svd_solver = "arpack",
             npcs = 20)
-)
-
-#' UncorrectedParams
-#'
-#' @export
-setClass(
-	'UncorrectedParams', 
-	representation(vars_to_regress = "character",
-                hvg = "logical"),
-	contains = c('SeuratNormalize',
-                'SeuratHVG',
-                'SeuratMerge'),
-  prototype(vars_to_regress = c("nUMI"),
-                                hvg = TRUE)
 )

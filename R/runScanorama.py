@@ -16,15 +16,19 @@ for group in groups:
 for adata in data:
     sc.pp.normalize_total(adata, inplace=True)
     sc.pp.log1p(adata)
-    sc.pp.highly_variable_genes(adata, flavor="seurat", n_top_genes=2000, inplace=True)
+    sc.pp.highly_variable_genes(adata, flavor="seurat", n_top_genes=int(nhvg), inplace=True)
 
 for adata in data:
   adata.X = adata.X.tocsr()
 
-new_result = type(data[0].X)
-
 adatas_cor = scanorama.correct_scanpy(data, return_dimred=True)
 
 Data = adatas_cor[0].concatenate(adatas_cor[1:len(data)], index_unique=None)
+
+sc.tl.pca(Data, svd_solver=svd_solver, n_comps=int(npcs))
+
+Data.obsm["X_pca"] *= -1
+
+Data.obsm["X_scanorama"] = Data.obsm["X_pca"]
 
 Data.write(filename = "temp.h5ad")
