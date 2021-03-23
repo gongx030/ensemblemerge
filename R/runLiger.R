@@ -1,7 +1,6 @@
 #' Run Seurat V3 functions
 #'
 #' @import Seurat
-#' @import rliger
 #'
 #' @param data SingleCellExpirement object containing single cell counts matrix
 #' @param params LigerParams object
