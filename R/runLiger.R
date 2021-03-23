@@ -34,16 +34,6 @@ run_Liger <- function(params, data){
   data <- RunOptimizeALS(data, k = params@k, lambda = params@lambda, split.by = params@batch)
   data <- RunQuantileNorm(data, split.by = params@batch)
 
-  #liger = seuratToLiger(data, combined.seurat = TRUE, meta.var = params@batch)
-  #liger <- normalize(liger)
-  #liger <- selectGenes(liger)
-  #liger <- scaleNotCenter(liger)
-
-  ### Run integration ###
-  #liger <- optimizeALS(liger, k = 20)
-  #liger <- quantile_norm(liger)
-  #integrated <- ligerToSeurat(liger)
-
   data = as.SingleCellExperiment(data)
 
   return(data)
@@ -61,7 +51,7 @@ run_Liger <- function(params, data){
 #' per-dataset feature loadings matrices stored in the \code{tool} slot, accessible with
 #' \code{\link[Seurat]{Tool}}
 #'
-# @importFrom rliger optimizeALS
+#' @importFrom rliger optimizeALS
 #' @importFrom Seurat DefaultAssay SplitObject GetAssayData VariableFeatures
 #' CreateDimReducObject Tool<- LogSeuratCommand
 #'
