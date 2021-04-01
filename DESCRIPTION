@@ -11,6 +11,7 @@ Depends:
     R (>= 3.6.0),
     methods
 Imports:
+    rliger,
     Matrix,
     dplyr,
     Seurat,
@@ -20,8 +21,7 @@ Imports:
     sceasy
 suggests:
     harmony,
-    kBET,
-    rliger
+    kBET
 Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
 Encoding: UTF-8
