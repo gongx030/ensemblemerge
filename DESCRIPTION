@@ -1,5 +1,5 @@
 Package: ensemblemerge
-Title: Integrates existing sc-RNAseq integration methods into a single package (One Line, Title Case)
+Title: Integrates existing sc-RNAseq integration methods into a single package
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Erik",
@@ -15,14 +15,15 @@ Imports:
     Seurat,
     magrittr,
     SummarizedExperiment,
-    SingleCellExperiment,
+    SingleCellExperiment
+suggests:
     harmony,
     kBET,
     reticulate,
     methods,
     rliger,
     sceasy
-Description: What the package does (one paragraph).
+Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
 Encoding: UTF-8
 LazyData: true

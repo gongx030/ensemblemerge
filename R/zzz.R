@@ -16,10 +16,4 @@ install_python_packages <- function(){
 }
 
 .onLoad <- function(libname, pkgname) {
-  reticulate::py_config()
-  # use superassignment to update global reference
-  sc <<- reticulate::import("scanpy", delay_load = TRUE)
-  sr <<- reticulate::import("scanorama", delay_load = TRUE)
-  ad <<- reticulate::import("anndata", delay_load = TRUE, convert = FALSE)
-  bbknn <<- reticulate::import("bbknn", delay_load = TRUE)
 }
