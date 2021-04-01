@@ -8,21 +8,20 @@ Authors@R:
            email = "skiex003@umn.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Depends:
-    R (>= 3.6.0)
+    R (>= 3.6.0),
+    methods
 Imports:
     Matrix,
     dplyr,
     Seurat,
     magrittr,
     SummarizedExperiment,
-    SingleCellExperiment
+    SingleCellExperiment,
+    sceasy
 suggests:
     harmony,
     kBET,
-    reticulate,
-    methods,
-    rliger,
-    sceasy
+    rliger
 Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
 Encoding: UTF-8
