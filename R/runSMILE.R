@@ -11,9 +11,6 @@ run_SMILE <- function(params, data){
   ### load up python environment ###
   reticulate::py_config()
   sc <- reticulate::import("scanpy", delay_load = TRUE)
-  sr <- reticulate::import("scanorama", delay_load = TRUE)
-  ad <- reticulate::import("anndata", delay_load = TRUE, convert = FALSE)
-  bbknn <- reticulate::import("bbknn", delay_load = TRUE)
   #filepath = system.file("R/runSMILE.py", package = "ensemblemerge")
   py$adata = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
   py_run_string("import numpy as np
