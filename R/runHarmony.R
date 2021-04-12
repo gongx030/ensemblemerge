@@ -1,6 +1,5 @@
 #' Run Harmony functions
 #'
-#' @import harmony
 #' @import Seurat
 #'
 #' @param x SingleCellExperiment object containing single cell counts matrix
@@ -40,6 +39,10 @@ harmony_preprocess <- function(x,
 #' @export
 call_harmony_2 <- function(b_seurat, batch_label, npcs = 20, seed = 1, pca_name = "PCA")
 {
+  if (!requireNamespace("harmony", quietly = TRUE)) {
+    stop("Package 'harmony' needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
 
   #Harmony settings
   theta_harmony = 2
@@ -49,7 +52,7 @@ call_harmony_2 <- function(b_seurat, batch_label, npcs = 20, seed = 1, pca_name 
 
   b_seurat <- RunPCA(object = b_seurat, npcs = npcs, pc.genes = b_seurat@var.genes, verbose = FALSE, reduction.name = pca_name)
 
-  b_seurat <- RunHarmony(object = b_seurat, batch_label, theta = theta_harmony, plot_convergence = FALSE, 
+  b_seurat <- harmony::RunHarmony(object = b_seurat, batch_label, theta = theta_harmony, plot_convergence = FALSE, 
                           nclust = numclust, max.iter.cluster = max_iter_cluster)
 
 
