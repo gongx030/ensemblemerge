@@ -13,6 +13,7 @@ run_Scanorama <- function(params, data){
   sc <- reticulate::import("scanpy", delay_load = TRUE)
   sr <- reticulate::import("scanorama", delay_load = TRUE)
   ad <- reticulate::import("anndata", delay_load = TRUE, convert = FALSE)
+  bbknn <- reticulate::import("bbknn", delay_load = TRUE)
   ### convert params to python ###
   py$min_genes = params@min_genes
   py$min_cells = params@min_cells

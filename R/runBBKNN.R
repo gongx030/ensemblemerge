@@ -11,6 +11,7 @@ run_BBKNN <- function(params, data){
   ### load up python environment ###
   reticulate::py_config()
   sc <- reticulate::import("scanpy", delay_load = TRUE)
+  sr <- reticulate::import("scanorama", delay_load = TRUE)
   ad <- reticulate::import("anndata", delay_load = TRUE, convert = FALSE)
   bbknn <- reticulate::import("bbknn", delay_load = TRUE)
   ### convert params to python ###
