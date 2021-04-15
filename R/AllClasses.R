@@ -74,10 +74,11 @@ setClass(
 #' @export
 setClass(
 	'SeuratParams', 
-	representation(),
+	representation(altExp_names = "character"),
 	contains = c('SeuratNormalize',
                 'SeuratHVG',
-                'SeuratMerge')
+                'SeuratMerge'),
+  prototype(altExp_names = "RNA")
 )
 
 #' HarmonyMerge

@@ -73,6 +73,6 @@ run_Seurat <- function(params, data){
                                                   npcs = params@npcs, seed = params@seed, regressUMI = params@regressUMI, Datascaling = params@scaling, dims = params@dims, pca_name = params@dimreduc_names[["PCA"]])
                         RNA = Seurat::as.SingleCellExperiment(integrated, assay = "RNA")
                         integrated = Seurat::as.SingleCellExperiment(integrated)
-                        SingleCellExperiment::altExp(integrated, "RNA") = RNA
+                        SingleCellExperiment::altExp(integrated, params@altExp_names) = RNA
                         return(integrated)
                       }
