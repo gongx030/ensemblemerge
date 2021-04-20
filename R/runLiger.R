@@ -34,9 +34,16 @@ run_Liger <- function(params, data){
   data <- RunOptimizeALS(data, k = params@k, lambda = params@lambda, split.by = params@batch)
   data <- RunQuantileNorm(data, split.by = params@batch)
 
-  data = as.SingleCellExperiment(data)
-
-  return(data)
+  if(params@return == "Seurat"){
+    return(data)
+  }
+  else if(params@return == "SingleCellExperiment"){
+    data = Seurat::as.SingleCellExperiment(data)
+    return(data)
+  }
+  else{
+    stop("Invalid return type, check params@return")
+  }
 }
 
 #' Run optimizeALS on a Seurat object

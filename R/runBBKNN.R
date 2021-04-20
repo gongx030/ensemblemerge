@@ -11,7 +11,6 @@ run_BBKNN <- function(params, data){
   ### load up python environment ###
   reticulate::py_config()
   sc <- reticulate::import("scanpy", delay_load = TRUE)
-  sr <- reticulate::import("scanorama", delay_load = TRUE)
   ad <- reticulate::import("anndata", delay_load = TRUE, convert = FALSE)
   bbknn <- reticulate::import("bbknn", delay_load = TRUE)
   ### convert params to python ###
@@ -59,7 +58,16 @@ sc.tl.pca(adata_bbknn, svd_solver=svd_solver,n_comps=int(npcs))
 adata_bbknn.write(filename = 'temp.h5ad')")
   #source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
-  integrated = as.SingleCellExperiment(integrated)
   file.remove("temp.h5ad")
-  return(integrated)
+
+  if(params@return == "Seurat"){
+    return(integrated)
+  }
+  else if(params@return == "SingleCellExperiment"){
+    integrated = Seurat::as.SingleCellExperiment(integrated)
+    return(integrated)
+  }
+  else{
+    stop("Invalid return type, check params@return")
+  }
 }

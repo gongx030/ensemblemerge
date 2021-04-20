@@ -65,6 +65,15 @@ run_Harmony <- function(params, data){
                               normData = params@norm_data, Datascaling = params@scaling, regressUMI = params@regressUMI, 
                               norm_method = params@norm_method, scale_factor = params@scale_factor, nfeatures = params@numHVG)
   integrated = call_harmony_2(b_seurat, batch_label = params@batch, npcs = params@npcs, seed = params@seed, pca_name = params@dimreduc_names[["PCA"]])
-  integrated = as.SingleCellExperiment(integrated)
-  return(integrated)
+
+  if(params@return == "Seurat"){
+    return(integrated)
+  }
+  else if(params@return == "SingleCellExperiment"){
+    integrated = Seurat::as.SingleCellExperiment(integrated)
+    return(integrated)
+  }
+  else{
+    stop("Invalid return type, check params@return")
+  }
 }
