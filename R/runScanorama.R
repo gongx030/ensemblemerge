@@ -64,7 +64,16 @@ Data.obsm['X_scanorama'] = Data.obsm['X_pca']
 Data.write(filename = 'temp.h5ad')")
   #source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
-  integrated = as.SingleCellExperiment(integrated)
   file.remove("temp.h5ad")
-  return(integrated)
+
+  if(params@return == "Seurat"){
+    return(integrated)
+  }
+  else if(params@return == "SingleCellExperiment"){
+    data = Seurat::as.SingleCellExperiment(integrated)
+    return(integrated)
+  }
+  else{
+    stop("Invalid return type, check params@return")
+  }
 }

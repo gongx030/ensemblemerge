@@ -7,7 +7,7 @@
 #'
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
-run_Uncorrected <- function(params, data){
+preprocess_MNN <- function(params, data){
   data = as.Seurat(data, counts = "counts", data = NULL)
   if(params@norm_data){
     print("Normalizing data")
@@ -29,7 +29,24 @@ run_Uncorrected <- function(params, data){
     data <- ScaleData(object = data)
   }
   data <- RunPCA(data, npcs = params@npcs, verbose = FALSE)
+  return(data)
+}
 
+
+
+#' Run Seurat V3 scaling and normalizing
+#'
+#' @import Seurat
+#'
+#' @param data SummarizedExpirement object containing single cell counts matrix
+#' @param params FastMNNParams object generated from setParams(method="fastMNN", ...)
+#'
+#' @return returns a SummarizedExperiment object of the integrated data
+#' @export
+run_fastMNN <- function(params, data){
+  data = preprocess_MNN(params, data)
+  data = suppressWarnings(SeuratWrappers::RunFastMNN(object.list = SplitObject(data, split.by = params@batch)))
+  
   if(params@return == "Seurat"){
     return(data)
   }

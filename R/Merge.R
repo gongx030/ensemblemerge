@@ -14,9 +14,13 @@ setMethod("Merge", "SeuratParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
@@ -45,9 +49,13 @@ setMethod("Merge", "HarmonyParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
@@ -76,9 +84,13 @@ setMethod("Merge", "BBKNNParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
@@ -105,9 +117,13 @@ setMethod("Merge", "SMILEParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
@@ -134,9 +150,13 @@ setMethod("Merge", "ScanoramaParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
@@ -163,9 +183,13 @@ setMethod("Merge", "UncorrectedParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
@@ -192,15 +216,52 @@ setMethod("Merge", "LigerParams", function(params, data) {
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
     }
 
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
     ### checking valid parameters ###
     if(class(data) != 'SingleCellExperiment'){
-      stop("Input data must be of SummarizedExperiment or SingleCellExperiment class")
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
     if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
       stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
     }
 
     integrated = run_Liger(params, data)
+
+    return(integrated)
+})
+
+#' Merge SingleCellExperiment object
+#'
+#' @import SingleCellExperiment
+#' @importFrom methods as
+#' @import SummarizedExperiment
+#'
+#' @param data SingleCellExperiment object containing single cell counts matrix
+#' @param params FastMNNParams object generated by setParams()
+#' @return returns a SingleCellExperiment object of the normalized/scaled data
+#' @export
+setMethod("Merge", "FastMNNParams", function(params, data) {
+
+    if(class(data) == 'SummarizedExperiment'){
+      data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
+    }
+
+    if(class(data) == "Seurat"){
+      data = Seurat::as.SingleCellExperiment(data)
+    }
+
+    ### checking valid parameters ###
+    if(class(data) != 'SingleCellExperiment'){
+      stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
+    }
+    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
+    }
+
+    integrated = run_fastMNN(params, data)
 
     return(integrated)
 })

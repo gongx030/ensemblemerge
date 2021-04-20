@@ -7,12 +7,14 @@ setClass(
 	'parent', 
 	representation(
 		batch = "character",
-    dimreduc_names = "character"
+    dimreduc_names = "character",
+    return = "character"
 	),
   prototype(batch = "batch",
             dimreduc_names = c("PCA" = "pca",
                               "UMAP" = "umap",
-                              "tSNE" = "tsne"))
+                              "tSNE" = "tsne"),
+            return = "SingleCellExperiment")
 )
 
 #' SeuratMerge
@@ -124,6 +126,16 @@ setClass(
                 'SeuratMerge'),
   prototype(vars_to_regress = c("nUMI"),
                                 hvg = TRUE)
+)
+
+#' FastMNNParams
+#'
+#' @export
+setClass(
+	'FastMNNParams', 
+	representation(),
+	contains = c('UncorrectedParams'),
+  prototype()
 )
 
 #' LigerNormalize
