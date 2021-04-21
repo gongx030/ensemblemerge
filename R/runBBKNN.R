@@ -5,6 +5,7 @@
 #' @import Matrix
 #' @import methods
 #' @import SparseM
+#' @import SingleCellExperiment
 #'
 #' @param data SingleCellExperiment object containing single cell counts matrix
 #' @param params BBKNNParams object generated from setParams(method = "BBKNN") function
@@ -100,6 +101,7 @@ adata.write(filename = 'temp.h5ad')")
   }
   else if(params@return == "SingleCellExperiment"){
     integrated = Seurat::as.SingleCellExperiment(integrated)
+    S4Vectors::metadata(integrated)$bbknn = bbknn
     return(integrated)
   }
   else{
