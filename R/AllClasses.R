@@ -226,7 +226,8 @@ setClass(
     approx = "logical",
     trim = "numeric",
     graph_name = "character",
-    nn_name = "character"
+    nn_name = "character",
+    ridge_regress = "logical"
 	),
 	contains = c('parent'),
   prototype(save_knn = TRUE,
@@ -235,7 +236,8 @@ setClass(
             approx = FALSE,
             trim = 50,
             graph_name = "bbknn_graph",
-            nn_name = "bbknn")
+            nn_name = "bbknn",
+            ridge_regress = TRUE)
 )
 
 #' BBKNNParams

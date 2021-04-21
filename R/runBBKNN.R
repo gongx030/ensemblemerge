@@ -35,6 +35,7 @@ run_BBKNN <- function(params, data){
   py$trim = params@trim
   py$n_neighbors = params@n_neighbors
   py$confounder_key = params@confounder_key
+  py$ridge_regress = params@ridge_regress
 
   ### run BBKNN integration ###
   #filepath = system.file("R/runBBKNN.py", package = "ensemblemerge")
@@ -47,8 +48,6 @@ import scanpy as sc
 
 adata = sc.read('temp.h5ad')")
 
-print("loaded in data")
-
 py_run_string("sc.pp.filter_cells(adata, min_genes=3)
 sc.pp.filter_genes(adata, min_cells=500)
 sc.pp.normalize_total(adata, target_sum=1e4)
@@ -57,27 +56,25 @@ sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
 sc.pp.scale(adata)
 sc.tl.pca(adata)")
 
-print("preprocessing done")
-
 py_run_string("import numpy as np
 import bbknn
 import scanpy as sc
 
 #perform bbknn integration
-if confounder_key == 'leiden':
-  sc.pp.neighbors(adata)
-  sc.tl.umap(adata)
-  sc.tl.leiden(adata, resolution=0.4)
-  bbknn.ridge_regression(adata, batch_key=['batch'], confounder_key=['leiden'])
-  sc.pp.pca(adata)
-  bbknn.bbknn(adata, batch_key='batch')
+if ridge_regress == False :
+  bbknn.bbknn(adata, batch_key=batch)
 else:
-  bbknn.ridge_regression(adata, batch_key=['batch'], confounder_key=['CellType'])
-  sc.pp.pca(adata)
-  bbknn.bbknn(adata, batch_key='batch')
-  sc.tl.umap(adata)")
-
-print("integration done")
+  if confounder_key == 'leiden':
+    sc.pp.neighbors(adata)
+    sc.tl.umap(adata)
+    sc.tl.leiden(adata, resolution=0.4)
+    bbknn.ridge_regression(adata, batch_key=[batch], confounder_key=['leiden'])
+    sc.pp.pca(adata)
+    bbknn.bbknn(adata, batch_key=batch)
+  else:
+    bbknn.ridge_regression(adata, batch_key=[batch], confounder_key=['CellType'])
+    sc.pp.pca(adata)
+    bbknn.bbknn(adata, batch_key=batch)")
 
 
 py_run_string("adata.obsm['X_pca'] *= -1  # multiply by -1 to match Seurat
