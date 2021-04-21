@@ -1,6 +1,6 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single package
-Version: 1.0.1.3
+Version: 1.0.1.4
 Authors@R: 
     person(given = "Erik",
            family = "Skie",
@@ -18,7 +18,8 @@ Imports:
     magrittr,
     SummarizedExperiment,
     SingleCellExperiment,
-    sceasy
+    sceasy,
+    SparseM
 suggests:
     harmony,
     kBET

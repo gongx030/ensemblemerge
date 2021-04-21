@@ -2,6 +2,10 @@
 #'
 #' @import reticulate
 #' @import Seurat
+#' @import Matrix
+#' @import methods
+#' @import SparseM
+#' @import SingleCellExperiment
 #'
 #' @param data SingleCellExperiment object containing single cell counts matrix
 #' @param params BBKNNParams object generated from setParams(method = "BBKNN") function
@@ -31,40 +35,73 @@ run_BBKNN <- function(params, data){
   py$approx = params@approx
   py$trim = params@trim
   py$n_neighbors = params@n_neighbors
+  py$confounder_key = params@confounder_key
+  py$ridge_regress = params@ridge_regress
 
   ### run BBKNN integration ###
   #filepath = system.file("R/runBBKNN.py", package = "ensemblemerge")
-  data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata"))
-  py$adata = data
-  Sys.sleep(10)
+  data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata", out = "temp.h5ad"))
+  #py$adata = data
+  #Sys.sleep(10)
   py_run_string("import numpy as np
 import bbknn
 import scanpy as sc
 
-sc.pp.filter_cells(adata, min_genes=300)
-sc.pp.filter_genes(adata, min_cells=5)
+adata = sc.read('temp.h5ad')")
 
+py_run_string("sc.pp.filter_cells(adata, min_genes=3)
+sc.pp.filter_genes(adata, min_cells=500)
+sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
 sc.pp.scale(adata)
-sc.tl.pca(adata, svd_solver=svd_solver)
-sc.pp.neighbors(adata,n_neighbors=int(n_neighbors), n_pcs=int(npcs))
+sc.tl.pca(adata)")
 
-adata.obsm['X_pca'] *= -1  # multiply by -1 to match Seurat
+py_run_string("import numpy as np
+import bbknn
+import scanpy as sc
 
-adata_bbknn = bbknn.bbknn(adata, copy=copy, neighbors_within_batch=int(neighbors_within_batch),
-                          approx=approx,trim=int(trim), batch_key = batch, n_pcs = int(npcs), use_faiss=False)
+#perform bbknn integration
+if ridge_regress == False :
+  bbknn.bbknn(adata, batch_key=batch)
+else:
+  if confounder_key == 'leiden':
+    sc.pp.neighbors(adata)
+    sc.tl.umap(adata)
+    sc.tl.leiden(adata, resolution=0.4)
+    bbknn.ridge_regression(adata, batch_key=[batch], confounder_key=['leiden'])
+    sc.pp.pca(adata)
+    bbknn.bbknn(adata, batch_key=batch)
+  else:
+    bbknn.ridge_regression(adata, batch_key=[batch], confounder_key=['CellType'])
+    sc.pp.pca(adata)
+    bbknn.bbknn(adata, batch_key=batch)")
 
-sc.tl.pca(adata_bbknn, svd_solver=svd_solver,n_comps=int(npcs))
-adata_bbknn.write(filename = 'temp.h5ad')")
+
+py_run_string("adata.obsm['X_pca'] *= -1  # multiply by -1 to match Seurat
+adata.write(filename = 'temp.h5ad')")
+
   #source_python(filepath)
   integrated = sceasy::convertFormat("temp.h5ad", from = "anndata", to = "seurat")
   file.remove("temp.h5ad")
+
+  bbknn = py$adata$obsp["distances"]
+  py$adata = NULL #remove adata object from python to reduce memory
+  bbknn = as(bbknn, "matrix.csr")
+  bbknn = as(bbknn, "dgCMatrix")
+  rownames(bbknn) = colnames(integrated)
+  colnames(bbknn) = colnames(integrated)
+  bbknn = Seurat::as.Graph(bbknn)
+  integrated[[params@graph_name]] <- bbknn
+  bbknn = Seurat::as.Neighbor(bbknn)
+  integrated[[params@nn_name]] <- bbknn
 
   if(params@return == "Seurat"){
     return(integrated)
   }
   else if(params@return == "SingleCellExperiment"){
     integrated = Seurat::as.SingleCellExperiment(integrated)
+    S4Vectors::metadata(integrated)$bbknn = bbknn
     return(integrated)
   }
   else{

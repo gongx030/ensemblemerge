@@ -200,7 +200,8 @@ setClass(
     scale_factor = "numeric",
     npcs = "numeric",
     nhvg = "numeric",
-    n_neighbors = "numeric"
+    n_neighbors = "numeric",
+    confounder_key = "character"
 	),
 	contains = c('parent'),
   prototype(min_genes = 300,
@@ -209,7 +210,8 @@ setClass(
             scale_factor = 10000,
             npcs = 20,
             nhvg = 2000,
-            n_neighbors = 10)
+            n_neighbors = 10,
+            confounder_key = "leiden")
 )
 
 #' BBKNNMerge
@@ -222,14 +224,20 @@ setClass(
     copy = "logical",
     neighbors_within_batch = "numeric",
     approx = "logical",
-    trim = "numeric"
+    trim = "numeric",
+    graph_name = "character",
+    nn_name = "character",
+    ridge_regress = "logical"
 	),
 	contains = c('parent'),
   prototype(save_knn = TRUE,
             copy = TRUE,
             neighbors_within_batch = 5,
             approx = FALSE,
-            trim = 50)
+            trim = 50,
+            graph_name = "bbknn_graph",
+            nn_name = "bbknn",
+            ridge_regress = TRUE)
 )
 
 #' BBKNNParams
