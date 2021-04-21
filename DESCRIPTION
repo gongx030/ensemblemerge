@@ -18,7 +18,8 @@ Imports:
     magrittr,
     SummarizedExperiment,
     SingleCellExperiment,
-    sceasy
+    sceasy,
+    SparseM
 suggests:
     harmony,
     kBET
