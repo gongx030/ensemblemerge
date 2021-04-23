@@ -17,8 +17,10 @@ seurat3_preprocess <- function(x,
 
   ##########################################################
   # preprocessing
-
-  batches <- Seurat::as.Seurat(x, counts = "counts", data = NULL)
+  batches = x
+  if(class(batches) != "Seurat"){
+    batches <- Seurat::as.Seurat(batches, counts = "counts", data = NULL)
+  }
 
   batch_list <- Seurat::SplitObject(batches, split.by = batch_label)
   for(i in 1:length(batch_list)) {

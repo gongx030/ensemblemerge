@@ -57,8 +57,11 @@ setMethod("Merge", "HarmonyParams", function(params, data) {
     if(class(data) != 'SingleCellExperiment'){
       stop("Input data must be of SummarizedExperiment, Seurat or SingleCellExperiment class")
     }
-    if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
-      stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
+
+    if(class(data) == "SingleCellExperiment"){
+      if(sum(params@dimreduc_names %in% reducedDimNames(data)) > 0){
+        stop(sprintf("%s is already in experiment, please change the name in params@dimreduc_names to avoid complications", params@dimreduc_names[which(params@dimreduc_names %in% reducedDimNames(data))]))
+      }
     }
 
     integrated = run_Harmony(params, data)

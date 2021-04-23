@@ -16,8 +16,11 @@ harmony_preprocess <- function(x,
                               norm_method = "LogNormalize", scale_factor = 10000, 
                               nfeatures = 300)
 {
+  b_seurat = x
 
-  b_seurat <- as.Seurat(x, counts = "counts", data = NULL)
+  if(class(b_seurat) != "Seurat"){
+    b_seurat <- Seurat::as.Seurat(b_seurat, counts = "counts", data = NULL)
+  }
 
   if(normData){
     b_seurat <- NormalizeData(object = b_seurat, normalization.method = norm_method, scale.factor = scale_factor)

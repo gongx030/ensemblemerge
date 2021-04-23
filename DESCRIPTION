@@ -19,7 +19,8 @@ Imports:
     SummarizedExperiment,
     SingleCellExperiment,
     sceasy,
-    SparseM
+    SparseM,
+    ArgumentCheck
 suggests:
     harmony,
     kBET
