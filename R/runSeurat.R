@@ -12,7 +12,7 @@ seurat3_preprocess <- function(x,
                               scale_factor = 10000, 
                               numVG = 300, nhvg = 2000, 
                               batch_label = "batchlb", celltype_label = "CellType",
-                              hvg = T)
+                              hvg = T, k.weight = 100)
 {
 
   ##########################################################
@@ -39,15 +39,23 @@ seurat3_preprocess <- function(x,
   return(batch_list)
 }
 #' @export
-call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, seed = 1, regressUMI = TRUE, Datascaling = TRUE, dims = 20, pca_name = "PCA")
+call_seurat3 <- function(batch_list, batch_label, celltype_label, npcs = 20, seed = 1, regressUMI = TRUE, Datascaling = TRUE, dims = 20, pca_name = "PCA", k.weight = 100)
 {
   for(batch in batch_list){
     if(nrow(batch) < npcs){
       stop(sprintf("batch: %s has %i cells, all batches must have more cells than dimensions for anchor weighting (dims:%i)", unique(batch@meta.data[[batch_label]]), nrow(batch), dims))
     }
   }
+
+  #check if batches are less than k.weight
+  for(batch in batch_list){
+    if(ncol(batch) < k.weight){
+      stop(sprintf("batch: %s has %i cells, all batches must have more cells than the value of k.weight (k.weight:%i)", unique(batch@meta.data[[batch_label]]), ncol(batch), k.weight))
+    }
+  }
+
   cell_anchors <- Seurat::FindIntegrationAnchors(object.list = batch_list, dims = 1:dims)
-  batches <- Seurat::IntegrateData(anchorset = cell_anchors, dims = 1:npcs)
+  batches <- Seurat::IntegrateData(anchorset = cell_anchors, dims = 1:npcs, k.weight = k.weight)
   dim(batches)
 
   Seurat::DefaultAssay(batches) <- "integrated"
@@ -70,9 +78,12 @@ run_Seurat <- function(params, data){
                               norm_method = params@norm_method, 
                               scale_factor = params@scale_factor, 
                               numVG = params@numVG, nhvg = params@numHVG, 
-                              batch_label = params@batch)
+                              batch_label = params@batch, k.weight = params@k.weight)
                         integrated = call_seurat3(batch_list, batch_label = params@batch, 
-                                                  npcs = params@npcs, seed = params@seed, regressUMI = params@regressUMI, Datascaling = params@scaling, dims = params@dims, pca_name = params@dimreduc_names[["PCA"]])
+                                                  npcs = params@npcs, seed = params@seed, 
+                                                  regressUMI = params@regressUMI, Datascaling = params@scaling,
+                                                  dims = params@dims, pca_name = params@dimreduc_names[["PCA"]],
+                                                  k.weight = params@k.weight)
 
                         
                         if(params@return == "Seurat"){
