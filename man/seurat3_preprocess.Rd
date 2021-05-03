@@ -16,7 +16,8 @@ seurat3_preprocess(
   nhvg = 2000,
   batch_label = "batchlb",
   celltype_label = "CellType",
-  hvg = T
+  hvg = T,
+  k.weight = 100
 )
 }
 \arguments{

@@ -25,12 +25,14 @@ setClass(
 	representation(
 		npcs = "numeric",
     seed = "numeric",
-    dims = "numeric"
+    dims = "numeric",
+    k.weight = "numeric"
 	),
 	contains = c('parent'),
   prototype(npcs = 20, 
             seed = 10,
-            dims = 20)
+            dims = 20,
+            k.weight = 100)
 )
 
 #' SeuratNormalize
