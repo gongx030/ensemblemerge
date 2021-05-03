@@ -33,28 +33,19 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
 
   #* Add error if methods is not of class character or xParams
   if(class(methods) != "character" & class(methods) != "list"){
-    ArgumentCheck::addError(
-      msg = "'methods' must be of class character or list of of Params objects set by setParams()",
-      argcheck = Check
-    )
+      stop("'methods' must be of class character or list of of Params objects set by setParams()")
   }
 
   #* Add error if methods length is not >= 2
   if(length(methods) < 2){
-    ArgumentCheck::addError(
-      msg = "'methods' must be a list or vector of at least 2 valid integration methods",
-      argcheck = Check
-    )
+    stop("'methods' must be a list or vector of at least 2 valid integration methods")
   }
 
   if(class(methods[1][[1]]) %in% getParams()){
     #* Add error if invalid methods present
     for(i in 1:length(methods)){
       if(!(methods[i][[1]] %in% getParams())){
-        ArgumentCheck::addError(
-          msg = sprintf("'%s' is not an available method, check available methods with getParams()", methods[i]),
-          argcheck = Check
-        )
+        stop(sprintf("'%s' is not an available method, check available methods with getParams()", methods[i]))
       }
     }
   }
@@ -63,10 +54,7 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
     #* Add error if invalid methods present, also convert methods to params objects if no error
     for(i in 1:length(methods)){
       if(!(methods[i] %in% getMethods())){
-        ArgumentCheck::addError(
-          msg = sprintf("'%s' is not an available method, check available methods with getMethods()", methods[i]),
-          argcheck = Check
-        )
+        stop(sprintf("'%s' is not an available method, check available methods with getMethods()", methods[i]))
       }
       else{
         new_methods[[i]] = setParams(method = methods[i]) #assign params object to methods
@@ -79,14 +67,8 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
 
   #* Add error if data is not a valid input type
   if(!(class(data) %in% c("Seurat", "SummarizedExperiment", "SingleCellExperiment"))){
-    ArgumentCheck::addError(
-      msg = sprintf("'%s' is not an valid input for data, available inputs are 'Seurat', 'SummarizedExperiment', 'SingleCellExperiment'", class(data)),
-      argcheck = Check
-    )
+      stop(sprintf("'%s' is not an valid input for data, available inputs are 'Seurat', 'SummarizedExperiment', 'SingleCellExperiment'", class(data)))
   }
-
-  #* Return errors and warnings (if any)
-  ArgumentCheck::finishArgCheck(Check)
   
   if(class(data) == 'SummarizedExperiment'){
       data = as(data, "SingleCellExperiment") # set data as SingleCellExperiment
