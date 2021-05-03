@@ -8,7 +8,9 @@
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 run_Uncorrected <- function(params, data){
-  data = as.Seurat(data, counts = "counts", data = NULL)
+  if(class(data) != "Seurat"){
+    data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
+  }
   if(params@norm_data){
     print("Normalizing data")
     data <- NormalizeData(data, normalization.method = params@norm_method, 

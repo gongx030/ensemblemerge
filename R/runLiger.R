@@ -9,7 +9,9 @@
 #' @export
 run_Liger <- function(params, data){
   
-  data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
+  if(class(data) != "Seurat"){
+    data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
+  }
 
   if(params@norm_data){
     print("Normalizing data")

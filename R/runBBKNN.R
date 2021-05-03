@@ -39,7 +39,9 @@ run_BBKNN <- function(params, data){
   py$ridge_regress = params@ridge_regress
 
   ### run BBKNN integration ###
-  #filepath = system.file("R/runBBKNN.py", package = "ensemblemerge")
+  if(class(data) == "Seurat"){
+    data <- Seurat::as.SingleCellExperiment(data, counts = "counts", data = NULL)
+  }
   data = suppressWarnings(sceasy::convertFormat(data, from = "sce", to = "anndata", out = "temp.h5ad"))
   #py$adata = data
   #Sys.sleep(10)
