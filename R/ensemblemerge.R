@@ -28,9 +28,6 @@ getParams <- function(){
 #' @export
 EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "SingleCellExperiment"){
 
-  #* Establish a new 'ArgCheck' object
-  Check <- ArgumentCheck::newArgCheck()
-
   #* Add error if methods is not of class character or xParams
   if(class(methods) != "character" & class(methods) != "list"){
       stop("'methods' must be of class character or list of of Params objects set by setParams()")
