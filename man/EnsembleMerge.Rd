@@ -2,7 +2,7 @@
 % Please edit documentation in R/ensemblemerge.R
 \name{EnsembleMerge}
 \alias{EnsembleMerge}
-\title{Run enhsemblemerge functions}
+\title{Run ensemblemerge functions}
 \usage{
 EnsembleMerge(
   data,
@@ -17,5 +17,5 @@ EnsembleMerge(
 returns a SummarizedExperiment object of the integrated data
 }
 \description{
-Run enhsemblemerge functions
+Run ensemblemerge functions
 }

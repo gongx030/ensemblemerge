@@ -29,7 +29,7 @@ setMethod("getNeighborGraph", "SeuratParams", function(params, data) {
 setMethod("getNeighborGraph", "HarmonyParams", function(params, data) {
   params@return = "Seurat"
   ng <- Merge(params, data)
-  ng <- RunUMAP(ng, reduction = "pca", dims = c(1:10), reduction.name = "Harmony_UMAP", reduction.key = "Harmony_UMAP_")
+  ng <- RunUMAP(ng, reduction = "harmony", dims = c(1:10), reduction.name = "Harmony_UMAP", reduction.key = "Harmony_UMAP_")
   ng <- FindNeighbors(ng, compute.SNN = TRUE, reduction = "Harmony_UMAP", dims = 1:2, graph.name = c("Harmony_knn","Harmony_snn"))
   ng <- ng[["Harmony_snn"]]
 })

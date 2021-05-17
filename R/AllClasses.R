@@ -8,13 +8,15 @@ setClass(
 	representation(
 		batch = "character",
     dimreduc_names = "character",
-    return = "character"
+    return = "character",
+    name = "character"
 	),
   prototype(batch = "batch",
             dimreduc_names = c("PCA" = "pca",
                               "UMAP" = "umap",
                               "tSNE" = "tsne"),
-            return = "SingleCellExperiment")
+            return = "SingleCellExperiment",
+            name = "parent")
 )
 
 #' SeuratMerge
@@ -82,7 +84,8 @@ setClass(
 	contains = c('SeuratNormalize',
                 'SeuratHVG',
                 'SeuratMerge'),
-  prototype(altExp_names = "RNA")
+  prototype(altExp_names = "RNA",
+  name = "Seurat")
 )
 
 #' HarmonyMerge
@@ -113,7 +116,8 @@ setClass(
 	representation(),
 	contains = c('SeuratNormalize',
                 'SeuratHVG',
-                'HarmonyMerge')
+                'HarmonyMerge'),
+                prototype(name = "Harmony")
 )
 
 #' UncorrectedParams
@@ -127,7 +131,8 @@ setClass(
                 'SeuratHVG',
                 'SeuratMerge'),
   prototype(vars_to_regress = c("nUMI"),
-                                hvg = TRUE)
+                                hvg = TRUE,
+                                name = "Uncorrected")
 )
 
 #' FastMNNParams
@@ -137,7 +142,7 @@ setClass(
 	'FastMNNParams', 
 	representation(),
 	contains = c('UncorrectedParams'),
-  prototype()
+  prototype(name = "FastMNN")
 )
 
 #' LigerNormalize
@@ -187,7 +192,8 @@ setClass(
 	contains = c('LigerNormalize',
                 'LigerHVG',
                 'LigerMerge',
-                'UncorrectedParams')
+                'UncorrectedParams'),
+  prototype(name = "Liger")
 )
 
 #' BBKNNNormalize
@@ -250,7 +256,8 @@ setClass(
 	representation(),
 	contains = c('BBKNNNormalize',
               'SeuratNormalize',
-              'BBKNNMerge')
+              'BBKNNMerge'),
+  prototype(name = "bbknn")
 )
 
 #' ScanoramaParams
@@ -274,7 +281,8 @@ setClass(
             knn = 10,
             svd_solver = "arpack",
             npcs = 20,
-            nhvg = 2000)
+            nhvg = 2000,
+            name = "Scanorama")
 )
 
 #' SMILEParams
@@ -296,5 +304,6 @@ setClass(
             return_dense = TRUE,
             knn = 10,
             svd_solver = "arpack",
-            npcs = 20)
+            npcs = 20,
+            name = "SMILE")
 )

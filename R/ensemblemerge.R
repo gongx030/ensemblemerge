@@ -18,7 +18,7 @@ getParams <- function(){
 }
 
 
-#' Run enhsemblemerge functions
+#' Run ensemblemerge functions
 #'
 #' @import Seurat
 #' @import SingleCellExperiment
@@ -27,9 +27,6 @@ getParams <- function(){
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "SingleCellExperiment"){
-
-  #* Establish a new 'ArgCheck' object
-  Check <- ArgumentCheck::newArgCheck()
 
   #* Add error if methods is not of class character or xParams
   if(class(methods) != "character" & class(methods) != "list"){
@@ -82,7 +79,52 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
     ng = getNeighborGraph(ng, data) 
   })
 
-  ng = Reduce("+", ng)/length(ng)
+  agreement = function(x){
+    #ret = Matrix::Matrix(nrow = nrow(x[[1]]), ncol = ncol(x[[1]]), data = 0, sparse = TRUE)
+    #ret = as(ret, "dgCMatrix")
+    #ret = as(ret, "dgCMatrix")
+    ret = ng[[1]]
+    temp = Reduce(rbind, lapply(x, summary))
+    temp = temp[which(duplicated(temp[,c("i", "j")])),]
+    temp = unique(temp[,c("i", "j")])
+    message("applying boolean values")
+    ret[as.matrix(temp[,c("i", "j")])] = 1
+    return(ret)
+  }
+
+  #sigmoid = suppressWarnings(function(x){0.5 * (1 + sin((x*pi)-(pi/2)))})
+  sigmoid = function(x){1/(1+(x/(1-x))^-5)}
+
+  agreement = agreement(ng)
+
+  wt = list()
+  kg = list()
+  for(i in 1:length(ng)){
+    weight = sum(ng[[i]]*agreement)/sqrt((ng[[i]]*ng[[i]])%*%(agreement*agreement))
+    x = ng[[i]]*weight
+    x[is.na(x)] = 0
+    weight[is.na(weight)] = 0
+    x = as(x, "dgCMatrix")
+    weight = as(weight, "dgCMatrix")
+    wt = append(wt, weight)
+    kg = append(kg, x)
+  }
+
+tmpwt = as.vector(unlist(wt))
+for(i in 1:length(wt)){
+  wt[i] = (wt[[i]] - min(tmpwt))/(max(tmpwt) - min(tmpwt))
+  message(sprintf("weight is %f", wt[[i]]))
+  wt[i] = sigmoid(wt[[i]])
+  message(sprintf("weight is now %f", wt[i]))
+}
+
+for(i in 1:length(methods)){
+    message(sprintf("%s method scores %f out of 1", methods[[i]]@name, wt[[i]]))
+}
+
+  ng = Reduce("+", kg)/Reduce("+", wt)
+  ng[is.na(ng)] = 0
+  ng = as(ng, "dgCMatrix")
 
   if(return == "SingleCellExperiment"){
     S4Vectors::metadata(data)$EnsembleMerge <- ng
