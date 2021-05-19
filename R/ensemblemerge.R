@@ -80,10 +80,10 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
   })
 
   agreement = function(x){
-    #ret = Matrix::Matrix(nrow = nrow(x[[1]]), ncol = ncol(x[[1]]), data = 0, sparse = TRUE)
-    #ret = as(ret, "dgCMatrix")
-    #ret = as(ret, "dgCMatrix")
-    ret = ng[[1]]
+    ret = Matrix::Matrix(nrow = nrow(x[[1]]), ncol = ncol(x[[1]]), data = 0, sparse = TRUE)
+    ret = as(ret, "dgCMatrix")
+    ret = as(ret, "dgCMatrix")
+    #ret = ng[[1]]
     temp = Reduce(rbind, lapply(x, summary))
     temp = temp[which(duplicated(temp[,c("i", "j")])),]
     temp = unique(temp[,c("i", "j")])
@@ -93,38 +93,57 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
   }
 
   #sigmoid = suppressWarnings(function(x){0.5 * (1 + sin((x*pi)-(pi/2)))})
-  sigmoid = function(x){1/(1+(x/(1-x))^-5)}
+  sigmoid = function(x){1/(1+(x/(1-x))^-2)}
 
   agreement = agreement(ng)
 
   wt = list()
-  kg = list()
   for(i in 1:length(ng)){
-    weight = sum(ng[[i]]*agreement)/sqrt((ng[[i]]*ng[[i]])%*%(agreement*agreement))
-    x = ng[[i]]*weight
-    x[is.na(x)] = 0
+    weight = ng[[i]]*agreement/sqrt((ng[[i]]*ng[[i]])%*%(agreement*agreement))
     weight[is.na(weight)] = 0
-    x = as(x, "dgCMatrix")
-    weight = as(weight, "dgCMatrix")
+    weight = sum(sum(weight))
+    message(sprintf("raw weight is %s", weight))
     wt = append(wt, weight)
-    kg = append(kg, x)
   }
 
-tmpwt = as.vector(unlist(wt))
-for(i in 1:length(wt)){
-  wt[i] = (wt[[i]] - min(tmpwt))/(max(tmpwt) - min(tmpwt))
-  message(sprintf("weight is %f", wt[[i]]))
-  wt[i] = sigmoid(wt[[i]])
-  message(sprintf("weight is now %f", wt[i]))
-}
+  tmpwt = as.vector(unlist(wt))
+  for(i in 1:length(wt)){
+    wt[i] = (wt[[i]] - nrow(data))/(max(tmpwt) - nrow(data)) #set 0 to min(tmpwt) to fix if needed
+    message(sprintf("normalized weight is %f", wt[[i]]))
+    wt[i] = sigmoid(wt[[i]])
+    message(sprintf("sig-transformed weight is now %f", wt[i]))
+  }
 
-for(i in 1:length(methods)){
-    message(sprintf("%s method scores %f out of 1", methods[[i]]@name, wt[[i]]))
+#tmpwt = as.vector(unlist(wt))
+#for(i in 1:length(wt)){
+  #wt[i] = (wt[[i]] - min(tmpwt))/(max(tmpwt) - min(tmpwt))
+  #message(sprintf("renormalized weight is %f", wt[[i]]))
+#}
+
+kg = list()
+for(i in 1:length(wt)){
+  x = ng[[i]]*wt[[i]]
+  x[is.na(x)] = 0
+  x = as(x, "dgCMatrix")
+  kg = append(kg, x)
 }
 
   ng = Reduce("+", kg)/Reduce("+", wt)
   ng[is.na(ng)] = 0
   ng = as(ng, "dgCMatrix")
+
+  weight = ng*agreement/sqrt((ng*ng)%*%(agreement*agreement))
+  weight[is.na(weight)] = 0
+  weight = sum(sum(weight))
+  tmpwt = c(tmpwt,weight)
+  weight = (weight - min(tmpwt))/(max(tmpwt) - min(tmpwt))
+  message(sprintf("weight for ensemblemerge is %s", weight))
+  wt = append(wt, weight)
+
+  for(i in 1:length(methods)){
+    message(sprintf("%s method scores %f out of 1", methods[[i]]@name, wt[[i]]))
+  }
+  message(sprintf("EnsembleMerge method scores %f out of 1", wt[[length(wt)]]))
 
   if(return == "SingleCellExperiment"){
     S4Vectors::metadata(data)$EnsembleMerge <- ng
