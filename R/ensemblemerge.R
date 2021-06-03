@@ -26,7 +26,7 @@ getParams <- function(){
 #' @param x SummarizedExpirement object containing single cell counts matrix
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
-EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "SingleCellExperiment"){
+EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "SingleCellExperiment", a = 1, b = 1, file = NA){
 
   #* Add error if methods is not of class character or xParams
   if(class(methods) != "character" & class(methods) != "list"){
@@ -93,7 +93,7 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
   }
 
   #sigmoid = suppressWarnings(function(x){0.5 * (1 + sin((x*pi)-(pi/2)))})
-  sigmoid = function(x){1/(1+(x/(1-x))^-2)}
+  sigmoid = function(x, a = 1, b = 1){1/(1+a*(x/(1-x))^-(b*2))}
 
   agreement = agreement(ng)
 
@@ -110,7 +110,7 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
   for(i in 1:length(wt)){
     wt[i] = (wt[[i]] - nrow(data))/(max(tmpwt) - nrow(data)) #set 0 to min(tmpwt) to fix if needed
     message(sprintf("normalized weight is %f", wt[[i]]))
-    wt[i] = sigmoid(wt[[i]])
+    wt[i] = sigmoid(wt[[i]], a , b)
     message(sprintf("sig-transformed weight is now %f", wt[i]))
   }
 
@@ -140,10 +140,26 @@ for(i in 1:length(wt)){
   message(sprintf("weight for ensemblemerge is %s", weight))
   wt = append(wt, weight)
 
+  if(!is.na(file)){
+    score = as.data.frame(c(method = "Method", weight = "Weight"), ncol = 2) %>% t()
+    rownames(score) = NULL
+    write.table(score, file = file, append = TRUE, sep = ",", col.names = FALSE, row.names = FALSE)
+  }
+
   for(i in 1:length(methods)){
     message(sprintf("%s method scores %f out of 1", methods[[i]]@name, wt[[i]]))
+    if(!is.na(file)){
+    score = as.data.frame(c(method = methods[[i]]@name, weight = wt[[i]]), nrow = 2) %>% t()
+    rownames(score) = NULL
+    write.table(score, file = file, append = TRUE, sep = ",", col.names = FALSE, row.names = FALSE)
+    }
   }
   message(sprintf("EnsembleMerge method scores %f out of 1", wt[[length(wt)]]))
+  if(!is.na(file)){
+    score = as.data.frame(c(method = "EnsembleMerge", weight = wt[[length(wt)]]), nrow = 2) %>% t()
+    rownames(score) = NULL
+    write.table(score, file = file, append = TRUE, sep = ",", col.names = FALSE, row.names = FALSE)
+  }
 
   if(return == "SingleCellExperiment"){
     S4Vectors::metadata(data)$EnsembleMerge <- ng

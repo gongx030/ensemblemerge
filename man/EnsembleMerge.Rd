@@ -7,7 +7,10 @@
 EnsembleMerge(
   data,
   methods = c("Seurat", "Harmony"),
-  return = "SingleCellExperiment"
+  return = "SingleCellExperiment",
+  a = 1,
+  b = 1,
+  file = NA
 )
 }
 \arguments{

@@ -35,8 +35,8 @@ import scanorama
 import pandas as pd
 import scanpy as sc
 
-sc.pp.filter_cells(adata, min_genes=min_genes)
-sc.pp.filter_genes(adata, min_cells=min_cells)
+#sc.pp.filter_cells(adata, min_genes=min_genes)
+#sc.pp.filter_genes(adata, min_cells=min_cells)
 
 
 groups = adata.obs.groupby(batch).indices
