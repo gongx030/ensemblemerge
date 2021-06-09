@@ -1,3 +1,5 @@
+<img src = "ensemblemerge_graphics_v2.png" width = "250" height = "200" align = "right" />
+
 <!-- badges: start -->
 [![Build Status](https://travis-ci.com/erikjskie/ensemblemerge.svg?token=TzArZ5EDidamcqdAtCie&branch=main)](https://travis-ci.com/github/erikjskie/ensemblemerge)
 [![Project Status: Work In Progress – The project is in a usable state and is being actively developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
