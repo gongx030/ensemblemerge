@@ -2,12 +2,15 @@
 % Please edit documentation in R/ensemblemerge.R
 \name{EnsembleMerge}
 \alias{EnsembleMerge}
-\title{Run enhsemblemerge functions}
+\title{Run ensemblemerge functions}
 \usage{
 EnsembleMerge(
   data,
   methods = c("Seurat", "Harmony"),
-  return = "SingleCellExperiment"
+  return = "SingleCellExperiment",
+  a = 1,
+  b = 1,
+  file = NA
 )
 }
 \arguments{
@@ -17,5 +20,5 @@ EnsembleMerge(
 returns a SummarizedExperiment object of the integrated data
 }
 \description{
-Run enhsemblemerge functions
+Run ensemblemerge functions
 }
