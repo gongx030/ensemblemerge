@@ -30,6 +30,7 @@ env:
     - HDF5_RELEASE_URL="https://support.hdfgroup.org/ftp/HDF5/releases"
 
 before_install:
+    - sudo apt-get install libhdf5-dev
 
 addons:
   apt:
