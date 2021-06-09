@@ -6,6 +6,7 @@ cache: packages
 
 os:
   - linux
+  - osx
 
 r:
   - release
@@ -14,6 +15,7 @@ r:
 matrix:
   exclude:
     - r: devel
+    - os: osx
 
 env:
   global:
@@ -22,6 +24,8 @@ env:
     - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
     - HDF5_VERSION=1.8.17
     - HDF5_RELEASE_URL="https://support.hdfgroup.org/ftp/HDF5/releases"
+
+before_install:
 
 addons:
   apt:
@@ -47,7 +51,6 @@ bioc_packages:
   - SingleCellExperiment
 
 r_github_packages:
-  - immunogenics/harmony
   - cellgeni/sceasy
   - rstudio/reticulate
 
