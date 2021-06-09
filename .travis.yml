@@ -28,6 +28,7 @@ env:
     - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
     - HDF5_VERSION=1.8.17
     - HDF5_RELEASE_URL="https://support.hdfgroup.org/ftp/HDF5/releases"
+    - CODECOV_TOKEN='bf47a518-93fc-408a-8b4f-ba0ffaec0cda'
 
 before_install:
     - sudo apt-get install libhdf5-dev
