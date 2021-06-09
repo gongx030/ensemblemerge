@@ -10,12 +10,18 @@ os:
 
 r:
   - release
-  - devel
   
+
+notifications:
+email:
+on_success: change
+on_failure: change
+    
+
 matrix:
   exclude:
     - r: devel
-    - os: osx
+      os: osx
 
 env:
   global:
@@ -46,12 +52,14 @@ bioc_packages:
 #  - S4Vectors
   - knitr
   - LoomExperiment
-  - batchelor
   - SummarizedExperiment
   - SingleCellExperiment
 
 r_github_packages:
   - cellgeni/sceasy
   - rstudio/reticulate
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
 
 warnings_are_errors: false
