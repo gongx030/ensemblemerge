@@ -6,7 +6,6 @@ cache: packages
 
 os:
   - linux
-  - osx
 
 r:
   - release
@@ -21,7 +20,6 @@ on_failure: change
 matrix:
   exclude:
     - r: devel
-      os: osx
 
 env:
   global:
