@@ -21,9 +21,11 @@ Imports:
     sceasy,
     SparseM,
     reticulate
-suggests:
-    harmony,
-    kBET
+remotes:
+    github::immunogenics/harmony,
+	github::satijalab/seurat-wrappers,
+	github::rstudio/reticulate
+
 Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
 Encoding: UTF-8
