@@ -22,9 +22,9 @@ Imports:
     SparseM,
     reticulate
 remotes:
-    github::immunogenics/harmony,
-	github::satijalab/seurat-wrappers,
-	github::rstudio/reticulate
+    github::immunogenomics/harmony,
+    github::satijalab/seurat-wrappers,
+    github::rstudio/reticulate
 
 Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
