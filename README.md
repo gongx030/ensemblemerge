@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/erikjskie/ensemblemerge.svg?token=TzArZ5EDidamcqdAtCie&branch=main)](https://travis-ci.com/github/erikjskie/ensemblemerge)
 [![codecov](https://codecov.io/gh/erikjskie/ensemblemerge/branch/main/graph/badge.svg?token=J1H0OAEQ5S)](https://codecov.io/gh/erikjskie/ensemblemerge)
+[![Project Status: Work In Progress – The project is in a usable state and is being actively developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 # ensemblemerge
 ensemblemerge is a package that implements a common work flow for several single cell RNA sequence integration methods including Seurat V3, Scanorama, Harmony, Liger, fastMNN, and bbknn. The merging process is designed to be as streamlined as possible for the user, only requiring a **SummarizedExperiment**, **SingleCellExperiment**, or **Seurat** object and a specification of which method should be used to integrate in `setParams()`.
 
