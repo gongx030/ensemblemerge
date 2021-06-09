@@ -6,7 +6,6 @@ cache: packages
 
 os:
   - linux
-  - osx
 
 r:
   - release
@@ -15,7 +14,6 @@ r:
 matrix:
   exclude:
     - r: devel
-      os: osx
 
 env:
   global:
