@@ -9,6 +9,8 @@ ensemblemerge is a package that implements a common work flow for several single
 
 **Instructions, documentation, and examples can be found online at: [EnsembleMerge](https://erikjskie.github.io/packages/ensemblemerge/)**
 
+**Docker images of pre-built package environments are found online at: [DockerHub](https://hub.docker.com/repository/docker/skiex003/ensemblemerge)**
+
 ## Prerequisites
 The following R packages are required for installation of ensemblemerge:
 
