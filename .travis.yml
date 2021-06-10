@@ -44,7 +44,6 @@ bioc_packages:
 #  - DESeq2
 #  - MAST
 #  - S4Vectors
-  - knitr
   - LoomExperiment
   - SummarizedExperiment
   - SingleCellExperiment
