@@ -9,8 +9,7 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Depends:
     R (>= 3.6.0),
-    methods,
-    Matrix (>= 1.3.3)
+    methods
 Imports:
     rliger,
     dplyr,
@@ -20,7 +19,8 @@ Imports:
     SingleCellExperiment,
     sceasy,
     SparseM,
-    reticulate
+    reticulate,
+    Matrix (>= 1.3.3)
 remotes:
     github::immunogenomics/harmony,
     github::satijalab/seurat-wrappers,
