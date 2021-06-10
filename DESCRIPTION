@@ -19,12 +19,7 @@ Imports:
     SingleCellExperiment,
     sceasy,
     SparseM,
-    reticulate,
-    Matrix (>= 1.3.3)
-remotes:
-    github::immunogenomics/harmony,
-    github::satijalab/seurat-wrappers,
-    github::rstudio/reticulate
+    reticulate
 Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
 Encoding: UTF-8
