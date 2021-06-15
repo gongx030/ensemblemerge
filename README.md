@@ -16,7 +16,7 @@ ensemblemerge is a package that implements a common work flow for several single
 ## Prerequisites
 The following R packages are required for installation of ensemblemerge:
 
-```{R}
+```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install(c("SingleCellExperiment", "SummarizedExperiment", "LoomExperiment"))
@@ -26,21 +26,21 @@ devtools::install_github("cellgeni/sceasy")
 
 The following packages are necessary only if using the following Merge methods:
   * For Harmony:
-  ```{R}
+  ```r
   devtools::install_github("immunogenomics/harmony")
   ```
   * For Scanorama:
-  ```{Python}
-  pip3 install scanpy
-  pip3 install scanorama
+  ```r
+  system("pip3 install scanpy")
+  system("pip3 install scanorama")
   ```
   * For bbknn:
   For R
-  ```{R}
+  ```r
   remotes::install_github("rstudio/reticulate") #increases available memory
   ```
   Python Packages
-  ```{Python}
+  ```r
   system("pip3 install pynndescent") #optimizes dimension reduction
   system("pip3 install leidenalg") #optional clustering algorithm that improves bbknn performance
   ```
@@ -48,7 +48,7 @@ The following packages are necessary only if using the following Merge methods:
 
 Once ensemblemerge is installed, merging batches can be performed by the following:
 
-```{R}
+```r
 library(ensemblemerge)
 
 data #some SingleCellExperiment or SummarizedExperiment object with batches to be integrated
