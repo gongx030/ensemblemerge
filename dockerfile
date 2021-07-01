@@ -19,4 +19,4 @@ RUN apt-get -y update -qq \
 	 remotes::install_version('Seurat', version = '4.0.1') \
 	 remotes::install_github('satijalab/seurat-wrappers') \
 	 remotes::install_github('cellgeni/sceasy') \
-	 remotes::install_github('erikjskie/ensemblemerge', auth_token = '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', force = FALSE, ref = 'development')"
+	 remotes::install_github('erikjskie/ensemblemerge', force = FALSE, ref = 'development')"
