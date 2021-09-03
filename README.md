@@ -46,6 +46,15 @@ The following packages are necessary only if using the following Merge methods:
   ```
 ## Quick start guide
 
+Once ensemblemerge is currently under reveiw for cran submission, currently ensemblemerge can be installed by:
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("devtools")
+devtools::install_github("erikjskie/ensemblemerge", force = FALSE)
+```
+
 Once ensemblemerge is installed, merging batches can be performed by the following:
 
 ```r
