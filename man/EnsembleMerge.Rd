@@ -11,7 +11,8 @@ EnsembleMerge(
   a = 1,
   b = 1,
   file = NA,
-  normalization_method = "logratio",
+  normalization_method = "LogNormalize",
+  latent = FALSE,
   ...
 )
 }

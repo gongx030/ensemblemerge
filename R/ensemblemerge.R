@@ -27,7 +27,7 @@ getParams <- function(){
 #' @param x SummarizedExpirement object containing single cell counts matrix
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
-EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Seurat", a = 1, b = 1, file = NA, normalization_method = "logratio", ...){
+EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Seurat", a = 1, b = 1, file = NA, normalization_method = "LogNormalize", latent = FALSE, ...){
 
   #* Add error if methods is not of class character or xParams
   if(class(methods) != "character" & class(methods) != "list"){
@@ -77,15 +77,8 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Seur
     }
 
   ng = lapply(methods, function(ng){
-    if(!is.na(normalization_method) & normalization_method == "CLR"){
-      ng = getNeighborGraph(ng, data, normalization_method)
-    }
-    else{
-      ng = getNeighborGraph(ng, data)
-    }
-     
+    ng = getNeighborGraph(ng, data, normalization_method, latent)
   })
-
 
   agreement = function(x){
     temp = base::Reduce(rbind, lapply(x, summary))
