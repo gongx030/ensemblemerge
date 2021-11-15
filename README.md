@@ -60,9 +60,10 @@ Once ensemblemerge is installed, merging batches can be performed by the followi
 ```r
 library(ensemblemerge)
 
-data #some SingleCellExperiment or SummarizedExperiment object with batches to be integrated
+#merge with single method
+pbmc #small 500 cell by 500 feature, 2 batch dataset
 
-params = setParams() #different integration methods can be selected by setting method = c("Seurat", "Harmony", "Liger", "Scanorama", "BBKNN")
+params = setParams(method = "Seurat"), return = "Seurat") #different integration methods can be selected by setting method, see methods by calling getMethods()
 
 merged_data = Merge(params, data)
 ```
