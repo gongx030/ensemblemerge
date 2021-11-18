@@ -65,5 +65,7 @@ pbmc #small 500 cell by 500 feature, 2 batch dataset
 
 params = setParams(method = "Seurat"), return = "Seurat") #different integration methods can be selected by setting method, see methods by calling getMethods()
 
-merged_data = Merge(params, data)
+merged_data = Merge(params, pbmc)
+
+ensemblemerged_data = EnsembleMerge(params, methods = c("Seurat", "Harmony", "BBKNN"), return = "Seurat")
 ```
