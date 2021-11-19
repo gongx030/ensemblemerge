@@ -67,5 +67,5 @@ params = setParams(method = "Seurat"), return = "Seurat") #different integration
 
 merged_data = Merge(params, pbmc)
 
-ensemblemerged_data = EnsembleMerge(params, methods = c("Seurat", "Harmony", "BBKNN"), return = "Seurat")
+ensemblemerged_data = EnsembleMerge(pbmc, methods = c("Seurat", "Harmony", "BBKNN"), return = "Seurat")
 ```
