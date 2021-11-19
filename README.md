@@ -13,6 +13,8 @@ ensemblemerge is a package that implements a common work flow for several single
 
 **Docker images of pre-built package environments are found online at: [DockerHub](https://hub.docker.com/repository/docker/skiex003/ensemblemerge)**
 
+**An example vignette can be found here: [preview ](https://github.com/erikjskie/ensemblemerge/blob/main/EnsembleMerge_Example_Vignette.ipynb)|[ colab](https://colab.research.google.com/github/erikjskie/ensemblemerge/blob/main/EnsembleMerge_Example_Vignette.ipynb)**
+
 ## Prerequisites
 The following R packages are required for installation of ensemblemerge:
 
