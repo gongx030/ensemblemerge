@@ -5,5 +5,5 @@
 \alias{FastMNNParams-class}
 \title{FastMNNParams}
 \description{
-FastMNNParams
+parameters class for fastMNN integration
 }

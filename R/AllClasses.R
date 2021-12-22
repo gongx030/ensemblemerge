@@ -1,6 +1,10 @@
 #' parent
-
 #' 
+#' set base params object
+#'
+#' @slot batch character name of batch in dataset metadata
+#' @slot dimreduc_names name of dimension reduction in metadata, i.e. "PCA"
+#' @slot return data type to return, can be Seurat or SingleCellExperiment 
 #'
 #' @export
 setClass(
@@ -21,6 +25,13 @@ setClass(
 
 #' SeuratMerge
 #'
+#' class for merging dataset with Seurat
+#'
+#' @slot npcs number of principle components to use in dimension reduction
+#' @slot seed value to set for seed for umap
+#' @slot dims number of dimensions used in seurat preprocessing
+#' @slot k.weight weight for neighbor function
+#'
 #' @export
 setClass(
 	'SeuratMerge', 
@@ -38,6 +49,16 @@ setClass(
 )
 
 #' SeuratNormalize
+#'
+#' normalization class for Seurat
+#'
+#' @slot norm_data boolean check to run data normalization
+#' @slot scaling boolean check to scale data
+#' @slot regressUMI boolean check to regress the UMI counts
+#' @slot min_cells threshold to set the minimum number of cells a gene needs to be present in
+#' @slot min_genes threshold of minimum number of genes in cells
+#' @slot norm_method set normalization method, default is "LogNormalize"
+#' @slot scale_factor factor for scaling
 #'
 #' @export
 setClass(
@@ -63,6 +84,12 @@ setClass(
 
 #' SeuratHVG
 #'
+#' Highly variable gene selection class for Seurat
+#'
+#' @slot numVG number of variable genes for integration
+#' @slot numHVG number of highly variable genes to select for downstream analysis
+#'
+#'
 #' @export
 setClass(
 	'SeuratHVG', 
@@ -77,6 +104,11 @@ setClass(
 
 #' SeuratParams
 #'
+#' base class for Seurat processing
+#'
+#' @slot altExp_names name(s) for additional experiment object in dataset to keep in downstream analysis
+#'
+#'
 #' @export
 setClass(
 	'SeuratParams', 
@@ -89,6 +121,15 @@ setClass(
 )
 
 #' HarmonyMerge
+#'
+#' merge class for Harmony
+#'
+#' @slot theta_harmony diversity clustering penalty parameter, larger values increase diversity
+#' @slot npcs number of principle components to use in umap
+#' @slot seed set seed value for umap clustering
+#' @slot num_clust number of clusters to use in harmony integration
+#' @slot max_iter_cluster maximum number of learning iterations per cluster
+#'
 #'
 #' @export
 setClass(
@@ -110,6 +151,9 @@ setClass(
 
 #' HarmonyParams
 #'
+#' base parameters class for harmony integration
+#'
+#'
 #' @export
 setClass(
 	'HarmonyParams', 
@@ -121,6 +165,12 @@ setClass(
 )
 
 #' UncorrectedParams
+#'
+#' parameters class for uncorrected integration
+#'
+#' @slot vars_to_regress list of names or name of metadata elements to regress
+#' @slot hvg boolean to check if hvg selection should be performed
+#'
 #'
 #' @export
 setClass(
@@ -137,6 +187,10 @@ setClass(
 
 #' FastMNNParams
 #'
+#' parameters class for fastMNN integration
+#'
+#'
+#'
 #' @export
 setClass(
 	'FastMNNParams', 
@@ -147,6 +201,9 @@ setClass(
 
 #' LigerNormalize
 #'
+#' parameters class for liger normalization
+#'
+#'
 #' @export
 setClass(
 	'LigerNormalize', 
@@ -156,6 +213,10 @@ setClass(
 )
 
 #' LigerHVG
+#'
+#' parameters class for liger highly variable gene
+#'
+#' @slot var_threshold theshold for variance of each gene in selecting variable features
 #'
 #' @export
 setClass(
@@ -168,6 +229,13 @@ setClass(
 )
 
 #' LigerMerge
+#'
+#' parameters class for liger merge
+#'
+#' @slot k number of clustrs for liger merge
+#' @slot nrep number of restarts to perform
+#' @slot lambda Regularization parameter. Larger values penalize dataset-specific effects more strongly
+#'
 #'
 #' @export
 setClass(
@@ -184,6 +252,8 @@ setClass(
 )
 
 #' LigerParams
+#'
+#' parameters class for liger operations
 #'
 #' @export
 setClass(
@@ -285,28 +355,6 @@ setClass(
             name = "Scanorama")
 )
 
-#' SMILEParams
-#'
-#' @export
-setClass(
-	'SMILEParams', 
-	representation(min_cells = "numeric",
-          min_genes = "numeric",
-          batch_size = "numeric",
-          return_dense = "logical",
-          knn = "numeric",
-          svd_solver = "character",
-          npcs = "numeric"),
-	contains = c('parent'),
-  prototype(min_genes = 300,
-            min_cells = 5,
-            batch_size = 30,
-            return_dense = TRUE,
-            knn = 10,
-            svd_solver = "arpack",
-            npcs = 20,
-            name = "SMILE")
-)
 
 #' scVIParams
 #'

@@ -5,5 +5,19 @@
 \alias{HarmonyMerge-class}
 \title{HarmonyMerge}
 \description{
-HarmonyMerge
+merge class for Harmony
 }
+\section{Slots}{
+
+\describe{
+\item{\code{theta_harmony}}{diversity clustering penalty parameter, larger values increase diversity}
+
+\item{\code{npcs}}{number of principle components to use in umap}
+
+\item{\code{seed}}{set seed value for umap clustering}
+
+\item{\code{num_clust}}{number of clusters to use in harmony integration}
+
+\item{\code{max_iter_cluster}}{maximum number of learning iterations per cluster}
+}}
+

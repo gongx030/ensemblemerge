@@ -5,5 +5,13 @@
 \alias{SeuratHVG-class}
 \title{SeuratHVG}
 \description{
-SeuratHVG
+Highly variable gene selection class for Seurat
 }
+\section{Slots}{
+
+\describe{
+\item{\code{numVG}}{number of variable genes for integration}
+
+\item{\code{numHVG}}{number of highly variable genes to select for downstream analysis}
+}}
+

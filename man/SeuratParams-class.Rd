@@ -5,5 +5,11 @@
 \alias{SeuratParams-class}
 \title{SeuratParams}
 \description{
-SeuratParams
+base class for Seurat processing
 }
+\section{Slots}{
+
+\describe{
+\item{\code{altExp_names}}{name(s) for additional experiment object in dataset to keep in downstream analysis}
+}}
+

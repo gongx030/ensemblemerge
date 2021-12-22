@@ -5,5 +5,5 @@
 \alias{HarmonyParams-class}
 \title{HarmonyParams}
 \description{
-HarmonyParams
+base parameters class for harmony integration
 }

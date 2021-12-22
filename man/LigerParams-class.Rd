@@ -5,5 +5,5 @@
 \alias{LigerParams-class}
 \title{LigerParams}
 \description{
-LigerParams
+parameters class for liger operations
 }

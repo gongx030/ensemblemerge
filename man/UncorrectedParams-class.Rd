@@ -5,5 +5,13 @@
 \alias{UncorrectedParams-class}
 \title{UncorrectedParams}
 \description{
-UncorrectedParams
+parameters class for uncorrected integration
 }
+\section{Slots}{
+
+\describe{
+\item{\code{vars_to_regress}}{list of names or name of metadata elements to regress}
+
+\item{\code{hvg}}{boolean to check if hvg selection should be performed}
+}}
+

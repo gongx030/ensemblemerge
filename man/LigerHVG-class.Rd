@@ -5,5 +5,11 @@
 \alias{LigerHVG-class}
 \title{LigerHVG}
 \description{
-LigerHVG
+parameters class for liger highly variable gene
 }
+\section{Slots}{
+
+\describe{
+\item{\code{var_threshold}}{theshold for variance of each gene in selecting variable features}
+}}
+

@@ -5,5 +5,17 @@
 \alias{SeuratMerge-class}
 \title{SeuratMerge}
 \description{
-SeuratMerge
+class for merging dataset with Seurat
 }
+\section{Slots}{
+
+\describe{
+\item{\code{npcs}}{number of principle components to use in dimension reduction}
+
+\item{\code{seed}}{value to set for seed for umap}
+
+\item{\code{dims}}{number of dimensions used in seurat preprocessing}
+
+\item{\code{k.weight}}{weight for neighbor function}
+}}
+

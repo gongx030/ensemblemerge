@@ -5,5 +5,23 @@
 \alias{SeuratNormalize-class}
 \title{SeuratNormalize}
 \description{
-SeuratNormalize
+normalization class for Seurat
 }
+\section{Slots}{
+
+\describe{
+\item{\code{norm_data}}{boolean check to run data normalization}
+
+\item{\code{scaling}}{boolean check to scale data}
+
+\item{\code{regressUMI}}{boolean check to regress the UMI counts}
+
+\item{\code{min_cells}}{threshold to set the minimum number of cells a gene needs to be present in}
+
+\item{\code{min_genes}}{threshold of minimum number of genes in cells}
+
+\item{\code{norm_method}}{set normalization method, default is "LogNormalize"}
+
+\item{\code{scale_factor}}{factor for scaling}
+}}
+

@@ -45,27 +45,10 @@ p3 <- Seurat::DimPlot(uncorrected, reduction = "umap", pt.size = 0.5, shuffle = 
 p1 + p2 + p3
 ```
 
-```{r}
-## run Harmony integration
-params = setParams(method = "Harmony", return = "Seurat") #set params object with individaul integration method and return seurat object
-Harmony = Merge(params, pbmc) # merging dataset with harmony
-Harmony <- RunUMAP(Harmony, reduction = "harmony", dims = 1:20, seed.use = 1) # create umap
-Harmony <- FindNeighbors(Harmony, reduction = 'umap', dims = 1:2, verbose = FALSE) # finding neighbors for clustering umap
-Harmony <- FindClusters(Harmony, algorithm = 3, resolution = 0.01, verbose = FALSE) # finding clusters in umap
-Harmony$cluster <- Idents(Harmony) # assign cluster data to umap
 
-## plotting Harmony
-Seurat::Idents(Harmony) = "batch"
-p1 <- Seurat::DimPlot(Harmony, reduction = "umap", pt.size = 0.5, shuffle = TRUE) + ggplot2::ggtitle(label = "Harmony Batch")
-Seurat::Idents(Harmony) = "CellType"
-p2 <- Seurat::DimPlot(Harmony, reduction = "umap", pt.size = 0.5, shuffle = TRUE) + ggplot2::ggtitle(label = "Harmony Cell Type")
-Seurat::Idents(Harmony) = "cluster"
-p3 <- Seurat::DimPlot(Harmony, reduction = "umap", pt.size = 0.5, shuffle = TRUE) + ggplot2::ggtitle(label = "Harmony Cluster")
-p1 + p2 + p3
-```
 ```{r}
 # run ensemblemerge
-test = EnsembleMerge(pbmc, methods = c("Seurat", "Harmony"), return = "Seurat") # running ensemblemerge with Seurat and Harmony methods
+test = EnsembleMerge(pbmc, methods = c("Seurat", "Liger"), return = "Seurat") # running ensemblemerge with Seurat and Harmony methods
 ```
 
 ```{r}

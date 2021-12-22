@@ -5,5 +5,15 @@
 \alias{parent-class}
 \title{parent}
 \description{
-parent
+set base params object
 }
+\section{Slots}{
+
+\describe{
+\item{\code{batch}}{character name of batch in dataset metadata}
+
+\item{\code{dimreduc_names}}{name of dimension reduction in metadata, i.e. "PCA"}
+
+\item{\code{return}}{data type to return, can be Seurat or SingleCellExperiment}
+}}
+

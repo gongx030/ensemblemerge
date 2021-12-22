@@ -5,5 +5,5 @@
 \alias{LigerNormalize-class}
 \title{LigerNormalize}
 \description{
-LigerNormalize
+parameters class for liger normalization
 }

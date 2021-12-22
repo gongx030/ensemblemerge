@@ -5,5 +5,15 @@
 \alias{LigerMerge-class}
 \title{LigerMerge}
 \description{
-LigerMerge
+parameters class for liger merge
 }
+\section{Slots}{
+
+\describe{
+\item{\code{k}}{number of clustrs for liger merge}
+
+\item{\code{nrep}}{number of restarts to perform}
+
+\item{\code{lambda}}{Regularization parameter. Larger values penalize dataset-specific effects more strongly}
+}}
+
