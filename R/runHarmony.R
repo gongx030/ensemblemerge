@@ -16,6 +16,7 @@ harmony_preprocess <- function(x,
                               norm_method = "LogNormalize", scale_factor = 10000, 
                               nfeatures = 300)
 {
+  checkParams('harmony', '0.1.0', 'R')
   b_seurat = x
 
   if(class(b_seurat) != "Seurat"){

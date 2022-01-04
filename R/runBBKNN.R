@@ -11,6 +11,7 @@
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 run_BBKNN <- function(params, data){
+  checkParams('bbknn', '1.5.1', 'Python')
   ### load up python environment ###
   reticulate::py_config()
   sc <- reticulate::import("scanpy", delay_load = TRUE)

@@ -14,7 +14,7 @@ seurat3_preprocess <- function(x,
                               batch_label = "batchlb", celltype_label = "CellType",
                               hvg = T, k.weight = 100)
 {
-
+  checkParams('Seurat', '4.0.1', 'R')
   ##########################################################
   # preprocessing
   batches = x
