@@ -19,28 +19,10 @@ ensemblemerge is a package that implements a common work flow for several single
 The following R packages are required for installation of ensemblemerge:
 
 ```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install(c("SingleCellExperiment", "SummarizedExperiment", "LoomExperiment"))
 devtools::install_github('satijalab/seurat-wrappers')
-devtools::install_github("cellgeni/sceasy")
 ```
 
 The following packages are necessary only if using the following Merge methods:
-  * For Scanorama:
-  ```r
-  system("pip install scanpy")
-  system("pip install scanorama")
-  ```
-  * For Scvi:
-  ```r
-  system("pip install scvi")
-  ```
-  * For bbknn:
-  For R
-  ```r
-  remotes::install_github("rstudio/reticulate") #increases available memory
-  ```
   Python Packages
   ```r
   system("pip install pynndescent") #optimizes dimension reduction
