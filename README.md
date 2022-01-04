@@ -27,14 +27,14 @@ devtools::install_github("cellgeni/sceasy")
 ```
 
 The following packages are necessary only if using the following Merge methods:
-  * For Harmony:
-  ```r
-  devtools::install_github("immunogenomics/harmony")
-  ```
   * For Scanorama:
   ```r
-  system("pip3 install scanpy")
-  system("pip3 install scanorama")
+  system("pip install scanpy")
+  system("pip install scanorama")
+  ```
+  * For Scvi:
+  ```r
+  system("pip install scvi")
   ```
   * For bbknn:
   For R
@@ -43,9 +43,17 @@ The following packages are necessary only if using the following Merge methods:
   ```
   Python Packages
   ```r
-  system("pip3 install pynndescent") #optimizes dimension reduction
-  system("pip3 install leidenalg") #optional clustering algorithm that improves bbknn performance
+  system("pip install pynndescent") #optimizes dimension reduction
+  system("pip install leidenalg") #optional clustering algorithm that improves bbknn performance
   ```
+  
+preconfigured environments are available here:
+| Configuration | OS | 
+| --- | --- |
+| [base](base_environment.yml) | Linux (Ubuntu 18.04) |
+| [full methods](full_environment.yml) | Linux (Ubuntu 18.04) |
+
+  
 ## Quick start guide
 
 Once ensemblemerge is currently under reveiw for cran submission, currently ensemblemerge can be installed by:
@@ -54,7 +62,7 @@ Once ensemblemerge is currently under reveiw for cran submission, currently ense
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("devtools")
-devtools::install_github("erikjskie/ensemblemerge", force = FALSE)
+devtools::install_github("erikjskie/ensemblemerge")
 ```
 
 Once ensemblemerge is installed, merging batches can be performed by the following:
