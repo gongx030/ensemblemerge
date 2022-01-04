@@ -13,7 +13,11 @@ install_python_packages <- function(){
   system("pip3 install scanorama")
   system("pip3 install anndata")
   system("pip3 install bbknn")
+  system("pip3 install scvi")
 }
 
 .onLoad <- function(libname, pkgname) {
+  install_python_packages()
+  devtools::install_github("cellgeni/sceasy")
+  devtools::install_github('satijalab/seurat-wrappers')
 }
