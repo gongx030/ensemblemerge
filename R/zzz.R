@@ -6,14 +6,14 @@ bbknn <- NULL
 
 #' @export
 install_python_packages <- function(){
-  system("pip3 install scipy")
-  system("pip3 install pandas")
-  system("pip3 install numpy")
-  system("pip3 install scanpy")
-  system("pip3 install scanorama")
-  system("pip3 install anndata")
-  system("pip3 install bbknn")
-  system("pip3 install scvi")
+  reticulate::py_install("scipy")
+  reticulate::py_install("pandas")
+  reticulate::py_install("numpy")
+  reticulate::py_install("scanpy")
+  reticulate::py_install("scanorama")
+  reticulate::py_install("anndata")
+  reticulate::py_install("bbknn")
+  reticulate::py_install("scvi")
 }
 
 .onLoad <- function(libname, pkgname) {
