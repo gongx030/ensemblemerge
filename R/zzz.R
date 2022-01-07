@@ -10,9 +10,9 @@ install_python_packages <- function(){
   reticulate::py_install("pandas")
   reticulate::py_install("numpy")
   reticulate::py_install("scanpy")
-  reticulate::py_install("scanorama")
-  reticulate::py_install("anndata")
-  reticulate::py_install("bbknn")
+  system("pip install scanorama")
+  system("pip install anndata")
+  system("pip install bbknn")
   system("pip install scipy")
 }
 
