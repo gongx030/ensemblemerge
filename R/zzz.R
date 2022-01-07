@@ -19,5 +19,6 @@ install_python_packages <- function(){
 .onLoad <- function(libname, pkgname) {
   install_python_packages()
   devtools::install_github("cellgeni/sceasy")
+  install.packages("rsvd")
   devtools::install_github('satijalab/seurat-wrappers')
 }
