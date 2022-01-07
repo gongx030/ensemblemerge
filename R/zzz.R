@@ -13,7 +13,7 @@ install_python_packages <- function(){
   reticulate::py_install("scanorama")
   reticulate::py_install("anndata")
   reticulate::py_install("bbknn")
-  reticulate::py_install("scvi")
+  system("pip install scipy")
 }
 
 .onLoad <- function(libname, pkgname) {
