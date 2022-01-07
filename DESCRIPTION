@@ -20,7 +20,6 @@ Imports:
     magrittr (>= 2.0.0),
     SummarizedExperiment (>= 1.20.0),
     SingleCellExperiment (>= 1.12.0),
-    sceasy (>= 0.0.6),
     reticulate (>= 1.20.9000),
     devtools (>= 2.3.2),
     harmony (>= 0.1.0)
