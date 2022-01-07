@@ -33,7 +33,7 @@ preconfigured environments are available here:
 | Configuration | OS | R Version | 
 | --- | --- | --- |
 | [base](Linux_4_0_4_environment.yml) | Linux (Ubuntu 18.04) | 4.0.4 |
-| [full methods](environment.yml) | Linux (Ubuntu 18.04) | 4.1.1 |
+| [base](environment.yml) | Linux (Ubuntu 18.04) | 4.1.1 |
 
   
 ## Quick start guide
