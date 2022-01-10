@@ -1,4 +1,4 @@
-name: ensemblemerge_testing_R_4.1.1_v9
+name: ensemblemerge_testing_R_4.1.1_v11
 channels:
   - anaconda
   - conda-forge

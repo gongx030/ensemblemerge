@@ -58,7 +58,7 @@ A Seurat object with embeddings from \code{\link[liger]{quantile_norm}}
 stored as a DimReduc object with name \code{reduction.name} (key set to \code{reduction.key})
 }
 \description{
-Run quantile_norm on a Seurat object
+Credit to WelchLab/rLiger, this code will be replaced in future updates
 }
 \seealso{
 \code{\link[rliger]{quantile_norm}}
