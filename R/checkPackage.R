@@ -13,16 +13,28 @@ checkPackage <- function(package, version, language = "R") {
         {
           if(!packageVersion(package)>=version){
             message(paste("Later version for package is recommended: ", package))
-            message(paste("Please install package version: ", version, " to use this feature", sep = ""))
+            #message(paste("Please install package version: ", version, " to use this feature", sep = ""))
+	    input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+            if(input == "y" | input == "Y"){
+               BiocManager::install(package)
+            }
           }
         },
         error=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
-            message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
+            #message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
+            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+            if(input == "y" | input == "Y"){
+               BiocManager::install(package)
+            }
         },
         warning=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
             message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
+            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+            if(input == "y" | input == "Y"){
+               BiocManager::install(package)
+            }
         },
         finally={
         }
@@ -34,16 +46,28 @@ checkPackage <- function(package, version, language = "R") {
 	  reticulate::py_run_string(paste("import ", package, "; version = ", package, ".__version__", sep = ""))
           if(!py$version>=version){
             message(paste("Later version for package is recommended: ", package))
-            message(paste("Please install package version: ", version, " to use this feature", sep = ""))
+            #message(paste("Please install package version: ", version, " to use this feature", sep = ""))
+            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+            if(input == "y" | input == "Y"){
+               reticulate::py_install(package, pip = TRUE)
+            }
           }
         },
         error=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
-            message(paste("Please install the packages to use to this feature: pip install ", package, "==", version, sep = ""))
+            #message(paste("Please install the packages to use to this feature: pip install ", package, "==", version, sep = ""))
+            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+            if(input == "y" | input == "Y"){
+               reticulate::py_install(package, pip = TRUE)
+            }
         },
         warning=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
             message(paste("Please install the packages to use to this feature: pip install ", package, "==", version, sep = ""))
+            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+            if(input == "y" | input == "Y"){
+               reticulate::py_install(package, pip = TRUE)
+            }
         },
         finally={
         }

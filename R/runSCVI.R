@@ -8,6 +8,7 @@
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 run_scVI <- function(params, data){
+  checkParams('anndata', '0.7.0', 'Python')
   checkParams('scvi', '0.6.0', 'Python')
   reticulate::py_config()
   scvi <- reticulate::import('scvi', delay_load = TRUE)

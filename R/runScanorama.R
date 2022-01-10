@@ -9,6 +9,7 @@
 #' @export
 run_Scanorama <- function(params, data){
   ### load up python environment ###
+  checkParams('anndata', '0.7.0', 'Python')
   checkParams('scanorama', '1.7.1', 'Python')
   reticulate::py_config()
   sc <- reticulate::import("scanpy", delay_load = TRUE)

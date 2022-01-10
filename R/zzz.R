@@ -1,8 +1,4 @@
 #' on load initialization of reticulate environment
-sc <- NULL
-sr <- NULL
-ad <- NULL
-bbknn <- NULL
 
 #' @export
 install_python_packages <- function(){
@@ -17,7 +13,6 @@ install_python_packages <- function(){
 }
 
 .onLoad <- function(libname, pkgname) {
-  install_python_packages()
   devtools::install_github("cellgeni/sceasy")
-  devtools::install_github('satijalab/seurat-wrappers')
+  #devtools::install_github('satijalab/seurat-wrappers')
 }
