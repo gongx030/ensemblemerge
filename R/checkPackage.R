@@ -13,6 +13,12 @@ checkPackage <- function(package, version, language = "R") {
         {
           if(!packageVersion(package)>=version){
             message(paste("Later version for package is recommended: ", package))
+            if(package == "sceasy"){
+               input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+               if(input == "y" | input == "Y"){
+                 devtools::install_github("cellgeni/sceasy")
+               }
+            }
             #message(paste("Please install package version: ", version, " to use this feature", sep = ""))
 	    input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
             if(input == "y" | input == "Y"){
@@ -22,6 +28,12 @@ checkPackage <- function(package, version, language = "R") {
         },
         error=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
+            if(package == "sceasy"){
+               input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+               if(input == "y" | input == "Y"){
+                 devtools::install_github("cellgeni/sceasy")
+               }
+            }
             #message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
             input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
             if(input == "y" | input == "Y"){
@@ -30,6 +42,12 @@ checkPackage <- function(package, version, language = "R") {
         },
         warning=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
+            if(package == "sceasy"){
+               input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+               if(input == "y" | input == "Y"){
+                 devtools::install_github("cellgeni/sceasy")
+               }
+            }
             message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
             input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
             if(input == "y" | input == "Y"){
