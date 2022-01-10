@@ -19,10 +19,17 @@ checkPackage <- function(package, version, language = "R") {
                  devtools::install_github("cellgeni/sceasy")
                }
             }
-            #message(paste("Please install package version: ", version, " to use this feature", sep = ""))
-	    input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
-            if(input == "y" | input == "Y"){
-               BiocManager::install(package)
+            if(package == "seurat-wrappers"){
+               input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+               if(input == "y" | input == "Y"){
+                 devtools::install_github('satijalab/seurat-wrappers')
+               }
+            }
+            else {
+              input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+              if(input == "y" | input == "Y"){
+                 BiocManager::install(package)
+              }
             }
           }
         },
@@ -34,10 +41,17 @@ checkPackage <- function(package, version, language = "R") {
                  devtools::install_github("cellgeni/sceasy")
                }
             }
-            #message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
-            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
-            if(input == "y" | input == "Y"){
-               BiocManager::install(package)
+            if(package == "seurat-wrappers"){
+               input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+               if(input == "y" | input == "Y"){
+                 devtools::install_github('satijalab/seurat-wrappers')
+               }
+            }
+            else {
+              input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+              if(input == "y" | input == "Y"){
+                 BiocManager::install(package)
+              }
             }
         },
         warning=function(cond) {
@@ -48,10 +62,17 @@ checkPackage <- function(package, version, language = "R") {
                  devtools::install_github("cellgeni/sceasy")
                }
             }
-            message(paste("Please install the packages to use to this feature: install.packages('", package, "')", sep = ""))
-            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
-            if(input == "y" | input == "Y"){
-               BiocManager::install(package)
+            if(package == "seurat-wrappers"){
+               input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+               if(input == "y" | input == "Y"){
+                 devtools::install_github('satijalab/seurat-wrappers')
+               }
+            }
+            else {
+              input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+              if(input == "y" | input == "Y"){
+                 BiocManager::install(package)
+              }
             }
         },
         finally={
