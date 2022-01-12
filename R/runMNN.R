@@ -8,7 +8,7 @@
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 preprocess_MNN <- function(params, data){
-  checkParams('seurat-wrappers', '0.0.0', 'R')
+  checkPackage('seurat-wrappers', '0.0.0', 'R')
 
   if(class(data) != "Seurat"){
     data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
