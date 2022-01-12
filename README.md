@@ -30,10 +30,10 @@ The following packages are necessary only if using the following Merge methods:
   ```
   
 preconfigured environments are available here:
-| Configuration | OS | 
-| --- | --- |
-| [base](base_environment.yml) | Linux (Ubuntu 18.04) |
-| [full methods](full_environment.yml) | Linux (Ubuntu 18.04) |
+| Configuration | OS | R Version | 
+| --- | --- | --- |
+| [base](Linux_4_0_4_environment.yml) | Linux (Ubuntu 18.04) | 4.0.4 |
+| [base](environment.yml) | Linux (Ubuntu 18.04) | 4.1.1 |
 | [base](base_macOS.yml) | macOS Big Sur |
 
   
