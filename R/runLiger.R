@@ -8,7 +8,7 @@
 #' @return returns a SingleCellExperiment object of the integrated data
 #' @export
 run_Liger <- function(params, data){
-  checkPackage('seurat-wrappers', '0.0.0', 'R')
+  checkPackage('SeuratWrappers', '0.3.0', 'R')
   
   if(class(data) != "Seurat"){
     data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)

@@ -8,7 +8,7 @@
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
 run_Uncorrected <- function(params, data){
-  checkParams('Seurat', '4.0.1', 'R')
+  checkPackage('Seurat', '4.0.1', 'R')
   if(class(data) != "Seurat"){
     data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
   }

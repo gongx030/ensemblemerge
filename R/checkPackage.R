@@ -19,7 +19,7 @@ checkPackage <- function(package, version, language = "R") {
                  devtools::install_github("cellgeni/sceasy")
                }
             }
-            if(package == "seurat-wrappers"){
+            if(package == "SeuratWrappers"){
                input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
                if(input == "y" | input == "Y"){
                  devtools::install_github('satijalab/seurat-wrappers')
@@ -41,7 +41,7 @@ checkPackage <- function(package, version, language = "R") {
                  devtools::install_github("cellgeni/sceasy")
                }
             }
-            if(package == "seurat-wrappers"){
+            if(package == "SeuratWrappers"){
                input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
                if(input == "y" | input == "Y"){
                  devtools::install_github('satijalab/seurat-wrappers')
@@ -82,15 +82,16 @@ checkPackage <- function(package, version, language = "R") {
   else if(language == "Python"){
     out <- tryCatch(
         {
-	  reticulate::py_run_string(paste("import ", package, "; version = ", package, ".__version__", sep = ""))
-          if(!py$version>=version){
-            message(paste("Later version for package is recommended: ", package))
-            #message(paste("Please install package version: ", version, " to use this feature", sep = ""))
-            input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
-            if(input == "y" | input == "Y"){
-               reticulate::py_install(package, pip = TRUE)
-            }
-          }
+	  #reticulate::py_run_string(paste("import ", package, "; version = ", package, ".__version__", sep = ""))
+	  reticulate::import(package)
+          #if(!py$version>=version){
+          #  message(paste("Later version for package is recommended: ", package))
+          #  #message(paste("Please install package version: ", version, " to use this feature", sep = ""))
+          #  input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
+          #  if(input == "y" | input == "Y"){
+          #     reticulate::py_install(package, pip = TRUE)
+          #  }
+          #}
         },
         error=function(cond) {
             message(paste("Package does not seem to be installed: ", package))
