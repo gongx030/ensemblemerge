@@ -30,10 +30,10 @@ pbmc
 ## run uncorrected method
 params = setParams(method = "Uncorrected", return = "Seurat") #set params object without integration method and return seurat object
 uncorrected = Merge(params, pbmc) # normalizing and scaling data, running pca
-uncorrected <- RunUMAP(uncorrected, reduction = "pca", dims = 1:20, seed.use = 1) # create umap
-uncorrected <- FindNeighbors(uncorrected, reduction = 'umap', dims = 1:2, verbose = FALSE) # finding neighbors for clustering umap
-uncorrected <- FindClusters(uncorrected, algorithm = 3, resolution = 0.01, verbose = FALSE) # finding clusters in umap
-uncorrected$cluster <- Idents(uncorrected) # assign cluster data to umap
+uncorrected <- Seurat::RunUMAP(uncorrected, reduction = "pca", dims = 1:20, seed.use = 1) # create umap
+uncorrected <- Seurat::FindNeighbors(uncorrected, reduction = 'umap', dims = 1:2, verbose = FALSE) # finding neighbors for clustering umap
+uncorrected <- Seurat::FindClusters(uncorrected, algorithm = 3, resolution = 0.01, verbose = FALSE) # finding clusters in umap
+uncorrected$cluster <- Seurat::Idents(uncorrected) # assign cluster data to umap
 
 ## plotting uncorrected method
 Seurat::Idents(uncorrected) = "batch"
@@ -47,6 +47,8 @@ p1 + p2 + p3
 
 
 ```{r}
+library(magrittr)
+library(Seurat)
 # run ensemblemerge
 test = EnsembleMerge(pbmc, methods = c("Seurat", "Liger"), return = "Seurat") # running ensemblemerge with Seurat and Harmony methods
 ```
