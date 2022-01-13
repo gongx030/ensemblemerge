@@ -47,7 +47,6 @@ p1 + p2 + p3
 
 
 ```{r}
-library(magrittr)
 library(Seurat)
 # run ensemblemerge
 test = EnsembleMerge(pbmc, methods = c("Seurat", "Liger"), return = "Seurat") # running ensemblemerge with Seurat and Harmony methods
