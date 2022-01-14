@@ -53,6 +53,8 @@ run_Liger <- function(params, data){
 #'
 #' Credit to WelchLab/rLiger, this code will be replaced in future updates
 #'
+#' @import Seurat
+#'
 #' @inheritParams rliger::optimizeALS
 #' @param object A merged Seurat object
 #' @param split.by Attribute for splitting, defaults to "orig.ident"
@@ -144,6 +146,8 @@ RunOptimizeALS <- function(
 #' Run quantile_norm on a Seurat object
 #'
 #' Credit to WelchLab/rLiger, this code will be replaced in future updates
+#'
+#' @import Seurat
 #'
 #' @inheritParams RunOptimizeALS
 #' @inheritParams rliger::quantile_norm
