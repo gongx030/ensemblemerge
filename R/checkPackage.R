@@ -101,7 +101,7 @@ checkPackage <- function(package, version, language = "R") {
             #message(paste("Please install the packages to use to this feature: pip install ", package, "==", version, sep = ""))
             input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
             if(input == "y" | input == "Y"){
-               reticulate::py_install(package, pip = TRUE)
+               reticulate::py_install(sprintf("%s==%s",package, version), pip = TRUE)
             }
         },
         warning=function(cond) {
@@ -109,7 +109,7 @@ checkPackage <- function(package, version, language = "R") {
             message(paste("Please install the packages to use to this feature: pip install ", package, "==", version, sep = ""))
             input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
             if(input == "y" | input == "Y"){
-               reticulate::py_install(package, pip = TRUE)
+               reticulate::py_install(sprintf("%s==%s",package, version), pip = TRUE)
             }
         },
         finally={
