@@ -15,6 +15,7 @@ seurat3_preprocess <- function(x,
                               hvg = T, k.weight = 100)
 {
   checkPackage('Seurat', '4.0.1', 'R')
+  library(Seurat)
   ##########################################################
   # preprocessing
   batches = x

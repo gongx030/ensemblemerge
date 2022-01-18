@@ -16,7 +16,7 @@ checkPackage <- function(package, version, language = "R") {
             if(package == "sceasy"){
                input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
                if(input == "y" | input == "Y"){
-		 BiocManager::install("LoomExperiment")
+				 BiocManager::install("LoomExperiment")
                  devtools::install_github("cellgeni/sceasy")
                }
             }
@@ -39,7 +39,7 @@ checkPackage <- function(package, version, language = "R") {
             if(package == "sceasy"){
                input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
                if(input == "y" | input == "Y"){
-		 BiocManager::install("LoomExperiment")
+				 BiocManager::install("LoomExperiment")
                  devtools::install_github("cellgeni/sceasy")
                }
             }
@@ -61,11 +61,11 @@ checkPackage <- function(package, version, language = "R") {
             if(package == "sceasy"){
                input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
                if(input == "y" | input == "Y"){
-		 BiocManager::install("LoomExperiment")
+				 BiocManager::install("LoomExperiment")
                  devtools::install_github("cellgeni/sceasy")
                }
             }
-            if(package == "seurat-wrappers"){
+            if(package == "SeuratWrappers"){
                input <- readline(prompt=paste("Would you like to install package version: ", version, " to use this feature? (Y or N)", sep = ""))
                if(input == "y" | input == "Y"){
                  devtools::install_github('satijalab/seurat-wrappers')

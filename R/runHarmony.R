@@ -17,6 +17,7 @@ harmony_preprocess <- function(x,
                               nfeatures = 300)
 {
   checkPackage('harmony', '0.1.0', 'R')
+  library(Seurat)
   b_seurat = x
 
   if(class(b_seurat) != "Seurat"){

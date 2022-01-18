@@ -9,6 +9,7 @@
 #' @export
 preprocess_MNN <- function(params, data){
   checkPackage('SeuratWrappers', '0.3.0', 'R')
+  library(Seurat)
 
   if(class(data) != "Seurat"){
     data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
