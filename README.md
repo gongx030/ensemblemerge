@@ -33,7 +33,7 @@ preconfigured environments are available here:
 | Configuration | OS | R Version | 
 | --- | --- | --- |
 | [base](Linux_4_0_4_environment.yml) | Linux (Ubuntu 18.04) | 4.0.4 |
-| [base](environment.yml) | Linux (Ubuntu 18.04) | 4.1.1 |
+| [base](Linux_4_1_1_environment.yml) | Linux (Ubuntu 18.04) | 4.1.1 |
 | [base](base_macOS.yml) | macOS Big Sur | 4.1.1 |
 | [base](base_macOS_R_4_0_5.yml) | macOS Big Sur | 4.0.5 |
 
