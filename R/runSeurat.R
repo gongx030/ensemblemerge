@@ -91,7 +91,7 @@ run_Seurat <- function(params, data){
                           return(integrated)
                         }
                         else if(params@return == "SingleCellExperiment"){
-                          RNA = Seurat::as.SingleCellExperiment(integrated, assay = "RNA")
+                          RNA = Seurat::as.SingleCellExperiment(integrated)
                           integrated = Seurat::as.SingleCellExperiment(integrated)
                           SingleCellExperiment::altExp(integrated, params@altExp_names) = RNA
                           return(integrated)
