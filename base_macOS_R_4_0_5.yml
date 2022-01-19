@@ -1,8 +1,8 @@
-name: ensemblemerge_R_4.0.5
+name: ensemblemerge_R4.0.5
 channels:
   - anaconda
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - _r-mutex=1.0.1
   - bwidget=1.9.14
@@ -10,15 +10,15 @@ dependencies:
   - c-ares=1.18.1
   - ca-certificates=2021.10.8
   - cairo=1.16.0
-  - cctools_osx-64=973.0.1
+  - cctools_osx-64=949.0.1
   - certifi=2016.9.26
-  - clang=12.0.1
-  - clang-12=12.0.1
-  - clang_osx-64=12.0.1
-  - clangxx=12.0.1
-  - clangxx_osx-64=12.0.1
-  - compiler-rt=12.0.1
-  - compiler-rt_osx-64=12.0.1
+  - clang=12.0.0
+  - clang-12=12.0.0
+  - clang_osx-64=12.0.0
+  - clangxx=12.0.0
+  - clangxx_osx-64=12.0.0
+  - compiler-rt=12.0.0
+  - compiler-rt_osx-64=12.0.0
   - curl=7.81.0
   - font-ttf-dejavu-sans-mono=2.37
   - font-ttf-inconsolata=3.000
@@ -42,13 +42,14 @@ dependencies:
   - jbig=2.1
   - jpeg=9d
   - krb5=1.19.2
-  - ld64_osx-64=609
+  - ld64_osx-64=530
+  - ldid=2.1.2
   - lerc=3.0
   - libblas=3.9.0
   - libcblas=3.9.0
-  - libclang-cpp12=12.0.1
+  - libclang-cpp12=12.0.0
   - libcurl=7.81.0
-  - libcxx=12.0.1
+  - libcxx=12.0.0
   - libdeflate=1.8
   - libedit=3.1.20191231
   - libev=4.33
@@ -60,7 +61,7 @@ dependencies:
   - libglib=2.70.2
   - libiconv=1.16
   - liblapack=3.9.0
-  - libllvm12=12.0.1
+  - libllvm12=12.0.0
   - libnghttp2=1.43.0
   - libopenblas=0.3.18
   - libpng=1.6.37
@@ -70,7 +71,7 @@ dependencies:
   - libxml2=2.9.12
   - libzlib=1.2.11
   - llvm-openmp=12.0.1
-  - llvm-tools=12.0.1
+  - llvm-tools=12.0.0
   - lz4-c=1.9.3
   - make=4.3
   - mpc=1.2.1
@@ -80,10 +81,9 @@ dependencies:
   - pango=1.48.10
   - pcre=8.45
   - pcre2=10.37
-  - pip=21.3.1
+  - pip=21.2.2
   - pixman=0.40.0
   - python=3.6.15
-  - python_abi=3.6
   - r-askpass=1.1
   - r-assertthat=0.2.1
   - r-backports=1.4.1
@@ -175,15 +175,14 @@ dependencies:
   - r-xopen=1.0.0
   - r-yaml=2.2.1
   - r-zip=2.2.0
-  - readline=8.1
-  - setuptools=49.6.0
-  - sigtool=0.1.2
+  - readline=8.1.2
+  - setuptools=58.0.4
   - sqlite=3.37.0
-  - tapi=1100.0.11
+  - tapi=1000.10.8
   - tk=8.6.11
   - tktable=2.10
   - wheel=0.37.1
   - xz=5.2.5
   - zlib=1.2.11
   - zstd=1.5.1
-prefix: /Users/dsouz072/opt/anaconda3/envs/ensemblemerge_R_4.0.5
+prefix: /Users/dsouz072/miniconda3/envs/ensemblemerge_R4.0.5
