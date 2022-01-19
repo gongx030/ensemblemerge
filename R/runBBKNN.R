@@ -12,7 +12,7 @@
 #' @export
 run_BBKNN <- function(params, data){
   checkPackage('sceasy', '0.0.6', "R")
-  checkPackage('anndata', '0.7.0', 'Python')
+  checkPackage('anndata', '0.7.6', 'Python')
   checkPackage('bbknn', '1.5.1', 'Python')
   ### load up python environment ###
   reticulate::py_config()
