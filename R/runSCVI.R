@@ -9,8 +9,8 @@
 #' @export
 run_scVI <- function(params, data){
   checkPackage('sceasy', '0.0.6', "R")
-  checkPackage('anndata', '0.7.0', 'Python')
-  checkPackage('scvi', '0.6.0', 'Python')
+  checkPackage('anndata', '0.7.6', 'Python')
+  checkPackage('scvi', '0.6.8', 'Python')
   reticulate::py_config()
   scvi <- reticulate::import('scvi', delay_load = TRUE)
   anndata <- reticulate::import("anndata", delay_load = TRUE, convert = FALSE)
