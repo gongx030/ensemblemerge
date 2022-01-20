@@ -1,4 +1,4 @@
-name: ensemblemerge_R4.0.5
+name: ensemblemerge_test_4_0_5
 channels:
   - anaconda
   - conda-forge
@@ -11,14 +11,14 @@ dependencies:
   - ca-certificates=2021.10.8
   - cairo=1.16.0
   - cctools_osx-64=949.0.1
-  - certifi=2016.9.26
-  - clang=12.0.0
-  - clang-12=12.0.0
-  - clang_osx-64=12.0.0
-  - clangxx=12.0.0
-  - clangxx_osx-64=12.0.0
-  - compiler-rt=12.0.0
-  - compiler-rt_osx-64=12.0.0
+  - certifi=2021.5.30
+  - clang=11.1.0
+  - clang-11=11.1.0
+  - clang_osx-64=11.1.0
+  - clangxx=11.1.0
+  - clangxx_osx-64=11.1.0
+  - compiler-rt=11.1.0
+  - compiler-rt_osx-64=11.1.0
   - curl=7.81.0
   - font-ttf-dejavu-sans-mono=2.37
   - font-ttf-inconsolata=3.000
@@ -47,6 +47,7 @@ dependencies:
   - lerc=3.0
   - libblas=3.9.0
   - libcblas=3.9.0
+  - libclang-cpp11.1=11.1.0
   - libclang-cpp12=12.0.0
   - libcurl=7.81.0
   - libcxx=12.0.0
@@ -61,6 +62,7 @@ dependencies:
   - libglib=2.70.2
   - libiconv=1.16
   - liblapack=3.9.0
+  - libllvm11=11.1.0
   - libllvm12=12.0.0
   - libnghttp2=1.43.0
   - libopenblas=0.3.18
@@ -71,7 +73,7 @@ dependencies:
   - libxml2=2.9.12
   - libzlib=1.2.11
   - llvm-openmp=12.0.1
-  - llvm-tools=12.0.0
+  - llvm-tools=11.1.0
   - lz4-c=1.9.3
   - make=4.3
   - mpc=1.2.1
@@ -84,6 +86,7 @@ dependencies:
   - pip=21.2.2
   - pixman=0.40.0
   - python=3.6.15
+  - python_abi=3.6
   - r-askpass=1.1
   - r-assertthat=0.2.1
   - r-backports=1.4.1
@@ -178,11 +181,11 @@ dependencies:
   - readline=8.1.2
   - setuptools=58.0.4
   - sqlite=3.37.0
-  - tapi=1000.10.8
+  - tapi=1100.0.11
   - tk=8.6.11
   - tktable=2.10
   - wheel=0.37.1
   - xz=5.2.5
   - zlib=1.2.11
   - zstd=1.5.1
-prefix: /Users/dsouz072/miniconda3/envs/ensemblemerge_R4.0.5
+prefix: /Users/dsouz072/miniconda3/envs/ensemblemerge_test_4_0_5
