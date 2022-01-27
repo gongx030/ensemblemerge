@@ -1,39 +1,28 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single package
-Version: 1.0.1.6
-Authors@R: 
-    person(given = "Erik",
-           family = "Skie",
-           role = c("aut", "cre"),
-           email = "skiex003@umn.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Version: 1.0.1.7
+Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
+Maintainer: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Depends:
-    R (>= 4.0.4),
-    methods (>= 4.0.4)
+  R (>= 4.0.4),
+  methods
 biocViews:
 Imports:
-    Matrix (>= 1.3.3),
-    SparseM (>= 1.81),
-    rliger (>= 1.0.0),
-    dplyr (>= 1.0.6),
-    Seurat (>= 4.0.1),
-    magrittr (>= 2.0.0),
-    SummarizedExperiment (>= 1.20.0),
-    SingleCellExperiment (>= 1.12.0),
-    reticulate (>= 1.20.9000),
-    devtools (>= 2.3.2),
-    harmony (>= 0.1.0),
-	ggplot2 (>= 3.0.0)
+  Matrix, 
+  dplyr, 
+  SingleCellExperiment,
+  reticulate,
+  Seurat (>= 4.0.1)
 Description: Integrates existing sc-RNAseq integration methods into a single package
 License: MIT License
 Encoding: UTF-8
 LazyData: true
-Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests: 
-    knitr,
-    covr,
-    testthat (>= 3.0.0),
-    rmarkdown
-Config/testthat/edition: 3
-VignetteBuilder: knitr
+  knitr,
+  covr,
+  testthat (>= 3.0.0),
+  rmarkdown,
+  rliger (>= 1.0.0),
+  magrittr (>= 2.0.0),
+  harmony (>= 0.1.0)

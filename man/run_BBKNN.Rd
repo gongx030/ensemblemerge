@@ -2,7 +2,7 @@
 % Please edit documentation in R/runBBKNN.R
 \name{run_BBKNN}
 \alias{run_BBKNN}
-\title{Run Seurat V3 functions}
+\title{Run BBKNN integration}
 \usage{
 run_BBKNN(params, data)
 }
@@ -15,5 +15,5 @@ run_BBKNN(params, data)
 returns a SummarizedExperiment object of the integrated data
 }
 \description{
-Run Seurat V3 functions
+Run BBKNN integration
 }

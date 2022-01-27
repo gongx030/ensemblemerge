@@ -1,54 +1,212 @@
-#' parent
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validity
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#' @importFrom reticulate py_config py_run_string
+#'
+check_package <- function(object){
+
+	if (length(object@package_name) == 0){
+		return(NULL)
+
+	}else{
+
+		if (length(object@package_version ) == 0){
+			txt <- 'package version is empty'
+			return(txt)
+		}
+
+		if (inherits(object, 'RPackage')){
+
+			is_available <- require(object@package_name, character.only = TRUE)
+	
+			if (!is_available){
+				txt <- sprintf('R package %s is not available', object@package_name)
+				return(txt)
+			}else{
+				if (packageVersion(object@package_name) < object@package_version){
+					txt <- sprintf('R package %s must have version >= %s', object@package_name, object@package_version)
+					return(txt)
+				}
+			}
+		}else if (inherits(object, 'PythonPackage')){
+
+			res <- sprintf('pip show %s', object@package_name) %>% 
+				system(intern = TRUE)
+
+			is_available <- is.null(attr(res, 'status'))
+
+			if (!is_available){
+				txt <- sprintf('Python package %s is not available', object@package_name)
+				return(txt)
+			}else{
+	
+				version <- sprintf('pip show %s', object@package_name) %>% 
+					system(intern = TRUE)
+				version <- gsub('Version: ', '', version[2])
+	
+				if (version < object@package_version){
+					txt <- sprintf('Python  package %s must have version >= %s', object@package_name, object@package_version)
+					return(txt)
+				}
+			}
+		}
+	}
+	return(NULL)
+}
+
+.check_dependences <- function(object){
+
+	res <- lapply(1:length(object@dependences), function(i){
+		check_package(object@dependences[[i]])
+	})
+
+	res <- res[!sapply(res, is.null)]
+	if (length(res) == 0){
+		TRUE
+	}else{
+		for (i in 1:length(res)){
+			res[[i]] %>% message()
+		}
+		return('missing packages')
+	}
+}
+
+
+#' RPackage
 #' 
-#' set base params object
+#' The base params object for R packages
+#'
+#' @slot package_name The package name
+#' @slot package_version The package version
+#'
+setClass(
+	'RPackage', 
+	representation(
+    package_name = "character",
+		package_version = 'character'
+	)
+)
+
+
+#' PythonPackage
+#' 
+#' The base params object for python packages
+#'
+#' @slot package_name The package name
+#' @slot package_version The package version
+#' @slot conda The conda environment
+#'
+setClass(
+	'PythonPackage', 
+	representation(
+    package_name = "character",
+		package_version = 'character'
+	)
+)
+
+#' BaseMerge 
+#' 
+#' set base merge params object
 #'
 #' @slot batch character name of batch in dataset metadata
 #' @slot dimreduc_names name of dimension reduction in metadata, i.e. "PCA"
 #' @slot return data type to return, can be Seurat or SingleCellExperiment 
+#' @slot npcs number of principle components to use in dimension reduction
+#' @slot latent whether or not use latent representation to construct the neighboring graph
 #'
-#' @export
 setClass(
-	'parent', 
+	'BaseMerge', 
 	representation(
 		batch = "character",
     dimreduc_names = "character",
     return = "character",
-    name = "character"
+		dependences = 'list',
+		name = 'character',
+		npcs = 'integer',
+		latent = 'logical',
+		umap_name = 'character',
+		umap_key = 'character',
+		umap_dim = 'integer',
+		snn_name = 'character',
+		knn_name = 'character'
 	),
-  prototype(batch = "batch",
-            dimreduc_names = c("PCA" = "pca",
-                              "UMAP" = "umap",
-                              "tSNE" = "tsne"),
-            return = "SingleCellExperiment",
-            name = "parent")
+  prototype(
+		batch = "batch",
+		dimreduc_names = c(
+			"PCA" = "pca",
+			"UMAP" = "umap",
+			"tSNE" = "tsne"
+		),
+		return = "SingleCellExperiment",
+		npcs = 20L,
+		latent = FALSE,
+		umap_dim = 2L
+	),
+	validity = .check_dependences
 )
+
+
+setMethod('initialize', 'BaseMerge', function(.Object, ...){
+	.Object <- callNextMethod()
+	.Object@umap_name <- sprintf('%sUMAP', .Object@name)
+	.Object@umap_key <- sprintf('%sUMAP_', .Object@name)
+	.Object@snn_name <- sprintf('%sSNN', .Object@name)
+	.Object@knn_name <- sprintf('%sKNN', .Object@name)
+	return(.Object)
+})
+
 
 #' SeuratMerge
 #'
 #' class for merging dataset with Seurat
 #'
-#' @slot npcs number of principle components to use in dimension reduction
 #' @slot seed value to set for seed for umap
 #' @slot dims number of dimensions used in seurat preprocessing
 #' @slot k.weight weight for neighbor function
 #'
-#' @export
 setClass(
 	'SeuratMerge', 
 	representation(
-		npcs = "numeric",
-    seed = "numeric",
-    dims = "numeric",
+    seed = "integer",
+    dims = "integer",
     k.weight = "numeric"
 	),
-	contains = c('parent'),
-  prototype(npcs = 20, 
-            seed = 10,
-            dims = 20,
-            k.weight = 100)
+	contains = 'BaseMerge',
+  prototype(
+		seed = 10L,
+		dims = 20L,
+		k.weight = 100,
+		name = 'Seurat'
+	)
 )
 
-#' SeuratNormalize
+
+
+#' BasePreprocess
+#' 
+#' set base normalize params object
+#'
+setClass(
+	'BasePreprocess', 
+	representation(
+    min_cells = "integer",
+    min_genes = "integer",
+		norm_data = "logical",
+    scaling = "logical",
+    norm_method = "character",
+    scale_factor = "numeric"
+	),
+  prototype(
+    min_cells = 10L,
+    min_genes = 300L,
+		norm_data = TRUE,
+		scaling = TRUE,
+		norm_method = "LogNormalize",
+		scale_factor = 10000
+	)
+)
+
+#' SeuratPreprocess
 #'
 #' normalization class for Seurat
 #'
@@ -59,47 +217,54 @@ setClass(
 #' @slot min_genes threshold of minimum number of genes in cells
 #' @slot norm_method set normalization method, default is "LogNormalize"
 #' @slot scale_factor factor for scaling
-#'
-#' @export
-setClass(
-	'SeuratNormalize', 
-	representation(
-		norm_data = "logical",
-    scaling = "logical",
-    regressUMI = "logical",
-    min_cells = "numeric",
-    min_genes = "numeric",
-    norm_method = "character",
-    scale_factor = "numeric"
-	),
-	contains = c('parent'),
-  prototype(norm_data = TRUE,
-            scaling = TRUE,
-            regressUMI = FALSE,
-            min_cells = 10,
-            min_genes = 300,
-            norm_method = "LogNormalize",
-            scale_factor = 10000)
-)
-
-#' SeuratHVG
-#'
-#' Highly variable gene selection class for Seurat
-#'
+#' @slot vars_to_regress list of names or name of metadata elements to regress
 #' @slot numVG number of variable genes for integration
 #' @slot numHVG number of highly variable genes to select for downstream analysis
 #'
+setClass(
+	'SeuratPreprocess', 
+	representation(
+    regressUMI = "logical",
+		vars_to_regress = 'character',
+    numVG = "integer",
+    numHVG = "integer",
+		selection.method = 'character'
+	),
+	contains = c('BasePreprocess'),
+  prototype(
+		regressUMI = FALSE,
+		vars_to_regress = 'nUMI',
+		numVG = 300L,
+		numHVG = 2000L,
+		selection.method = 'vst'
+	)
+)
+
+
+#' ScanpyPreprocess
 #'
 #' @export
 setClass(
-	'SeuratHVG', 
+	'ScanpyPreprocess', 
 	representation(
-    numVG = "numeric",
-    numHVG = "numeric"
+    svd_solver = "character",
+    nhvg = "integer",
+    n_neighbors = "integer",
+		min_mean = 'numeric',
+		max_mean = 'integer',
+		min_disp = 'numeric'
 	),
-	contains = c('parent'),
-  prototype(numVG = 300,
-            numHVG = 2000)
+	contains = 'BasePreprocess',
+  prototype(
+		min_genes = 200L,
+		min_cells  = 3L,
+		svd_solver = "arpack",
+		nhvg = 2000L,
+		n_neighbors = 10L,
+		min_mean = 0.0125, 
+		max_mean = 3L, 
+		min_disp = 0.5
+	)
 )
 
 #' SeuratParams
@@ -110,22 +275,27 @@ setClass(
 #'
 #'
 #' @export
+#'
 setClass(
 	'SeuratParams', 
-	representation(altExp_names = "character"),
-	contains = c('SeuratNormalize',
-                'SeuratHVG',
-                'SeuratMerge'),
-  prototype(altExp_names = "RNA",
-  name = "Seurat")
+	representation(
+		altExp_names = "character"
+	),
+  prototype(
+		altExp_names = "RNA",
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'SeuratMerge')
 )
+
 
 #' HarmonyMerge
 #'
 #' merge class for Harmony
 #'
 #' @slot theta_harmony diversity clustering penalty parameter, larger values increase diversity
-#' @slot npcs number of principle components to use in umap
 #' @slot seed set seed value for umap clustering
 #' @slot num_clust number of clusters to use in harmony integration
 #' @slot max_iter_cluster maximum number of learning iterations per cluster
@@ -136,17 +306,18 @@ setClass(
 	'HarmonyMerge', 
 	representation(
     theta_harmony = "numeric",
-    npcs = "numeric",
-    seed = "numeric",
-    num_clust = "numeric",
-    max_iter_cluster = "numeric"
+    num_clust = "integer",
+    max_iter_cluster = "integer",
+    seed = "numeric"
 	),
-	contains = c('parent'),
-  prototype(theta_harmony = 2,
-            num_clust = 50,
-            max_iter_cluster = 100,
-            npcs = 20,
-            seed = 10)
+	contains = c('BaseMerge'),
+  prototype(
+		theta_harmony = 2,
+		num_clust = 50L,
+		max_iter_cluster = 100L,
+		seed = 10,
+		name = 'Harmony'
+	)
 )
 
 #' HarmonyParams
@@ -157,82 +328,92 @@ setClass(
 #' @export
 setClass(
 	'HarmonyParams', 
-	representation(),
-	contains = c('SeuratNormalize',
-                'SeuratHVG',
-                'HarmonyMerge'),
-                prototype(name = "Harmony")
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
+			new('RPackage', package_name = 'harmony', package_version = '0.1.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'HarmonyMerge')
 )
+
+#' UncorrectedMerge
+#'
+#' class for merging dataset without any correction 
+#'
+setClass(
+	'UncorrectedMerge', 
+	representation(
+	),
+	prototype(
+		name = 'Uncorrected'
+	),
+	contains = c('BaseMerge')
+)
+
 
 #' UncorrectedParams
 #'
 #' parameters class for uncorrected integration
 #'
-#' @slot vars_to_regress list of names or name of metadata elements to regress
 #' @slot hvg boolean to check if hvg selection should be performed
 #'
 #'
 #' @export
 setClass(
 	'UncorrectedParams', 
-	representation(vars_to_regress = "character",
-                hvg = "logical"),
-	contains = c('SeuratNormalize',
-                'SeuratHVG',
-                'SeuratMerge'),
-  prototype(vars_to_regress = c("nUMI"),
-                                hvg = TRUE,
-                                name = "Uncorrected")
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'UncorrectedMerge')
 )
+
+#' FastMNNMerge
+#'
+#' class for merging dataset with fastMNN
+#'
+setClass(
+	'FastMNNMerge', 
+	representation(
+    n_neighbors = "integer"
+	),
+	contains = c('BaseMerge'),
+  prototype(
+		n_neighbors = 20L,
+		name = 'FastMNN'
+	)
+)
+
 
 #' FastMNNParams
 #'
 #' parameters class for fastMNN integration
 #'
-#'
-#'
 #' @export
 setClass(
 	'FastMNNParams', 
-	representation(),
-	contains = c('UncorrectedParams'),
-  prototype(name = "FastMNN")
-)
-
-#' LigerNormalize
-#'
-#' parameters class for liger normalization
-#'
-#'
-#' @export
-setClass(
-	'LigerNormalize', 
 	representation(
 	),
-	contains = c('parent')
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
+			new('RPackage', package_name = 'SeuratWrappers', package_version = '0.3.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'FastMNNMerge')
 )
 
-#' LigerHVG
-#'
-#' parameters class for liger highly variable gene
-#'
-#' @slot var_threshold theshold for variance of each gene in selecting variable features
-#'
-#' @export
-setClass(
-	'LigerHVG', 
-	representation(
-    var_threshold = "numeric"
-	),
-	contains = c('parent'),
-  prototype(var_threshold = 0.1)
-)
 
 #' LigerMerge
 #'
 #' parameters class for liger merge
 #'
-#' @slot k number of clustrs for liger merge
 #' @slot nrep number of restarts to perform
 #' @slot lambda Regularization parameter. Larger values penalize dataset-specific effects more strongly
 #'
@@ -241,14 +422,15 @@ setClass(
 setClass(
 	'LigerMerge', 
 	representation(
-    k = "numeric",
-    nrep = "numeric",
+    nrep = "integer",
     lambda = "numeric"
 	),
-	contains = c('parent'),
-  prototype(k = 20,
-            nrep = 3,
-            lambda = 5)
+	contains = c('BaseMerge'),
+  prototype(
+		nrep = 3L,
+		lambda = 5,
+		name = 'LIGER'
+	)
 )
 
 #' LigerParams
@@ -258,39 +440,18 @@ setClass(
 #' @export
 setClass(
 	'LigerParams', 
-	representation(),
-	contains = c('LigerNormalize',
-                'LigerHVG',
-                'LigerMerge',
-                'UncorrectedParams'),
-  prototype(name = "Liger")
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
+			new('RPackage', package_name = 'rliger', package_version = '1.0.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'LigerMerge')
 )
 
-#' BBKNNNormalize
-#'
-#' @export
-setClass(
-	'BBKNNNormalize', 
-	representation(
-    min_genes = "numeric",
-    min_cells = "numeric",
-    svd_solver = "character",
-    scale_factor = "numeric",
-    npcs = "numeric",
-    nhvg = "numeric",
-    n_neighbors = "numeric",
-    confounder_key = "character"
-	),
-	contains = c('parent'),
-  prototype(min_genes = 300,
-            min_genes = 5,
-            svd_solver = "arpack",
-            scale_factor = 10000,
-            npcs = 20,
-            nhvg = 2000,
-            n_neighbors = 10,
-            confounder_key = "leiden")
-)
+
 
 #' BBKNNMerge
 #'
@@ -305,17 +466,22 @@ setClass(
     trim = "numeric",
     graph_name = "character",
     nn_name = "character",
-    ridge_regress = "logical"
+    ridge_regress = "logical",
+    confounder_key = "character"
 	),
-	contains = c('parent'),
-  prototype(save_knn = TRUE,
-            copy = TRUE,
-            neighbors_within_batch = 5,
-            approx = FALSE,
-            trim = 50,
-            graph_name = "bbknn_graph",
-            nn_name = "bbknn",
-            ridge_regress = TRUE)
+	contains = 'BaseMerge', 
+  prototype(
+		save_knn = TRUE,
+		copy = TRUE,
+		neighbors_within_batch = 5,
+		approx = FALSE,
+		trim = 50,
+		graph_name = "bbknn_graph",
+		nn_name = "bbknn",
+		ridge_regress = TRUE,
+		confounder_key = "leiden",
+		name = 'BBKNN'
+	)
 )
 
 #' BBKNNParams
@@ -323,11 +489,35 @@ setClass(
 #' @export
 setClass(
 	'BBKNNParams', 
-	representation(),
-	contains = c('BBKNNNormalize',
-              'SeuratNormalize',
-              'BBKNNMerge'),
-  prototype(name = "bbknn")
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
+			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
+			new('PythonPackage', package_name = 'scanpy', package_version = '1.8'),
+			new('PythonPackage', package_name = 'bbknn', package_version = '1.5.1'),
+			new('PythonPackage', package_name = 'leidenalg', package_version = '0.8.8'),
+			new('RPackage', package_name = 'zellkonverter', package_version = '1.4.0'),
+			new('RPackage', package_name = 'basilisk', package_version = '1.6.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'BBKNNMerge')
+)
+
+
+
+#' ScanoramaMerge
+#'
+#' @export
+setClass(
+	'ScanoramaMerge',
+	representation(
+	),
+	contains = c('BaseMerge'),
+  prototype(
+		name = "Scanorama"
+	)
 )
 
 #' ScanoramaParams
@@ -335,50 +525,87 @@ setClass(
 #' @export
 setClass(
 	'ScanoramaParams', 
-	representation(min_cells = "numeric",
-          min_genes = "numeric",
-          batch_size = "numeric",
-          return_dense = "logical",
-          knn = "numeric",
-          svd_solver = "character",
-          npcs = "numeric",
-          nhvg = "numeric"),
-	contains = c('parent'),
-  prototype(min_genes = 300,
-            min_cells = 5,
-            batch_size = 30,
-            return_dense = TRUE,
-            knn = 10,
-            svd_solver = "arpack",
-            npcs = 20,
-            nhvg = 2000,
-            name = "Scanorama")
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
+			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
+			new('PythonPackage', package_name = 'scanpy', package_version = '1.8'),
+			new('PythonPackage', package_name = 'scanorama', package_version = '1.7.1'),
+			new('RPackage', package_name = 'zellkonverter', package_version = '1.4.0'),
+			new('RPackage', package_name = 'basilisk', package_version = '1.6.0')
+		)
+	),
+	contains = c('SeuratPreprocess', 'ScanoramaMerge')
 )
 
 
-#' scVIParams
+#' scVIMerge
+#'
+#' @export
+setClass(
+	'scVIMerge',
+	representation(
+		seed = 'integer'
+	),
+	contains = c('BaseMerge'),
+  prototype(
+		seed = 123L,						
+		name = "scVI"
+	)
+)
+
+#' scVIParams 
 #'
 #' @export
 setClass(
 	'scVIParams', 
-	representation(min_cells = "numeric",
-          min_genes = "numeric",
-          batch_size = "numeric",
-          return_dense = "logical",
-          knn = "numeric",
-          svd_solver = "character",
-          npcs = "numeric",
-          nhvg = "numeric",
-          use_cuda = "logical"),
-	contains = c('parent'),
-  prototype(min_genes = 300,
-            min_cells = 5,
-            batch_size = 30,
-            return_dense = TRUE,
-            knn = 10,
-            svd_solver = "arpack",
-            npcs = 20,
-            nhvg = 2000,
-            name = "Scanorama",
-            use_cuda = TRUE)
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
+			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
+			new('PythonPackage', package_name = 'scanpy', package_version = '1.8'),
+			new('RPackage', package_name = 'zellkonverter', package_version = '1.4.0'),
+			new('RPackage', package_name = 'basilisk', package_version = '1.6.0'),
+			new('PythonPackage', package_name = 'scvi-tools', package_version = '0.14.5')
+		)
+	),
+	contains = c('SeuratPreprocess', 'scVIMerge')
 )
+
+#' ParamsList
+#' @export
+#'
+setClass(
+	'ParamsList',
+	contains = 'SimpleList'
+)
+
+setClass(
+	'EnsembleMerge', 
+	representation(
+		constituent = 'ParamsList'
+	),
+	prototype(
+		name = 'EnsembleMerge'
+	),
+	contains = 'BaseMerge'
+)
+	
+
+
+setClass(
+	'EnsembleMergeParams', 
+	representation(
+	),
+	prototype(
+		dependences = list(
+			new('PythonPackage', package_name = 'umap-learn', package_version = '0.5.2')
+		)
+	),
+	contains = 'EnsembleMerge'
+)
+	

@@ -4,7 +4,7 @@
 \alias{setParams}
 \title{set parameters for integration}
 \usage{
-setParams(method = "Seurat", ...)
+setParams(methods = "Seurat", ...)
 }
 \arguments{
 \item{method}{character specifying the integration method i.e "Seurat"}

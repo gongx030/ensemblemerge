@@ -2,18 +2,18 @@
 % Please edit documentation in R/runLiger.R
 \name{run_Liger}
 \alias{run_Liger}
-\title{Run Seurat V3 functions}
+\title{Run Liger merging}
 \usage{
 run_Liger(params, data)
 }
 \arguments{
-\item{params}{LigerParams object}
+\item{params}{a LigerMerge object}
 
-\item{data}{SingleCellExpirement object containing single cell counts matrix}
+\item{data}{a data object}
 }
 \value{
-returns a SingleCellExperiment object of the integrated data
+returns a Seurat object of the integrated data
 }
 \description{
-Run Seurat V3 functions
+Run Liger merging
 }

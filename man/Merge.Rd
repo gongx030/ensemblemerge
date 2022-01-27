@@ -4,7 +4,7 @@
 \alias{Merge}
 \title{Generic merge function}
 \usage{
-Merge(params, data)
+Merge(params, data, ...)
 }
 \description{
 Generic merge function

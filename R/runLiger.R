@@ -1,53 +1,15 @@
-#' Run Seurat V3 functions
+#' Run Liger merging
 #'
-#' @import Seurat
+#' @param params a LigerMerge object
+#' @param data a data object
+#' @return returns a Seurat object of the integrated data
 #'
-#' @param data SingleCellExpirement object containing single cell counts matrix
-#' @param params LigerParams object
-#'
-#' @return returns a SingleCellExperiment object of the integrated data
-#' @export
 run_Liger <- function(params, data){
-  library(Seurat)
-  checkPackage('SeuratWrappers', '0.3.0', 'R')
-  
-  if(class(data) != "Seurat"){
-    data <- Seurat::as.Seurat(data, counts = "counts", data = NULL)
-  }
 
-  if(params@norm_data){
-    print("Normalizing data")
-    data <- NormalizeData(data, normalization.method = params@norm_method, 
-                        scale.factor = params@scale_factor)
-  }
-  if(params@hvg){
-    print("finding variable features")
-    data <- Seurat::FindVariableFeatures(data, 
-                                      selection.method = "vst", nfeatures = params@numHVG, 
-                                      verbose = FALSE)
-  }
-  else{
-      data@assays$RNA@var.features <- rownames(data)
-  }
-  if(params@regressUMI && params@scaling) {
-    data <- ScaleData(object = data, vars.to.regress = params@vars_to_regress, do.center = FALSE, split.by = params@batch)  # in case of read count data
-  } else if(params@scaling) { # default option
-    data <- ScaleData(object = data, do.center = FALSE, split.by = params@batch)
-  }
+  data <- RunOptimizeALS(data, k = params@npcs, lambda = params@lambda, split.by = params@batch, reduction = params@name, reduction.name = params@name, reduction.key = params@name)
+  data <- RunQuantileNorm(data, split.by = params@batch, reduction = params@name, reduction.name = params@name, reduction.key = params@name)
+	data
 
-  data <- RunOptimizeALS(data, k = params@k, lambda = params@lambda, split.by = params@batch)
-  data <- RunQuantileNorm(data, split.by = params@batch)
-
-  if(params@return == "Seurat"){
-    return(data)
-  }
-  else if(params@return == "SingleCellExperiment"){
-    data = Seurat::as.SingleCellExperiment(data)
-    return(data)
-  }
-  else{
-    stop("Invalid return type, check params@return")
-  }
 }
 
 #' Run optimizeALS on a Seurat object
@@ -56,7 +18,6 @@ run_Liger <- function(params, data){
 #'
 #' @import Seurat
 #'
-#' @inheritParams rliger::optimizeALS
 #' @param object A merged Seurat object
 #' @param split.by Attribute for splitting, defaults to "orig.ident"
 #' @param ... Arguments passed to other methods
@@ -66,14 +27,12 @@ run_Liger <- function(params, data){
 #' per-dataset feature loadings matrices stored in the \code{tool} slot, accessible with
 #' \code{\link[Seurat]{Tool}}
 #'
-#' @importFrom rliger optimizeALS
 #' @importFrom Seurat DefaultAssay SplitObject GetAssayData VariableFeatures
 #' CreateDimReducObject Tool<- LogSeuratCommand
 #'
 #' @aliases optimizeALS
 #' @seealso \code{\link[liger]{optimizeALS}} \code{\link[Seurat]{Tool}}
 #'
-#' @export
 # @method optimizeALS Seurat
 #'
 RunOptimizeALS <- function(
@@ -150,21 +109,17 @@ RunOptimizeALS <- function(
 #'
 #' @import Seurat
 #'
-#' @inheritParams RunOptimizeALS
-#' @inheritParams rliger::quantile_norm
 #' @param ... Arguments passed to other methods
 #'
 #' @return A Seurat object with embeddings from \code{\link[liger]{quantile_norm}}
 #' stored as a DimReduc object with name \code{reduction.name} (key set to \code{reduction.key})
 #'
-#' @importFrom rliger quantile_norm
 #' @importFrom Seurat Tool SplitObject Embeddings CreateDimReducObject
 #' DefaultAssay Tool<- Idents<- LogSeuratCommand
 #'
 #' @aliases quantile_norm
 #' @seealso \code{\link[rliger]{quantile_norm}}
 #'
-#' @export
 # @method quantile_norm Seurat
 #'
 RunQuantileNorm <- function(

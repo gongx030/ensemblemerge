@@ -2,18 +2,18 @@
 % Please edit documentation in R/runUncorrected.R
 \name{run_Uncorrected}
 \alias{run_Uncorrected}
-\title{Run Seurat V3 scaling and normalizing}
+\title{Run uncorrected merging}
 \usage{
 run_Uncorrected(params, data)
 }
 \arguments{
-\item{params}{UncorrectedParams object generated from setParams(method="Uncorrected", ...)}
+\item{params}{a UncorrectedMerge object}
 
-\item{data}{SummarizedExpirement object containing single cell counts matrix}
+\item{data}{a data object}
 }
 \value{
-returns a SummarizedExperiment object of the integrated data
+returns a Seurat object of the integrated data
 }
 \description{
-Run Seurat V3 scaling and normalizing
+Run uncorrected merging
 }

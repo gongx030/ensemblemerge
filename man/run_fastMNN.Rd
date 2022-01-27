@@ -2,18 +2,18 @@
 % Please edit documentation in R/runMNN.R
 \name{run_fastMNN}
 \alias{run_fastMNN}
-\title{Run Seurat V3 scaling and normalizing}
+\title{Run fastMNN merging}
 \usage{
 run_fastMNN(params, data)
 }
 \arguments{
-\item{params}{FastMNNParams object generated from setParams(method="fastMNN", ...)}
+\item{params}{a FastMNNParams object}
 
-\item{data}{SummarizedExpirement object containing single cell counts matrix}
+\item{data}{a data object}
 }
 \value{
-returns a SummarizedExperiment object of the integrated data
+a Seurat object
 }
 \description{
-Run Seurat V3 scaling and normalizing
+Run fastMNN merging
 }
