@@ -1,7 +1,5 @@
 run_Seurat <- function(params, data){
 
-	cn <- colnames(data)
-
   batch_list <- SplitObject(data, split.by = params@batch)
 
   for(i in 1:length(batch_list)) {

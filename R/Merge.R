@@ -173,6 +173,7 @@ setMethod(
 		for (i in 1:length(params@constituent)){
 			integrated[[i]] <- Merge(params@constituent[[i]], data)
 		}
+		browser()
 
 		cn <- colnames(data)
 		ng <- ensemblemerge_core(params, integrated, ...)
