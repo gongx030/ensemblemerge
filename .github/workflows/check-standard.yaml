@@ -38,13 +38,13 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install dependencies
-        run: install.packages('devtools')
-        shell: Rscript {0}
+#      - name: Install dependencies
+#        run: install.packages('devtools')
+#        shell: Rscript {0}
         
-      - name: Install dependencies
-        run: devtools::install_github("satijalab/seurat-wrappers")
-        shell: Rscript {0}
+#      - name: Install dependencies
+#        run: devtools::install_github("satijalab/seurat-wrappers")
+#        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
