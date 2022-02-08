@@ -1,35 +1,39 @@
 Package: ensemblemerge
-Title: Integrates existing sc-RNAseq integration methods into a single package
+Title: Integrates existing sc-RNAseq integration methods into a single
+    package
 Version: 2.0.0
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
-Depends:
-  R (>= 4.1),
-  methods,
-biocViews:
-Imports:
-  Matrix, 
-  dplyr, 
-  SingleCellExperiment,
-  reticulate,
-  Seurat (>= 4.0),
-	SummarizedExperiment,
-	uwot,
-	S4Vectors,
-  magrittr,
-	remotes
-Description: EnsembleMerge provides a unified interface for individual integration algorithm, allowing for easy scRNA-seq integration. EnsembleMerge also implemented a majority voting-based ensemble approach to integrate the batch-corrected datasets to establish an ensembled scRNA-seq integration and to rank individual algorithms.  
+Description: EnsembleMerge provides a unified interface for individual
+    integration algorithm, allowing for easy scRNA-seq integration.
+    EnsembleMerge also implemented a majority voting-based ensemble
+    approach to integrate the batch-corrected datasets to establish an
+    ensembled scRNA-seq integration and to rank individual algorithms.
 License: GPL-3
+Depends:
+    methods,
+    R (>= 4.1)
+Imports:
+    dplyr,
+    magrittr,
+    Matrix,
+    reticulate,
+    S4Vectors,
+    Seurat (>= 4.0),
+    SingleCellExperiment,
+    SummarizedExperiment,
+    uwot
+Suggests: 
+    batchelor,
+    harmony,
+    rliger (>= 0.5.0),
+    sceasy (>= 0.0.6),
+    SeuratWrappers (>= 0.3.0),
+    zellkonverter
+Remotes: 
+    cellgeni/sceasy,
+    satijalab/seurat-wrappers
+biocViews:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
-Suggests: 
-		rliger (>= 0.5.0),
-    harmony,
-    batchelor,
-    sceasy (>= 0.0.6),
-    zellkonverter,
-    SeuratWrappers (>= 0.3.0)
-Remotes:  
-    cellgeni/sceasy,
-    satijalab/seurat-wrappers

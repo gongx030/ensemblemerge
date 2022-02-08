@@ -1,5 +1,6 @@
 #' @import Matrix
 #' @importFrom magrittr %>%
+#' @import dplyr
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validity
