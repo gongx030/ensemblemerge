@@ -39,7 +39,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install dependencies
-        run: isntall.packages('devtools')
+        run: install.packages('devtools')
         shell: Rscript {0}
         
       - name: Install dependencies
