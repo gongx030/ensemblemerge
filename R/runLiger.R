@@ -8,7 +8,8 @@
 run_Liger <- function(params, data){
 
   data <- data %>% 
-		SeuratWrappers::RunOptimizeALS(
+#		SeuratWrappers::RunOptimizeALS(
+		RunOptimizeALS(
 			k = params@npcs, 
 			lambda = params@lambda, 
 			split.by = params@batch, 
@@ -16,7 +17,8 @@ run_Liger <- function(params, data){
 			reduction.name = params@name, 
 			reduction.key = params@name
 		) %>%
- 		 	SeuratWrappers::RunQuantileNorm(
+# 		 	SeuratWrappers::RunQuantileNorm(
+ 		 	RunQuantileNorm(
 				split.by = params@batch, 
 				reduction = params@name, 
 				reduction.name = params@name, 
