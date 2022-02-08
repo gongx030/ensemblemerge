@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.com/erikjskie/ensemblemerge.svg?token=TzArZ5EDidamcqdAtCie&branch=main)](https://travis-ci.com/github/erikjskie/ensemblemerge)
 [![Project Status: Work In Progress – The project is in a usable state and is being actively developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Codecov test coverage](https://codecov.io/gh/erikjskie/ensemblmerge/branch/main/graph/badge.svg)](https://codecov.io/gh/erikjskie/ensemblmerge?branch=main)
+[![R-CMD-check](https://github.com/erikjskie/ensemblemerge/workflows/R-CMD-check/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions)
 <!-- badges: end -->
 
 # ensemblemerge
