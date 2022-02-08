@@ -9,10 +9,10 @@ run_fastMNN(params, data)
 \arguments{
 \item{params}{a FastMNNParams object}
 
-\item{data}{a data object}
+\item{data}{a Seurat object}
 }
 \value{
-a Seurat object
+returns a Seurat object with integrated data
 }
 \description{
 Run fastMNN merging

@@ -1,23 +1,15 @@
+#' Run Seurat functions
+#'
+#' @param params a SeuratParam object
+#' @param data a Seurat object
+#'
+#' @importFrom Seurat FindIntegrationAnchors IntegrateData ScaleData RunPCA
+#'
+#' @return returns a Seurat object with integrated data
+#'
 run_Seurat <- function(params, data){
 
-  batch_list <- SplitObject(data, split.by = params@batch)
-
-  for(i in 1:length(batch_list)) {
-    if(params@norm_data){
-      batch_list[[i]] <- NormalizeData(
-				batch_list[[i]],
-				normalization.method = params@norm_method, 
-				scale.factor = params@scale_factor
-			)
-    }
-		batch_list[[i]] <- FindVariableFeatures(
-			batch_list[[i]], 
-			selection.method = params@selection.method, 
-			nfeatures = params@numHVG
-		)
-  }
-
-  cell_anchors <- FindIntegrationAnchors(object.list = batch_list, dims = 1:params@npcs)
+  cell_anchors <- FindIntegrationAnchors(object.list = data, dims = 1:params@npcs)
   data <- IntegrateData(anchorset = cell_anchors, dims = 1:params@npcs, k.weight = params@k.weight)
 
   if(params@regressUMI && params@scaling) {

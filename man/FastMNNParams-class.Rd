@@ -3,7 +3,7 @@
 \docType{class}
 \name{FastMNNParams-class}
 \alias{FastMNNParams-class}
-\title{FastMNNParams}
+\title{The FastMNNParams class}
 \description{
-parameters class for fastMNN integration
+The FastMNNParams class
 }

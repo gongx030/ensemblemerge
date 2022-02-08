@@ -12,8 +12,6 @@ class for merging dataset with Seurat
 \describe{
 \item{\code{seed}}{value to set for seed for umap}
 
-\item{\code{dims}}{number of dimensions used in seurat preprocessing}
-
 \item{\code{k.weight}}{weight for neighbor function}
 }}
 

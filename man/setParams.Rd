@@ -2,16 +2,18 @@
 % Please edit documentation in R/setParams.R
 \name{setParams}
 \alias{setParams}
-\title{set parameters for integration}
+\title{Set parameters for integration}
 \usage{
 setParams(methods = "Seurat", ...)
 }
 \arguments{
-\item{method}{character specifying the integration method i.e "Seurat"}
+\item{methods}{The method names (default: 'Seurat')}
+
+\item{...}{Additional arguments}
 }
 \value{
-returns a params S4 class depending on input
+If only one method is used, the output is a parameter object for each method; If more than one methods are used, the output is a `EnsembleMergeParams` object
 }
 \description{
-set parameters for integration
+Set parameters for integration
 }

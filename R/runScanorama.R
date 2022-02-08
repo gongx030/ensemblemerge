@@ -1,18 +1,19 @@
-#' Run Seurat V3 functions
+#' Run Scanorama integration
+#' 
+#' @param params a ScanoramaParams object
+#' @param data a Seurat object
 #'
-#' @import reticulate
-#' @import Seurat
+#' @importFrom reticulate import
+#' @importFrom Seurat VariableFeatures SplitObject GetAssayData CreateDimReducObject DefaultAssay
 #'
-#' @param data SingleCellExperiment object containing single cell counts matrix
-#' @param params ScanoramaParams object generated from setParams(method = "BBKNN") function
-#' @return returns a SummarizedExperiment object of the integrated data
-#' @export
+#' @return returns a Seurat object with integrated data
+#'
 run_Scanorama <- function(params, data){
 
-  sc <- reticulate::import("scanpy")
-  sr <- reticulate::import("scanorama")
-  anndata <- reticulate::import("anndata")
-  np <- reticulate::import("numpy")
+  sc <- import("scanpy")
+  sr <- import("scanorama")
+  anndata <- import("anndata")
+  np <- import("numpy")
 
 	features <- VariableFeatures(data)
 	object.list <- SplitObject(data, split.by = params@batch)

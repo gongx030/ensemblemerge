@@ -3,7 +3,7 @@
 \docType{class}
 \name{HarmonyParams-class}
 \alias{HarmonyParams-class}
-\title{HarmonyParams}
+\title{The HarmonyParams class}
 \description{
-base parameters class for harmony integration
+The HarmonyParams class
 }

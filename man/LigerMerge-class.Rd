@@ -3,15 +3,7 @@
 \docType{class}
 \name{LigerMerge-class}
 \alias{LigerMerge-class}
-\title{LigerMerge}
+\title{The LigerMerge class}
 \description{
-parameters class for liger merge
+The LigerMerge class
 }
-\section{Slots}{
-
-\describe{
-\item{\code{nrep}}{number of restarts to perform}
-
-\item{\code{lambda}}{Regularization parameter. Larger values penalize dataset-specific effects more strongly}
-}}
-

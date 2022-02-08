@@ -2,18 +2,18 @@
 % Please edit documentation in R/runScanorama.R
 \name{run_Scanorama}
 \alias{run_Scanorama}
-\title{Run Seurat V3 functions}
+\title{Run Scanorama integration}
 \usage{
 run_Scanorama(params, data)
 }
 \arguments{
-\item{params}{ScanoramaParams object generated from setParams(method = "BBKNN") function}
+\item{params}{a ScanoramaParams object}
 
-\item{data}{SingleCellExperiment object containing single cell counts matrix}
+\item{data}{a Seurat object}
 }
 \value{
-returns a SummarizedExperiment object of the integrated data
+returns a Seurat object with integrated data
 }
 \description{
-Run Seurat V3 functions
+Run Scanorama integration
 }

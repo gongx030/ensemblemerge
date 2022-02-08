@@ -1,28 +1,31 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single package
-Version: 1.0.1.7
+Version: 2.0.0
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Depends:
-  R (>= 4.0.4),
-  methods
+  R (>= 4.1),
+  methods,
 biocViews:
 Imports:
   Matrix, 
   dplyr, 
   SingleCellExperiment,
   reticulate,
-  Seurat (>= 4.0.1)
-Description: Integrates existing sc-RNAseq integration methods into a single package
-License: MIT License
+  Seurat (>= 4.0),
+	SummarizedExperiment,
+	uwot,
+	S4Vectors,
+  magrittr
+Description: EnsembleMerge provides a unified interface for individual integration algorithm, allowing for easy scRNA-seq integration. EnsembleMerge also implemented a majority voting-based ensemble approach to integrate the batch-corrected datasets to establish an ensembled scRNA-seq integration and to rank individual algorithms.  
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 Suggests: 
-  knitr,
-  covr,
-  testthat (>= 3.0.0),
-  rmarkdown,
-  rliger (>= 1.0.0),
-  magrittr (>= 2.0.0),
-  harmony (>= 0.1.0)
+  rliger,
+  harmony,
+	batchelor,
+	sceasy,
+	zellkonverter,
+	SeuratWrappers

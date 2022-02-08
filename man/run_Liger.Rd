@@ -7,9 +7,9 @@
 run_Liger(params, data)
 }
 \arguments{
-\item{params}{a LigerMerge object}
+\item{params}{a LigerParams object}
 
-\item{data}{a data object}
+\item{data}{a Seurat object}
 }
 \value{
 returns a Seurat object of the integrated data

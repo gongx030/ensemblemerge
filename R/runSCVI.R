@@ -1,16 +1,17 @@
 #' Run scVI functions
 #'
-#' @import Seurat
-#' @import SingleCellExperiment
-#' @import reticulate
+#' @param params a scVIParams object
+#' @param data a Seurat object
 #'
-#' @param x SummarizedExpirement, SingleCellExperiment, or Seurat object containing single cell counts matrix
-#' @return returns a SummarizedExperiment object of the integrated data
-#' @export
+#' @importFrom Seurat VariableFeatures CreateDimReducObject DefaultAssay
+#' @importFrom reticulate import
+#'
+#' @return returns a Seurat object with integrated data
+#'
 run_scVI <- function(params, data){
 
-  scvi <- reticulate::import('scvi')
-  anndata <- reticulate::import("anndata")
+  scvi <- import('scvi')
+  anndata <- import("anndata")
 
 	features <- VariableFeatures(data)
 	adata <- anndata$AnnData(X = t(GetAssayData(data, 'counts')[features, ]), obs = data[[params@batch]])

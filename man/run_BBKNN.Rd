@@ -7,12 +7,12 @@
 run_BBKNN(params, data)
 }
 \arguments{
-\item{params}{BBKNNParams object generated from setParams(method = "BBKNN") function}
+\item{params}{a scVIParams object}
 
-\item{data}{SingleCellExperiment object containing single cell counts matrix}
+\item{data}{a Seurat object}
 }
 \value{
-returns a SummarizedExperiment object of the integrated data
+returns a Seurat object with integrated data
 }
 \description{
 Run BBKNN integration

@@ -2,6 +2,7 @@
 #'
 #' @param params a UncorrectedMerge object
 #' @param data a data object
+#' @importFrom Seurat RunPCA
 #'
 #' @return returns a Seurat object of the integrated data
 #'

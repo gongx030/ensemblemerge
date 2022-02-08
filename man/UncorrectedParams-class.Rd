@@ -3,13 +3,7 @@
 \docType{class}
 \name{UncorrectedParams-class}
 \alias{UncorrectedParams-class}
-\title{UncorrectedParams}
+\title{The UncorrectedParams class}
 \description{
-parameters class for uncorrected integration
+The UncorrectedParams class
 }
-\section{Slots}{
-
-\describe{
-\item{\code{hvg}}{boolean to check if hvg selection should be performed}
-}}
-

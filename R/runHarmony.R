@@ -1,10 +1,11 @@
 #' Run Harmony functions
 #'
+#' @param params a HarmonyParams object
+#' @param data a Seurat object
+#'
 #' @importFrom Seurat RunPCA
 #'
-#' @param params a HarmonyMerge object
-#' @param data a data object
-#' @return a Seurat object
+#' @return returns a Seurat object with integrated data
 #'
 run_Harmony <- function(params, data){
 

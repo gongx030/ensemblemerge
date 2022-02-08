@@ -3,7 +3,7 @@
 \docType{class}
 \name{ScanoramaParams-class}
 \alias{ScanoramaParams-class}
-\title{ScanoramaParams}
+\title{The ScanoramaParams class}
 \description{
-ScanoramaParams
+The ScanoramaParams class
 }

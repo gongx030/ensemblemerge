@@ -1,10 +1,14 @@
-#' set parameters for integration
+#' Set parameters for integration
+#'
+#' @param methods The method names (default: 'Seurat')
+#' @param ... Additional arguments
 #'
 #' @importFrom methods new
 #'
-#' @param method character specifying the integration method i.e "Seurat"
-#' @return returns a params S4 class depending on input
+#' @return If only one method is used, the output is a parameter object for each method; If more than one methods are used, the output is a `EnsembleMergeParams` object
+#'
 #' @export
+#'
 setParams <- function(methods = "Seurat", ...){
 
 	availableMethods = c(

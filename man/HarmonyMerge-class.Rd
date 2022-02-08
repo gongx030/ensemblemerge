@@ -3,9 +3,9 @@
 \docType{class}
 \name{HarmonyMerge-class}
 \alias{HarmonyMerge-class}
-\title{HarmonyMerge}
+\title{The HarmonyMerge class}
 \description{
-merge class for Harmony
+The HarmonyMerge class
 }
 \section{Slots}{
 

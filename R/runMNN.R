@@ -1,10 +1,12 @@
 #' Run fastMNN merging
 #'
-#' @importFrom Seurat RunPCA
-#'
 #' @param params a FastMNNParams object
-#' @param data a data object
-#' @return a Seurat object
+#' @param data a Seurat object
+#'
+#' @importFrom Seurat VariableFeatures SplitObject RunPCA as.SingleCellExperiment CreateDimReducObject
+#' @importFrom SingleCellExperiment reducedDim
+#'
+#' @return returns a Seurat object with integrated data
 #'
 run_fastMNN <- function(params, data){
 

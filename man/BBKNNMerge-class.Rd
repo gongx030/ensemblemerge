@@ -3,7 +3,7 @@
 \docType{class}
 \name{BBKNNMerge-class}
 \alias{BBKNNMerge-class}
-\title{BBKNNMerge}
+\title{The BBKNNMerge class}
 \description{
-BBKNNMerge
+The BBKNNMerge class
 }

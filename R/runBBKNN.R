@@ -1,12 +1,12 @@
 #' Run BBKNN integration
 #'
-#' @importFrom reticulate import
-#' @importFrom Seurat as.SingleCellExperiment as.Graph as.Neighbor as.Seurat
+#' @param params a scVIParams object
+#' @param data a Seurat object
 #'
-#' @param data SingleCellExperiment object containing single cell counts matrix
-#' @param params BBKNNParams object generated from setParams(method = "BBKNN") function
-#' @return returns a SummarizedExperiment object of the integrated data
-#' @export
+#' @importFrom reticulate import 
+#' @importFrom Seurat RunPCA  CreateDimReducObject DefaultAssay
+#'
+#' @return returns a Seurat object with integrated data
 #'
 run_BBKNN <- function(params, data){
 
@@ -16,7 +16,7 @@ run_BBKNN <- function(params, data){
 
   data <- RunPCA(
 		object = data, 
-		npcs = params@npcs, 
+		npcs = params@npcs + 1L, 
 		pc.genes = data@var.genes, 
 		reduction.name = params@dimreduc_names[["PCA"]]
 	)
@@ -46,6 +46,7 @@ run_BBKNN <- function(params, data){
  		bbknn$bbknn(data, batch_key= params@batch)
 	}
 
+	# ncol(adata$obsm[["X_pca"]]) = params@npcs - 1
 	latent <- adata$obsm[["X_pca"]]
 	rownames(latent) <- colnames(data)
 

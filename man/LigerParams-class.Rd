@@ -3,7 +3,7 @@
 \docType{class}
 \name{LigerParams-class}
 \alias{LigerParams-class}
-\title{LigerParams}
+\title{The LigerParams class}
 \description{
-parameters class for liger operations
+The LigerParams class
 }

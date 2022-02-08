@@ -7,10 +7,12 @@
 run_scVI(params, data)
 }
 \arguments{
-\item{x}{SummarizedExpirement, SingleCellExperiment, or Seurat object containing single cell counts matrix}
+\item{params}{a scVIParams object}
+
+\item{data}{a Seurat object}
 }
 \value{
-returns a SummarizedExperiment object of the integrated data
+returns a Seurat object with integrated data
 }
 \description{
 Run scVI functions

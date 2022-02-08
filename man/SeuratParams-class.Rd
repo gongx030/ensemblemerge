@@ -3,9 +3,9 @@
 \docType{class}
 \name{SeuratParams-class}
 \alias{SeuratParams-class}
-\title{SeuratParams}
+\title{The SeuratParams class}
 \description{
-base class for Seurat processing
+The SeuratParams class
 }
 \section{Slots}{
 

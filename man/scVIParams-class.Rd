@@ -3,7 +3,7 @@
 \docType{class}
 \name{scVIParams-class}
 \alias{scVIParams-class}
-\title{scVIParams}
+\title{The scVIParams  class}
 \description{
-scVIParams
+The scVIParams  class
 }
