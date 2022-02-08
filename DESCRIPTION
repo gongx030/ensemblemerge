@@ -22,13 +22,13 @@ Imports:
     Seurat (>= 4.0),
     SingleCellExperiment,
     SummarizedExperiment,
+    SeuratWrappers (>= 0.3.0),
     uwot
 Suggests: 
     batchelor,
     harmony,
     rliger (>= 0.5.0),
     sceasy (>= 0.0.6),
-    SeuratWrappers (>= 0.3.0),
     zellkonverter
 Remotes: 
     cellgeni/sceasy,
