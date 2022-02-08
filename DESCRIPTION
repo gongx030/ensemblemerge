@@ -32,7 +32,7 @@ Suggests:
     zellkonverter
 Remotes: 
     cellgeni/sceasy,
-    satijalab/seurat-wrappers
+    github::satijalab/seurat-wrappers
 biocViews:
 Encoding: UTF-8
 LazyData: true
