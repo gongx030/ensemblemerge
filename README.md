@@ -39,7 +39,7 @@ conda install -y -c conda-forge umap-learn=0.5.2
 
 ## Quick start guide
 
-Once ensemblemerge is currently under reveiw for CRAN submission, currently ensemblemerge can be installed by:
+ensemblemerge can be installed by:
 
 ```r
 devtools::install_github("erikjskie/ensemblemerge")
