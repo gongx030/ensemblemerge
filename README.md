@@ -1,10 +1,9 @@
-<img src = "ensemblemerge_graphics_v2.png" width = "250" height = "200" align = "right" />
+<img src = "https://github.com/gongx030/gongx030.github.io/blob/cac14d855edd4e785056c09e340e5213c7b6e572/images/ensemblemerge_graphics_v2.png?raw=true" width = "250" height = "200" align = "right" />
 
 # ensemblemerge
 
 <!-- badges: start -->
-[![R](https://github.com/erikjskie/ensemblemerge/actions/workflows/r.yml/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions/workflows/r.yml)
-[![R-CMD-check](https://github.com/erikjskie/ensemblemerge/workflows/R-CMD-check/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions)
+[![R-CMD-check](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
 
