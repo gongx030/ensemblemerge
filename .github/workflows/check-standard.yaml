@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-#          - {os: macOS-latest,   r: 'release'}
+          - {os: macOS-latest,   r: 'release'}
 #          - {os: windows-latest, r: 'release'}
 #          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
@@ -37,14 +37,6 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
-#      - name: Install dependencies
-#        run: install.packages('devtools')
-#        shell: Rscript {0}
-        
-#      - name: Install dependencies
-#        run: devtools::install_github("satijalab/seurat-wrappers")
-#        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
