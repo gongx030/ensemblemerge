@@ -400,8 +400,7 @@ setClass(
 	),
 	prototype(
 		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('RPackage', package_name = 'SeuratWrappers', package_version = '0.3.0')
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
 		)
 	),
 	contains = c('SeuratPreprocess', 'FastMNNMerge')
@@ -437,7 +436,6 @@ setClass(
 	prototype(
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('RPackage', package_name = 'SeuratWrappers', package_version = '0.3.0'),
 			new('RPackage', package_name = 'rliger', package_version = '1.0.0')
 		)
 	),

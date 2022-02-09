@@ -1,7 +1,7 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single
     package
-Version: 2.0.0
+Version: 2.0.1
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Description: EnsembleMerge provides a unified interface for individual
@@ -22,17 +22,16 @@ Imports:
     Seurat (>= 4.0),
     SingleCellExperiment,
     SummarizedExperiment,
-    uwot
+    uwot,
+		rlang
 Suggests: 
     batchelor,
     harmony,
     rliger (>= 0.5.0),
     sceasy (>= 0.0.6),
-    SeuratWrappers (>= 0.3.0),
     zellkonverter
 Remotes: 
-    cellgeni/sceasy,
-    github::satijalab/seurat-wrappers
+    cellgeni/sceasy
 biocViews:
 Encoding: UTF-8
 LazyData: true
