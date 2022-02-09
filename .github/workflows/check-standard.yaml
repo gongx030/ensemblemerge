@@ -3,8 +3,15 @@
 on:
   push:
     branches: [main, master]
+    paths:
+      - '**.r'
+      - '**.R'
+      
   pull_request:
     branches: [main, master]
+    paths:
+      - '**.r'
+      - '**.R'
 
 name: R-CMD-check
 
