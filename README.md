@@ -9,43 +9,40 @@
 
 ensemblemerge is a package that implements a common work flow for several single cell RNA sequence integration methods including Seurat, Scanorama, Harmony, Liger, fastMNN, bbknn and scVI. The merging process is designed to be as streamlined as possible for the user, only requiring a **SingleCellExperiment**, or **Seurat** object and a specification of which method should be used to integrate in `setParams()`.
 
-**Instructions, documentation, and examples can be found online at: [EnsembleMerge](https://erikjskie.github.io/packages/ensemblemerge/)**
-
-**Docker images of pre-built package environments are found online at: [DockerHub](https://hub.docker.com/repository/docker/skiex003/ensemblemerge)**
-
-**An example vignette can be found here: [preview ](https://github.com/erikjskie/ensemblemerge/blob/main/EnsembleMerge_Example_Vignette.ipynb)|[ colab](https://colab.research.google.com/github/erikjskie/ensemblemerge/blob/main/EnsembleMerge_Example_Vignette.ipynb)**
-
 ## Prerequisites
-The following R packages are required for installation of ensemblemerge:
 
-```r
-devtools::install_github('satijalab/seurat-wrappers')
+We recommend to build a new `conda` environment for ensemblemerge and install several R packages required for base function:
+
+```
+conda create -n ensemblemerge
+conda activate ensemblemerge
 ```
 
-The following packages are necessary only if using the following Merge methods:
-  Python Packages
-  ```r
-  system("pip install pynndescent") #optimizes dimension reduction
-  system("pip install leidenalg") #optional clustering algorithm that improves bbknn performance
-  ```
-  
-preconfigured environments are available here:
-| Configuration | OS | R Version | 
-| --- | --- | --- |
-| [base](Linux_4_0_4_environment.yml) | Linux (Ubuntu 18.04) | 4.0.4 |
-| [base](Linux_4_1_1_environment.yml) | Linux (Ubuntu 18.04) | 4.1.1 |
-| [base](base_macOS.yml) | macOS Big Sur | 4.1.1 |
-| [base](base_macOS_R_4_0_5.yml) | macOS Big Sur | 4.0.5 |
+```
+conda install -y -c conda-forge r-base=4.1.2
+conda install -y -c conda-forge r-devtools=2.4.2
+conda install -y -c conda-forge r-seurat=4.1.0
+conda install -y -c conda-forge r-r.utils=2.11.0
+conda install -y -c conda-forge umap-learn=0.5.2
+conda install -y python=3.7
+```
 
-  
+| Method | R | Python |
+| --- | --- | --- |
+| Seurat | | |
+| Harmony | `install.packages("harmony")` | |
+| LIGER | `install.packages('rliger')` | |
+| fastMNN | `BiocManager::install('batchelor')` | |
+| Scanorama | `BiocManager::install("zellkonverter")` <br> `BiocManager::install("basilisk")` | `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install scanorama==1.7.1`  | 
+| scVI | `BiocManager::install("zellkonverter")` <br> `BiocManager::install("basilisk")` | `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install scvi-tools==0.14.5` | 
+| BBKNN | `BiocManager::install("zellkonverter")` <br> `BiocManager::install("basilisk")` | `pip install bbknn==1.5.1` <br> `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install leidenalg==0.8.8 ` |
+
+
 ## Quick start guide
 
-Once ensemblemerge is currently under reveiw for cran submission, currently ensemblemerge can be installed by:
+Once ensemblemerge is currently under reveiw for CRAN submission, currently ensemblemerge can be installed by:
 
 ```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("devtools")
 devtools::install_github("erikjskie/ensemblemerge")
 ```
 
