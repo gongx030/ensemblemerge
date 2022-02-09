@@ -26,7 +26,7 @@ conda install -y -c conda-forge r-r.utils=2.11.0
 conda install -y -c conda-forge umap-learn=0.5.2
 ```
 
-To use the constituent methods other than `Seurat`, the users will need to have the R or Python dependencies installed manually. 
+To use the constituent methods other than `Seurat`, the users will need to have the R or Python dependencies installed manually. For R packages, ensemblemerge uses `packageVersion` to verify required packages and versions. For Python packages, ensemblemerge ueses the system command `pip show` to verify required packages and versions. 
 
 | Method | R | Python |
 | --- | --- | --- |
