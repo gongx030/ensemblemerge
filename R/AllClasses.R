@@ -400,6 +400,7 @@ setClass(
 	),
 	prototype(
 		dependences = list(
+			new('RPackage', package_name = 'batchelor', package_version = '1.10.0'),
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
 		)
 	),
