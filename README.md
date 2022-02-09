@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 
-ensemblemerge is a package that implements a common work flow for several single cell RNA sequence integration methods including Seurat V3, Scanorama, Harmony, Liger, fastMNN, and bbknn. The merging process is designed to be as streamlined as possible for the user, only requiring a **SummarizedExperiment**, **SingleCellExperiment**, or **Seurat** object and a specification of which method should be used to integrate in `setParams()`.
+ensemblemerge is a package that implements a common work flow for several single cell RNA sequence integration methods including Seurat, Scanorama, Harmony, Liger, fastMNN, bbknn and scVI. The merging process is designed to be as streamlined as possible for the user, only requiring a **SingleCellExperiment**, or **Seurat** object and a specification of which method should be used to integrate in `setParams()`.
 
 **Instructions, documentation, and examples can be found online at: [EnsembleMerge](https://erikjskie.github.io/packages/ensemblemerge/)**
 
