@@ -11,7 +11,7 @@ ensemblemerge is a package that implements a common work flow for several single
 
 ## Prerequisites
 
-We recommend to build a new `conda` environment for ensemblemerge and install several R packages required for base function:
+### Step 1. We recommend to build a new `conda` environment for ensemblemerge and install several R packages required for base function:
 
 ```
 conda create -n ensemblemerge python=3.7
@@ -25,6 +25,14 @@ conda install -y -c conda-forge r-seurat=4.1.0
 conda install -y -c conda-forge r-r.utils=2.11.0
 conda install -y -c conda-forge umap-learn=0.5.2
 ```
+
+### Step 2: Installing ensemblemerge:
+
+```r
+devtools::install_github("erikjskie/ensemblemerge")
+```
+
+### Step 3: Installing dependencies:
 
 To use the constituent methods other than `Seurat`, the users will need to have the R or Python dependencies installed manually. For R packages, ensemblemerge uses `packageVersion` to verify required packages and versions. For Python packages, ensemblemerge ueses the system command `pip show` to verify required packages and versions. 
 
@@ -40,12 +48,6 @@ To use the constituent methods other than `Seurat`, the users will need to have 
 
 
 ## Quick start guide
-
-ensemblemerge can be installed by:
-
-```r
-devtools::install_github("erikjskie/ensemblemerge")
-```
 
 Once ensemblemerge is installed, merging batches can be performed by the following:
 
