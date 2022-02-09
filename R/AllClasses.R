@@ -601,4 +601,3 @@ setClass(
 	),
 	contains = 'EnsembleMerge'
 )
-	
