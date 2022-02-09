@@ -14,7 +14,7 @@ ensemblemerge is a package that implements a common work flow for several single
 We recommend to build a new `conda` environment for ensemblemerge and install several R packages required for base function:
 
 ```
-conda create -n ensemblemerge
+conda create -n ensemblemerge python=3.7
 conda activate ensemblemerge
 ```
 
@@ -24,7 +24,6 @@ conda install -y -c conda-forge r-devtools=2.4.2
 conda install -y -c conda-forge r-seurat=4.1.0
 conda install -y -c conda-forge r-r.utils=2.11.0
 conda install -y -c conda-forge umap-learn=0.5.2
-conda install -y python=3.7
 ```
 
 | Method | R | Python |
