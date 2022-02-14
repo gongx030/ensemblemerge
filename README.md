@@ -4,7 +4,6 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml)
-[![Github tag](https://badgen.net/github/tag/Naereen/Strapdown.js)](https://github.com/erikjskie/ensemblemerge/tags/)
 <!-- badges: end -->
 
 
