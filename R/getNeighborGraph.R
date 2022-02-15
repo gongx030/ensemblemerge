@@ -7,6 +7,7 @@
 #' @importFrom Seurat FindNeighbors RunUMAP 
 #'
 #' @return returns a Seurat object with neighboring information
+#' @export
 #'
 setMethod(
 	"getNeighborGraph", 
