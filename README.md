@@ -11,7 +11,7 @@ ensemblemerge is a package that implements a common work flow for several single
 
 ## Prerequisites
 
-We recommend to build a new `conda` environment for ensemblemerge and install several R packages required for base function:
+### Step 1. We recommend to build a new `conda` environment for ensemblemerge and install several R packages required for base function:
 
 ```
 conda create -n ensemblemerge python=3.7
@@ -26,6 +26,14 @@ conda install -y -c conda-forge r-r.utils=2.11.0
 conda install -y -c conda-forge umap-learn=0.5.2
 ```
 
+### Step 2: Installing ensemblemerge:
+
+```r
+devtools::install_github("erikjskie/ensemblemerge")
+```
+
+### Step 3: Installing dependencies:
+
 To use the constituent methods other than `Seurat`, the users will need to have the R or Python dependencies installed manually. For R packages, ensemblemerge uses `packageVersion` to verify required packages and versions. For Python packages, ensemblemerge ueses the system command `pip show` to verify required packages and versions. 
 
 | Method | R | Python |
@@ -34,18 +42,12 @@ To use the constituent methods other than `Seurat`, the users will need to have 
 | Harmony | `install.packages("harmony")` | |
 | LIGER | `install.packages('rliger')` | |
 | fastMNN | `BiocManager::install('batchelor')` | |
-| Scanorama | `BiocManager::install("zellkonverter")` <br> `BiocManager::install("basilisk")` | `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install scanorama==1.7.1`  | 
-| scVI | `BiocManager::install("zellkonverter")` <br> `BiocManager::install("basilisk")` | `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install scvi-tools==0.14.5` | 
-| BBKNN | `BiocManager::install("zellkonverter")` <br> `BiocManager::install("basilisk")` | `pip install bbknn==1.5.1` <br> `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install leidenalg==0.8.8 ` |
+| Scanorama |  | `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install scanorama==1.7.1`  | 
+| scVI |  | `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install scvi-tools==0.14.5` | 
+| BBKNN |  | `pip install bbknn==1.5.1` <br> `pip install scanpy==1.8.2` <br> `pip install anndata==0.7.8` <br> `pip install leidenalg==0.8.8 ` |
 
 
 ## Quick start guide
-
-ensemblemerge can be installed by:
-
-```r
-devtools::install_github("erikjskie/ensemblemerge")
-```
 
 Once ensemblemerge is installed, merging batches can be performed by the following:
 
