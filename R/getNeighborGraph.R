@@ -44,3 +44,33 @@ setMethod(
 		data
 	}
 )
+
+#' Get a neighbor graph
+#' 
+#' @param params a EnsembleMerge object
+#' @param data a Seurat object
+#' @param ... Additional arguments
+#'
+#' @importFrom Seurat FindNeighbors 
+#'
+#' @return returns a Seurat object with neighboring information
+#' @export
+#'
+setMethod(
+	"getNeighborGraph", 
+	signature(
+		params = "EnsembleMerge", 
+		data = 'Seurat'
+	),
+	function(params, data, ...) {
+
+   	data <- FindNeighbors(
+			data, 
+			compute.SNN = TRUE, 
+			reduction = params@umap_name,
+			dims = 1:params@umap_dim, 
+			graph.name = c(params@knn_name, params@snn_name)
+		)
+		data
+	}
+)
