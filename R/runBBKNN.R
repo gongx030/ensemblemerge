@@ -14,14 +14,15 @@ run_BBKNN <- function(params, data){
 	sc <- import("scanpy")
 	anndata <- import("anndata")
 
-  data <- RunPCA(
-		object = data, 
-		npcs = params@npcs + 1L, 
-		pc.genes = data@var.genes, 
-		reduction.name = params@dimreduc_names[["PCA"]]
-	)
+	if (is.null(data@reductions[[params@dimreduc_names[["PCA"]]]])){
+	  data <- RunPCA(
+			object = data, 
+			npcs = params@npcs + 1L, 
+			reduction.name = params@dimreduc_names[["PCA"]]
+		)
+	}
 
-	pca <- data[['pca']]@cell.embeddings
+	pca <- data[[params@dimreduc_names[["PCA"]]]]@cell.embeddings
 	adata <- anndata$AnnData(X = pca, obs = data[[params@batch]])
 
 	# The weird PCA computation part and replacing it with your original values is unfortunately necessary 
@@ -52,7 +53,7 @@ run_BBKNN <- function(params, data){
 
 	data[[params@name]] <- CreateDimReducObject(
 		embeddings = latent,
-		key = sprintf('%s_', params@name), 
+		key = params@reduction_key,
 		assay = DefaultAssay(data)
 	)
 	data
