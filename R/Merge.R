@@ -6,8 +6,6 @@
 #'
 #' @return returns a data object with integrated data
 #'
-#' @export
-#'
 #' @importFrom Seurat as.SingleCellExperiment
 #'
 setMethod(
@@ -27,45 +25,6 @@ setMethod(
 
 })
 
-#' Merge SingleCellExperiment objects
-#'
-#' @param params a BaseMerge object 
-#' @param data a SingleCellExperiment
-#' @param counts The assays field that contains the raw counts data
-#' @param ... Additional arguments
-#'
-#' @return returns a data object with integrated data
-#'
-#' @importFrom Seurat CreateSeuratObject 
-#' @importFrom SummarizedExperiment assays colData colData<- rowData rowData<- 
-#'
-#' @export
-#'
-setMethod(
-	'Merge',
-	signature(
-		params = 'BaseMerge',
-		data  = 'SingleCellExperiment'
-	),
-	function(
-		params,
-		data,
-		counts = 'counts',
-		...
-	){
-
-		seurat <- CreateSeuratObject(
-			counts = assays(data)[[counts]],
-			meta.data = as.data.frame(colData(data))
-		)
-
-		if (ncol(rowData(data)) > 0){
-			seurat[["RNA"]][[]] <- as.data.frame(rowData(data))
-		}
-
-		Merge(params, seurat, ...)
-	}	
-)
 
 #' Merge Seurat objects
 #'
@@ -75,7 +34,6 @@ setMethod(
 #' @return returns a data object with integrated data
 #' @importFrom Seurat as.SingleCellExperiment
 #' @importFrom methods is
-#' @export
 #'
 setMethod(
 	'Merge',
@@ -89,37 +47,102 @@ setMethod(
 		...
 	){
 
-		stopifnot(!any(duplicated(colnames(data))))
-
-		data <- Preprocess(params, data)
-
 		if (is(params, 'SeuratParams')){
-    	integrated = run_Seurat(params, data)
+    	data = run_Seurat(params, data)
 		}else if (is(params, 'HarmonyParams')){
-    	integrated = run_Harmony(params, data)
+    	data = run_Harmony(params, data)
 		}else if (is(params, 'FastMNNParams')){
-    	integrated = run_fastMNN(params, data)
+    	data = run_fastMNN(params, data)
 		}else if (is(params, 'UncorrectedParams')){
-	    integrated = run_Uncorrected(params, data)
+	    data = run_Uncorrected(params, data)
 		}else if (is(params, 'LigerParams')){
-	    integrated = run_Liger(params, data)
+	    data = run_Liger(params, data)
 		}else if (is(params, 'BBKNNParams')){
-	    integrated = run_BBKNN(params, data)
+	    data = run_BBKNN(params, data)
 		}else if (is(params, 'ScanoramaParams')){
-	    integrated = run_Scanorama(params, data)
+	    data = run_Scanorama(params, data)
 		}else if (is(params, 'scVIParams')){
-	    integrated = run_scVI(params, data)
+	    data = run_scVI(params, data)
 		}else
 			stop(sprintf('unknown params class: %s', class(params)))
 
-		if(params@return == "Seurat"){
-			return(integrated)
-		}else if(params@return == "SingleCellExperiment"){
-			integrated = as.SingleCellExperiment(integrated)
-			return(integrated)
-		}else{
-			stop("Invalid return type, check params@return")
+		data
+})
+
+#' Merge SummarizedExperiment objects
+#'
+#' @param params a ParamsList object 
+#' @param data a SummarizedExperiment object 
+#' @param ... Additional arguments
+#'
+#' @importFrom Seurat CreateSeuratObject 
+#' @importFrom SummarizedExperiment assays colData colData<- rowData rowData<- 
+#'
+#' @return returns a data object with integrated data
+#'
+#' @export
+#'
+setMethod(
+	'Merge',
+	signature(
+		params = 'ParamsList',
+		data  = 'SummarizedExperiment'
+	),
+	function(
+		params,
+		data,
+		counts = 'counts',
+		assay = 'RNA',
+		...
+	){
+
+		seurat <- CreateSeuratObject(
+			counts = assays(data)[[counts]], # Unnormalized data such as raw counts or TPMs
+			meta.data = as.data.frame(colData(data)),
+			assay = assay
+		)
+
+		if (ncol(rowData(data)) > 0){
+			seurat[[assaye]][[]] <- as.data.frame(rowData(data))
 		}
+
+		Merge(params, seurat, ...)
+})
+
+#' Merge Seurat objects
+#'
+#' @param params a ParamsList object 
+#' @param data a Seurat object 
+#' @param ... Additional arguments
+#'
+#' @return returns a data object with integrated data
+#'
+#' @export
+#'
+setMethod(
+	'Merge',
+	signature(
+		params = 'ParamsList',
+		data  = 'Seurat'
+	),
+	function(
+		params,
+		data,
+		...
+	){
+
+		stopifnot(!any(duplicated(colnames(data))))
+
+		# use the preprocessing pipeline from the first one to process the data
+		# need to deal with the situation where the preprocessing specificication may be different from constituent methods
+		# we should use consistent preprocessing method for constituent method
+		#
+		data <- Preprocess(params[[1L]], data)
+
+		for (i in 1:length(params)){
+			data <- Merge(params[[i]], data)
+		}
+		data
 })
 
 
@@ -146,6 +169,12 @@ setMethod(
 	){
 
 		integrated <- list()
+
+		for (i in 1:length(params@constituent)){
+			data <- Merge(params@constituent[[i]], data)
+		}
+
+		browser()
 
 		for (i in 1:length(params@constituent)){
 			integrated[[i]] <- Merge(params@constituent[[i]], data)
