@@ -9,12 +9,13 @@
 #'
 run_Harmony <- function(params, data){
 
-  data <- RunPCA(
-		object = data, 
-		npcs = params@npcs, 
-		pc.genes = data@var.genes, 
-		reduction.name = params@dimreduc_names[["PCA"]]
-	)
+	if (is.null(data@reductions[[params@dimreduc_names[["PCA"]]]])){
+  	data <- RunPCA(
+			object = data, 
+			npcs = params@npcs, 
+			reduction.name = params@dimreduc_names[["PCA"]]
+		)
+	}
 
   data <- harmony::RunHarmony(
 		object = data, 
