@@ -24,7 +24,7 @@ run_scVI <- function(params, data){
 	rownames(latent) <- colnames(data)
 	data[[params@name]] <- CreateDimReducObject(
 		embeddings = latent,
-		key = sprintf('%s_', params@name), 
+		key = params@reduction_key,
 		assay = DefaultAssay(data)
 	)
 	data
