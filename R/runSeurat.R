@@ -34,7 +34,8 @@ run_Seurat <- function(params, data){
  	d <- IntegrateData(
 		anchorset = cell_anchors, 
 		dims = 1:params@npcs, 
-		k.weight = params@k.weight
+		k.weight = params@k.weight,
+		verbose = FALSE
 	)
 
   if(params@regressUMI && params@scaling) {
@@ -52,7 +53,7 @@ run_Seurat <- function(params, data){
 	)
 
 	d@reductions[[params@name]]@assay.used <- data@active.assay
-	data[[params@name]] <- d@reductions[[params@name]]
+	data[[params@name]] <- d@reductions[[params@name]][colnames(data), , drop = FALSE]
 		
 	data
 
