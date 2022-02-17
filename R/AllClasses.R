@@ -133,6 +133,7 @@ setClass(
     return = "character",
 		dependences = 'list',
 		name = 'character',
+		reduction_key = 'character',
 		npcs = 'integer',
 		latent = 'logical',
 		umap_name = 'character',
@@ -161,6 +162,7 @@ setClass(
 #'
 setMethod('initialize', 'BaseMerge', function(.Object, ...){
 	.Object <- callNextMethod()
+	.Object@reduction_key <- sprintf('%s_', .Object@name)
 	.Object@umap_name <- sprintf('%sUMAP', .Object@name)
 	.Object@umap_key <- sprintf('%sUMAP_', .Object@name)
 	.Object@snn_name <- sprintf('%sSNN', .Object@name)
