@@ -1,11 +1,13 @@
 #' Preprocess a Seurat objects by the Seurat pipeline
 #'
+#' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
+#'
 #' @param params a SeuratPreprocess object 
 #' @param data a Seurat object
 #' @param ... Additional arguments
 #' @return returns a Seurat object
 
-#' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData
+#' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures
 #'
 setMethod(
 	'Preprocess',
@@ -34,24 +36,30 @@ setMethod(
 				batch_list[[i]] <- NormalizeData(
 					batch_list[[i]],
 					normalization.method = params@norm_method,
-					scale.factor = params@scale_factor
+					scale.factor = params@scale_factor,
+					verbose = FALSE
 				)
 	    }
 	    batch_list[[i]] <- FindVariableFeatures(
 				batch_list[[i]],
 				selection.method = params@selection.method,
-				nfeatures = params@numHVG
+				nfeatures = params@numHVG,
+				verbose = FALSE
 			)
-			if(params@regressUMI && params@scaling) {
-				batch_list[[i]] <- ScaleData(object = batch_list[[i]], vars.to.regress = params@vars.to.regress)
-			} else if (params@scaling) { # default option
-				batch_list[[i]] <- ScaleData(object = batch_list[[i]])
-			}
 		}
-		if (length(batch_list) == 1L)
-			return(batch_list[[1L]])
-		else
-			return(batch_list)
+
+		# select features that are repeatedly variable across datasets for integration
+		features <- SelectIntegrationFeatures(batch_list, verbose = FALSE)
+
+		data@assays[[data@active.assay]]@var.features <- features
+
+		if(params@regressUMI && params@scaling) {
+			data <- ScaleData(object = data, vars.to.regress = params@vars.to.regress, verbose = FALSE)
+		} else if (params@scaling) { # default option
+			data <- ScaleData(object = data, verbose = FALSE)
+		}
+		data
+
 	}
 )
 
