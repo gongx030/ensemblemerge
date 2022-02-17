@@ -27,7 +27,8 @@ run_Seurat <- function(params, data){
   cell_anchors <- FindIntegrationAnchors(
 		object.list = d, 
 		dims = 1:params@npcs, 
-		anchor.features = features
+		anchor.features = features,
+		verbose = FALSE
 	)
 
  	d <- IntegrateData(
@@ -37,16 +38,17 @@ run_Seurat <- function(params, data){
 	)
 
   if(params@regressUMI && params@scaling) {
-    d <- ScaleData(object = d, vars.to.regress = params@vars.to.regress)
+    d <- ScaleData(object = d, vars.to.regress = params@vars.to.regress, verbose = FALSE)
   } else if(params@scaling) { # default option
-    d <- ScaleData(object = d)
+    d <- ScaleData(object = d, verbose = FALSE)
   }
 
   d <- RunPCA(
 		d, 
 		npcs = params@npcs, 
 		reduction.name = params@name,
-		reduction.key = params@reduction_key
+		reduction.key = params@reduction_key,
+		verbose = FALSE
 	)
 
 	d@reductions[[params@name]]@assay.used <- data@active.assay
