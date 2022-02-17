@@ -10,7 +10,13 @@
 #'
 run_fastMNN <- function(params, data){
 
-  data <- RunPCA(data, npcs = params@npcs, verbose = FALSE)
+	if (is.null(data@reductions[[params@dimreduc_names[["PCA"]]]])){
+  	data <- RunPCA(
+			object = data, 
+			npcs = params@npcs, 
+			reduction.name = params@dimreduc_names[["PCA"]]
+		)
+	}
 	
 	features <- VariableFeatures(data)
 	object.list <- SplitObject(data, split.by = params@batch)
@@ -22,7 +28,7 @@ run_fastMNN <- function(params, data){
 
 	data[[params@name]] <- CreateDimReducObject(
 		embeddings = reducedDim(out, 'corrected'),
-		key = sprintf('%s_', params@name), 
+		key = params@reduction_key,
 		assay = DefaultAssay(data)
 	)
 	data
