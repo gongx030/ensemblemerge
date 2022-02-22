@@ -15,5 +15,5 @@ run_Seurat(params, data)
 returns a Seurat object with integrated data
 }
 \description{
-Run Seurat functions
+Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
 }

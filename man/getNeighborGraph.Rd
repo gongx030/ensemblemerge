@@ -4,12 +4,12 @@
 \alias{getNeighborGraph}
 \title{The generic function of getNeighborGraph}
 \usage{
-getNeighborGraph(params, data, ...)
+getNeighborGraph(data, params, ...)
 }
 \arguments{
-\item{params}{a parameter object}
-
 \item{data}{a data object}
+
+\item{params}{a parameter object}
 
 \item{...}{Other arguments}
 }

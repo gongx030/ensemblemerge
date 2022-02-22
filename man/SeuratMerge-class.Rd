@@ -10,8 +10,6 @@ class for merging dataset with Seurat
 \section{Slots}{
 
 \describe{
-\item{\code{seed}}{value to set for seed for umap}
-
 \item{\code{k.weight}}{weight for neighbor function}
 }}
 

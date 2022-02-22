@@ -38,11 +38,7 @@ run_Seurat <- function(params, data){
 		verbose = FALSE
 	)
 
-  if(params@regressUMI && params@scaling) {
-    d <- ScaleData(object = d, vars.to.regress = params@vars.to.regress, verbose = FALSE)
-  } else if(params@scaling) { # default option
-    d <- ScaleData(object = d, verbose = FALSE)
-  }
+  d <- ScaleData(object = d, verbose = FALSE)
 
   d <- RunPCA(
 		d, 
@@ -53,8 +49,12 @@ run_Seurat <- function(params, data){
 	)
 
 	d@reductions[[params@name]]@assay.used <- data@active.assay
-	data[[params@name]] <- d@reductions[[params@name]][colnames(data), , drop = FALSE]
-		
+
+	data[[params@name]] <- CreateDimReducObject(
+		embeddings = d@reductions[[params@name]]@cell.embeddings[colnames(data), ],
+		key = params@reduction_key,
+		assay = DefaultAssay(data)
+	)
 	data
 
 }

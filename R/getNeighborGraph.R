@@ -1,7 +1,7 @@
 #' Get a neighbor graph
 #' 
-#' @param params a BaseMerge object
 #' @param data a Seurat object
+#' @param params a BaseMerge object
 #' @param ... Additional arguments
 #'
 #' @importFrom Seurat FindNeighbors RunUMAP 
@@ -12,10 +12,10 @@
 setMethod(
 	"getNeighborGraph", 
 	signature(
-		params = "BaseMerge", 
-		data = 'Seurat'
+		data = 'Seurat',
+		params = "BaseMerge"
 	),
-	function(params, data, ...) {
+	function(data, params, ...) {
 
 		if (params@latent){
     	data <- FindNeighbors(
@@ -47,8 +47,8 @@ setMethod(
 
 #' Get a neighbor graph
 #' 
-#' @param params a EnsembleMerge object
 #' @param data a Seurat object
+#' @param params a EnsembleMerge object
 #' @param ... Additional arguments
 #'
 #' @importFrom Seurat FindNeighbors 
@@ -59,10 +59,10 @@ setMethod(
 setMethod(
 	"getNeighborGraph", 
 	signature(
-		params = "EnsembleMerge", 
-		data = 'Seurat'
+		data = 'Seurat',
+		params = "EnsembleMerge"
 	),
-	function(params, data, ...) {
+	function(data, params, ...) {
 
    	data <- FindNeighbors(
 			data, 

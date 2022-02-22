@@ -2,8 +2,8 @@
 #'
 #' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
 #'
-#' @param params a SeuratPreprocess object 
 #' @param data a Seurat object
+#' @param params a SeuratPreprocess object 
 #' @param ... Additional arguments
 #' @return returns a Seurat object
 
@@ -12,18 +12,33 @@
 setMethod(
 	'Preprocess',
 	signature(
-		params = 'SeuratPreprocess',
-		data  = 'Seurat'
+		data  = 'Seurat',
+		params = 'SeuratPreprocess'
 	),
 	function(
-		params,
 		data,
+		params,
 		...
 	){
 
-		cn <- colnames(data)
+		stopifnot(valid(data, params))
 
-		stopifnot(!any(duplicated(cn)))
+		rc <- rowSums(GetAssayData(data, 'data') > 0)
+		cc <- colSums(GetAssayData(data, 'data') > 0)
+
+		invalid <- rc < params@min_cells
+		if (any(invalid)){
+			data <- data[!invalid, ]
+			sprintf('Preprocess | removing %d genes that are expressed in <%d (min_cells) cells', sum(invalid), params@min_cells) %>% message()
+		}
+
+		invalid <- cc < params@min_genes
+		if (any(invalid)){
+			data <- data[, !invalid]
+			sprintf('Preprocess | removing %d cells that have <%d (min_genes) detected genes', sum(invalid), params@min_genes) %>% message()
+		}
+
+		cn <- colnames(data)
 
 		if (params@batchwise){
 			batch_list <- SplitObject(data, split.by = params@batch)
@@ -52,12 +67,7 @@ setMethod(
 		features <- SelectIntegrationFeatures(batch_list, verbose = FALSE)
 
 		data@assays[[data@active.assay]]@var.features <- features
-
-		if(params@regressUMI && params@scaling) {
-			data <- ScaleData(object = data, vars.to.regress = params@vars.to.regress, verbose = FALSE)
-		} else if (params@scaling) { # default option
-			data <- ScaleData(object = data, verbose = FALSE)
-		}
+		data <- ScaleData(object = data, verbose = FALSE)
 		data
 
 	}
@@ -66,20 +76,20 @@ setMethod(
 
 #' Preprocess a Seurat object by the Scanpy pipeline
 #'
-#' @param params a ScanpyPreprocess object
 #' @param data  a Seurat object
+#' @param params a ScanpyPreprocess object
 #' @param ... Additional arguments
 #' @return returns a Seurat object
 #'
 setMethod(
 	'Preprocess',
 	signature(
-		params = 'ScanpyPreprocess',
-		data  = 'Seurat'
+		data  = 'Seurat',
+		params = 'ScanpyPreprocess'
 	),
 	function(
-		params,
 		data,
+		params,
 		...
 	){
 
@@ -90,8 +100,8 @@ setMethod(
 
 #' Preprocess a SingleCellExperiment object by the Scanpy pipeline
 #'
-#' @param params a ScanpyPreprocess object
 #' @param data a SingleCellExperiment object
+#' @param params a ScanpyPreprocess object
 #' @return returns a SingleCellExperiment object
 #' @param ... Additional arguments
 #' @importFrom reticulate import
@@ -99,12 +109,12 @@ setMethod(
 setMethod(
 	'Preprocess',
 	signature(
-		params = 'ScanpyPreprocess',
-		data  = 'SingleCellExperiment'
+		data  = 'SingleCellExperiment',
+		params = 'ScanpyPreprocess'
 	),
 	function(
-		params,
 		data,
+		params,
 		...
 	){
 

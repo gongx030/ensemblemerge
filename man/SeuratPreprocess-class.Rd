@@ -10,10 +10,6 @@ The SeuratPreprocess class
 \section{Slots}{
 
 \describe{
-\item{\code{regressUMI}}{whether or not regress against UMI}
-
-\item{\code{numHVG}}{number of highly variable genes}
-
 \item{\code{selection.method}}{The gene selection method}
 
 \item{\code{batchwise}}{whether or not performing batchwise data normalization and HVG selection}

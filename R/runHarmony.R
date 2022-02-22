@@ -9,11 +9,12 @@
 #'
 run_Harmony <- function(params, data){
 
-	if (is.null(data@reductions[[params@dimreduc_names[["PCA"]]]])){
+	if (is.null(data@reductions[[params@pca_name]])){
   	data <- RunPCA(
 			object = data, 
 			npcs = params@npcs, 
-			reduction.name = params@dimreduc_names[["PCA"]]
+			reduction.name = params@pca_name,
+			verbose = FALSE
 		)
 	}
 
@@ -24,8 +25,9 @@ run_Harmony <- function(params, data){
 		plot_convergence = FALSE, 
 		nclust = params@num_clust, 
 		max.iter.cluster = params@max_iter_cluster,
-		assay.use = 'RNA',
-		reduction.save = params@name
+		assay.use = params@raw_assay,
+		reduction.save = params@name,
+		verbose = FALSE
 	)
 
 	data

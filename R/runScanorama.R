@@ -3,7 +3,7 @@
 #' @param params a ScanoramaParams object
 #' @param data a Seurat object
 #'
-#' @importFrom reticulate import
+#' @importFrom reticulate import py_capture_output
 #' @importFrom Seurat VariableFeatures SplitObject GetAssayData CreateDimReducObject DefaultAssay
 #'
 #' @return returns a Seurat object with integrated data
@@ -25,14 +25,24 @@ run_Scanorama <- function(params, data){
 		assay_list[[i]] <- as.matrix(t(GetAssayData(object.list[[i]], "data")))
 		gene_list[[i]] <- rownames(object.list[[i]])
 	}
-	integrated.corrected.data <- sr$correct(assay_list, gene_list, return_dimred = TRUE, return_dense = TRUE, dimred = params@npcs)
 
-	intdimred <- do.call(rbind, integrated.corrected.data[[1]])
+	reticulate::py_capture_output(
+		integrated.corrected.data <- sr$correct(
+			assay_list, 
+			gene_list, 
+			return_dimred = TRUE, 
+			return_dense = TRUE, 
+			dimred = params@npcs
+		)
+	)
+
+	intdimred <- do.call('rbind', integrated.corrected.data[[1]])
 	rownames(intdimred) <- unlist(sapply(object.list, colnames))
+	intdimred <- intdimred[colnames(data), , drop = FALSE]
 
 	data[[params@name]] <- CreateDimReducObject(
 		embeddings = intdimred,
-		key = sprintf('%s_', params@name), 
+		key = params@reduction_key,
 		assay = DefaultAssay(data)
 	)
 	data

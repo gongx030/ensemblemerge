@@ -4,12 +4,24 @@
 \alias{setParams}
 \title{Set parameters for integration}
 \usage{
-setParams(methods = "Seurat", ...)
+setParams(
+  methods = "Seurat",
+  npcs = 20L,
+  raw_assay = "RNA",
+  batch = "batch",
+  ...
+)
 }
 \arguments{
 \item{methods}{The method names (default: 'Seurat')}
 
-\item{...}{Additional arguments}
+\item{npcs}{the size of latent dimension (default: 20L)}
+
+\item{raw_assay}{Assay field in the Seurat object for the raw counts (default: 'RNA')}
+
+\item{batch}{the name for the batch label (default: 'batch')}
+
+\item{...}{Additional arguments for new('SeuratPreprocess', ...)}
 }
 \value{
 If only one method is used, the output is a parameter object for each method; If more than one methods are used, the output is a `EnsembleMergeParams` object

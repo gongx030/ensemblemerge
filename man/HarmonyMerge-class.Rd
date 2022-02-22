@@ -12,8 +12,6 @@ The HarmonyMerge class
 \describe{
 \item{\code{theta_harmony}}{diversity clustering penalty parameter, larger values increase diversity}
 
-\item{\code{seed}}{set seed value for umap clustering}
-
 \item{\code{num_clust}}{number of clusters to use in harmony integration}
 
 \item{\code{max_iter_cluster}}{maximum number of learning iterations per cluster}

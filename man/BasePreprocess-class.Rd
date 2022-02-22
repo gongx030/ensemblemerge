@@ -21,5 +21,11 @@ The BasePreprocess class
 \item{\code{norm_method}}{the normalization method}
 
 \item{\code{scale_factor}}{the scaling factor}
+
+\item{\code{numHVG}}{number of highly variable genes}
+
+\item{\code{raw_assay}}{the raw assay field in a Seurat object}
+
+\item{\code{batch}}{character name of batch in dataset metadata}
 }}
 

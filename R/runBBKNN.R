@@ -1,5 +1,7 @@
 #' Run BBKNN integration
 #'
+#' Adopted from https://github.com/Teichlab/bbknn
+#'
 #' @param params a scVIParams object
 #' @param data a Seurat object
 #'
@@ -14,42 +16,28 @@ run_BBKNN <- function(params, data){
 	sc <- import("scanpy")
 	anndata <- import("anndata")
 
-	if (is.null(data@reductions[[params@dimreduc_names[["PCA"]]]])){
-	  data <- RunPCA(
-			object = data, 
-			npcs = params@npcs + 1L, 
-			reduction.name = params@dimreduc_names[["PCA"]]
-		)
-	}
+	adata <- anndata$AnnData(
+		X = t(GetAssayData(data, 'scale.data')), 
+		obs = data[[params@batch]]
+	)
 
-	pca <- data[[params@dimreduc_names[["PCA"]]]]@cell.embeddings
-	adata <- anndata$AnnData(X = pca, obs = data[[params@batch]])
-
-	# The weird PCA computation part and replacing it with your original values is unfortunately necessary 
-	# due to how AnnData innards operate from a reticulate level. 
- 	sc$tl$pca(adata)
-	adata$obsm$X_pca <- pca
-
-	bbknn$bbknn(adata, params@batch)
+ 	sc$tl$pca(adata, n_comps = params@npcs)
+	bbknn$bbknn(adata, batch_key = params@batch)
 
 	if (params@ridge_regress){
   	if (params@confounder_key == 'leiden'){
  	   	sc$tl$leiden(adata, resolution = 0.4)
     	bbknn$ridge_regression(adata, batch_key= params@batch, confounder_key = params@confounder_key)
-    	sc$tl$pca(adata)
-    	bbknn$bbknn(adata, batch_key = params@batch)
 		}else{
     	bbknn$ridge_regression(adata, batch_key = params@batch)
-    	sc$tl$pca(data)
-    	bbknn$bbknn(data, batch_key = params@batch)
 		}
-	}else{
- 		bbknn$bbknn(data, batch_key= params@batch)
+   	sc$tl$pca(adata, n_comps = params@npcs)
+   	bbknn$bbknn(adata, batch_key = params@batch)
 	}
 
-	# ncol(adata$obsm[["X_pca"]]) = params@npcs - 1
 	latent <- adata$obsm[["X_pca"]]
 	rownames(latent) <- colnames(data)
+	colnames(latent) <- sprintf('%s_%d', params@reduction_key, 1:params@npcs)
 
 	data[[params@name]] <- CreateDimReducObject(
 		embeddings = latent,

@@ -15,5 +15,5 @@ run_BBKNN(params, data)
 returns a Seurat object with integrated data
 }
 \description{
-Run BBKNN integration
+Adopted from https://github.com/Teichlab/bbknn
 }

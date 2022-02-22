@@ -8,6 +8,6 @@
 #'
 run_Uncorrected <- function(params, data){
 
-  data <- RunPCA(data, npcs = params@npcs, reduction.name = params@name)
+  data <- RunPCA(data, npcs = params@npcs, reduction.name = params@name, verbose = FALSE)
 	data
 }

@@ -1,7 +1,7 @@
 #' Merge SummarizedExperiment objects
 #'
-#' @param params a BaseMerge object 
 #' @param data a SummarizedExperiment object 
+#' @param params a BaseMerge object 
 #' @param ... Additional arguments
 #'
 #' @return returns a data object with integrated data
@@ -11,12 +11,12 @@
 setMethod(
 	'Merge',
 	signature(
-		params = 'BaseMerge',
-		data  = 'SummarizedExperiment'
+		data  = 'SummarizedExperiment',
+		params = 'BaseMerge'
 	),
 	function(
-		params,
 		data,
+		params,
 		...
 	){
 
@@ -28,8 +28,8 @@ setMethod(
 
 #' Merge Seurat objects
 #'
-#' @param params a BaseMerge object 
 #' @param data Seurat object containing single cell counts matrix
+#' @param params a BaseMerge object 
 #' @param ... Additional arguments
 #' @return returns a data object with integrated data
 #' @importFrom Seurat as.SingleCellExperiment
@@ -38,41 +38,57 @@ setMethod(
 setMethod(
 	'Merge',
 	signature(
-		params = 'BaseMerge',
-		data  = 'Seurat'
+		data  = 'Seurat',
+		params = 'BaseMerge'
 	),
 	function(
-		params,
 		data,
+		params,
 		...
 	){
 
-		if (is(params, 'SeuratParams')){
+		sprintf('Merge | running %s', params@name) %>% message()
+
+		stopifnot(valid(data, params))
+
+		if (is(params, 'SeuratMerge')){
     	data = run_Seurat(params, data)
-		}else if (is(params, 'HarmonyParams')){
+		}else if (is(params, 'HarmonyMerge')){
     	data = run_Harmony(params, data)
-		}else if (is(params, 'FastMNNParams')){
+		}else if (is(params, 'FastMNNMerge')){
     	data = run_fastMNN(params, data)
-		}else if (is(params, 'UncorrectedParams')){
+		}else if (is(params, 'UncorrectedMerge')){
 	    data = run_Uncorrected(params, data)
-		}else if (is(params, 'LigerParams')){
+		}else if (is(params, 'LigerMerge')){
 	    data = run_Liger(params, data)
-		}else if (is(params, 'BBKNNParams')){
+		}else if (is(params, 'BBKNNMerge')){
 	    data = run_BBKNN(params, data)
-		}else if (is(params, 'ScanoramaParams')){
+		}else if (is(params, 'ScanoramaMerge')){
 	    data = run_Scanorama(params, data)
-		}else if (is(params, 'scVIParams')){
+		}else if (is(params, 'scVIMerge')){
 	    data = run_scVI(params, data)
 		}else
 			stop(sprintf('unknown params class: %s', class(params)))
+
+		sprintf('Merge | running UMAP') %>% message()
+	  data <- RunUMAP(
+			data, 
+			reduction = params@name, 
+			dims = 1:params@npcs, 
+			reduction.key = params@umap_key, 
+			seed.use = 1, 
+			reduction.name = params@umap_name, 
+			verbose = FALSE
+		)
 
 		data
 })
 
 #' Merge SummarizedExperiment objects
 #'
-#' @param params a ParamsList object 
 #' @param data a SummarizedExperiment object 
+#' @param params a MethodList object 
+#' @param counts the assay field for raw counts in a SingleCellExperiment object (default: 'counts')
 #' @param ... Additional arguments
 #'
 #' @importFrom Seurat CreateSeuratObject 
@@ -85,34 +101,33 @@ setMethod(
 setMethod(
 	'Merge',
 	signature(
-		params = 'ParamsList',
-		data  = 'SummarizedExperiment'
+		data  = 'SummarizedExperiment',
+		params = 'Params'
 	),
 	function(
-		params,
 		data,
+		params,
 		counts = 'counts',
-		assay = 'RNA',
 		...
 	){
 
 		seurat <- CreateSeuratObject(
 			counts = assays(data)[[counts]], # Unnormalized data such as raw counts or TPMs
 			meta.data = as.data.frame(colData(data)),
-			assay = assay
+			assay = params@preprocess@raw_assay
 		)
 
 		if (ncol(rowData(data)) > 0){
-			seurat[[assaye]][[]] <- as.data.frame(rowData(data))
+			seurat[[params@preprocess@raw_assay]][[]] <- as.data.frame(rowData(data))
 		}
 
-		Merge(params, seurat, ...)
+		Merge(seurat, params, ...)
 })
 
 #' Merge Seurat objects
 #'
-#' @param params a ParamsList object 
 #' @param data a Seurat object 
+#' @param params a MethodList object 
 #' @param ... Additional arguments
 #'
 #' @return returns a data object with integrated data
@@ -122,75 +137,25 @@ setMethod(
 setMethod(
 	'Merge',
 	signature(
-		params = 'ParamsList',
-		data  = 'Seurat'
+		data  = 'Seurat',
+		params = 'Params'
 	),
 	function(
-		params,
 		data,
+		params,
 		...
 	){
-
-		stopifnot(!any(duplicated(colnames(data))))
 
 		# use the preprocessing pipeline from the first one to process the data
 		# need to deal with the situation where the preprocessing specificication may be different from constituent methods
 		# we should use consistent preprocessing method for constituent method
 		#
-		data <- Preprocess(params[[1L]], data)
+		data <- Preprocess(data, params@preprocess)
 
-		for (i in 1:length(params)){
-			data <- Merge(params[[i]], data)
+		for (i in 1:length(params@constituent)){
+			data <- Merge(data, params@constituent[[i]])
 		}
 		data
 })
 
 
-#' Merge Seurat objects by the EnsembleMerge method
-#'
-#' @param params a EnsembleMergeParams object
-#' @param data a Seurat object 
-#' @param ... Additional arguments
-#' @return returns a data object (SingleCellExperiment or Seurat) of the integrated data
-#' @importFrom uwot umap
-#' @importFrom Seurat DefaultAssay
-#' @export
-#'
-setMethod(
-	'Merge',
-	signature(
-		params = 'EnsembleMergeParams',
-		data  = 'Seurat'
-	),
-	function(
-		params,
-		data,
-		...
-	){
-
-		integrated <- list()
-
-		for (i in 1:length(params@constituent)){
-			data <- Merge(params@constituent[[i]], data)
-		}
-
-		browser()
-
-		for (i in 1:length(params@constituent)){
-			integrated[[i]] <- Merge(params@constituent[[i]], data)
-		}
-
-		cn <- colnames(data)
-		res <- ensemblemerge_core(params, integrated)
-		ng <- res$ng[cn, cn]
-		y <- umap(ng)
-		rownames(y) <- colnames(data)
-		data[[params@umap_name]] <- CreateDimReducObject(
-			embeddings = y, 
-			key = params@umap_key, 
-			assay = DefaultAssay(data)
-		)
-		data@misc$kta_weight <- res$weight
-		data
-	}
-)

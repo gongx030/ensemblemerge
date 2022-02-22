@@ -10,19 +10,13 @@ The BaseMerge class
 \section{Slots}{
 
 \describe{
-\item{\code{batch}}{character name of batch in dataset metadata}
-
-\item{\code{dimreduc_names}}{name of dimension reduction in metadata, i.e. "PCA"}
-
-\item{\code{return}}{data type to return, can be Seurat or SingleCellExperiment}
+\item{\code{pca_name}}{name of PCA results in metadata}
 
 \item{\code{dependences}}{a list of dependend packages}
 
 \item{\code{name}}{The name of the method used to store the dimension reduction results}
 
 \item{\code{npcs}}{the size of latent dimension (default: 20L)}
-
-\item{\code{latent}}{whether or not use latent representation to construct the neighboring graph (default: FALSE)}
 
 \item{\code{umap_name}}{the name of the UMAP results}
 
@@ -33,5 +27,9 @@ The BaseMerge class
 \item{\code{snn_name}}{the name of SNN results}
 
 \item{\code{knn_name}}{the name of the KNN results}
+
+\item{\code{raw_assay}}{the raw assay field in a Seurat object}
+
+\item{\code{batch}}{character name of batch in dataset metadata}
 }}
 
