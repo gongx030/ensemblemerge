@@ -1,12 +1,12 @@
 #' Run BBKNN integration
 #'
-#' Adopted from https://github.com/Teichlab/bbknn
+#' Adopted from https://scanpy-tutorials.readthedocs.io/en/latest/integrating-data-using-ingest.html#BBKNN
 #'
 #' @param params a scVIParams object
 #' @param data a Seurat object
 #'
 #' @importFrom reticulate import 
-#' @importFrom Seurat RunPCA  CreateDimReducObject DefaultAssay
+#' @importFrom Seurat RunPCA  CreateDimReducObject DefaultAssay as.Graph as.Neighbor
 #'
 #' @return returns a Seurat object with integrated data
 #'
@@ -17,33 +17,24 @@ run_BBKNN <- function(params, data){
 	anndata <- import("anndata")
 
 	adata <- anndata$AnnData(
-		X = t(GetAssayData(data, 'scale.data')), 
+		X = t(GetAssayData(data, 'data')), 
 		obs = data[[params@batch]]
 	)
 
  	sc$tl$pca(adata, n_comps = params@npcs)
-	bbknn$bbknn(adata, batch_key = params@batch)
 
-	if (params@ridge_regress){
-  	if (params@confounder_key == 'leiden'){
- 	   	sc$tl$leiden(adata, resolution = 0.4)
-    	bbknn$ridge_regression(adata, batch_key= params@batch, confounder_key = params@confounder_key)
-		}else{
-    	bbknn$ridge_regression(adata, batch_key = params@batch)
-		}
-   	sc$tl$pca(adata, n_comps = params@npcs)
-   	bbknn$bbknn(adata, batch_key = params@batch)
-	}
+	sc$external$pp$bbknn(
+		adata, 
+		batch_key = params@batch
+	)
+	sc$tl$umap(adata)
+	y <- adata$obsm[['X_umap']]
+	rownames(y) <- colnames(data)
 
-	latent <- adata$obsm[["X_pca"]]
-	rownames(latent) <- colnames(data)
-	colnames(latent) <- sprintf('%s_%d', params@reduction_key, 1:params@npcs)
-
-	data[[params@name]] <- CreateDimReducObject(
-		embeddings = latent,
-		key = params@reduction_key,
-		assay = DefaultAssay(data)
+	data[[params@umap_name]] <- CreateDimReducObject(
+		embeddings = y,
+		assay = params@raw_assay,
+		key = params@umap_key
 	)
 	data
-
 }

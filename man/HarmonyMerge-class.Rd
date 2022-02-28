@@ -10,9 +10,7 @@ The HarmonyMerge class
 \section{Slots}{
 
 \describe{
-\item{\code{theta_harmony}}{diversity clustering penalty parameter, larger values increase diversity}
-
-\item{\code{num_clust}}{number of clusters to use in harmony integration}
+\item{\code{theta}}{diversity clustering penalty parameter, larger values increase diversity}
 
 \item{\code{max_iter_cluster}}{maximum number of learning iterations per cluster}
 }}

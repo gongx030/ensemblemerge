@@ -7,11 +7,3 @@
 \description{
 The BBKNNMerge class
 }
-\section{Slots}{
-
-\describe{
-\item{\code{ridge_regress}}{whether or not performing ridge regression}
-
-\item{\code{confounder_key}}{Confounder key}
-}}
-

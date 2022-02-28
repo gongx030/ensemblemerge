@@ -18,9 +18,10 @@ setGeneric("getNeighborGraph", function(data, params, ...) standardGeneric("getN
 #'
 #' @param data a data object
 #' @param params a parameter object
+#' @param merge a merge object
 #' @param ... Other arguments
 #'
-setGeneric("Preprocess", function(data, params, ...) standardGeneric("Preprocess"))
+setGeneric("Preprocess", function(data, params, merge, ...) standardGeneric("Preprocess"))
 
 #' The generic function of valid
 #'

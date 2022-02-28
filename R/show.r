@@ -99,8 +99,7 @@ setMethod(
 		object
 	){
 		callNextMethod()
-		sprintf('%20.20s: %9.3f [%s]', 'theta_harmony', object@theta_harmony, 'diversity clustering penalty parameter, larger values increase diversity') %>% message()
-		sprintf('%20.20s: %9.d [%s]', 'num_clust', object@num_clust, 'number of clusters to use in harmony integration') %>% message()
+		sprintf('%20.20s: %9.3f [%s]', 'theta', object@theta, 'diversity clustering penalty parameter, larger values increase diversity') %>% message()
 		sprintf('%20.20s: %9.d [%s]', 'max_iter_cluster', object@max_iter_cluster, 'maximum number of learning iterations per cluster') %>% message()
 	}
 )

@@ -9,7 +9,7 @@ run_Seurat(params, data)
 \arguments{
 \item{params}{a SeuratParam object}
 
-\item{data}{a Seurat object}
+\item{data}{a list of Seurat objects or a SeuratList object}
 }
 \value{
 returns a Seurat object with integrated data

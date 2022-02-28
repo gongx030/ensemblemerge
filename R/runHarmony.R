@@ -21,13 +21,12 @@ run_Harmony <- function(params, data){
   data <- harmony::RunHarmony(
 		object = data, 
 		params@batch, 
-		theta = params@theta_harmony, 
+		theta = params@theta, 
 		plot_convergence = FALSE, 
-		nclust = params@num_clust, 
 		max.iter.cluster = params@max_iter_cluster,
 		assay.use = params@raw_assay,
 		reduction.save = params@name,
-		verbose = FALSE
+		verbose = TRUE
 	)
 
 	data

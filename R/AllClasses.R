@@ -137,7 +137,7 @@ setClass(
 	),
   prototype(
     min_cells = 10L,
-    min_genes = 300L,
+    min_genes = 0L,
 		norm_data = TRUE,
 		scaling = TRUE,
 		norm_method = "LogNormalize",
@@ -204,6 +204,29 @@ setClass(
 setClass(
 	'MethodList',
 	contains = 'SimpleList'
+)
+
+#' The SeuratList class
+#'
+#' @export
+#'
+#' @importFrom S4Vectors SimpleList
+#' @importFrom methods is
+#'
+setClass(
+	'SeuratList',
+	contains = 'SimpleList',
+	validity = function(object){
+		valid <- sapply(object, is, 'Seurat')
+		if (any(!valid)){
+			sprintf('all elememts must be Seurat objects') %>% message()
+			return(FALSE)
+		}
+
+		# also need to make sure the the dimensions and other features match
+
+		TRUE
+	}
 )
 
 
@@ -297,25 +320,21 @@ setClass(
 
 #' The HarmonyMerge class
 #'
-#' @slot theta_harmony diversity clustering penalty parameter, larger values increase diversity
-#' @slot num_clust number of clusters to use in harmony integration
+#' @slot theta diversity clustering penalty parameter, larger values increase diversity
 #' @slot max_iter_cluster maximum number of learning iterations per cluster
-#'
 #'
 #' @export
 #'
 setClass(
 	'HarmonyMerge', 
 	representation(
-    theta_harmony = "numeric",
-    num_clust = "integer",
+    theta = "numeric",
     max_iter_cluster = "integer"
 	),
 	contains = c('BaseMerge'),
   prototype(
-		theta_harmony = 2,
-		num_clust = 50L,
-		max_iter_cluster = 100L,
+		theta = 2,
+		max_iter_cluster = 20L,
 		name = 'Harmony',
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
@@ -387,21 +406,14 @@ setClass(
 
 #' The BBKNNMerge class
 #'
-#' @slot ridge_regress whether or not performing ridge regression
-#' @slot confounder_key Confounder key
-#'
 #' @export
 #'
 setClass(
 	'BBKNNMerge', 
 	representation(
-    ridge_regress = "logical",
-    confounder_key = "character"
 	),
 	contains = 'BaseMerge', 
   prototype(
-		ridge_regress = TRUE,
-		confounder_key = "leiden",
 		name = 'BBKNN',
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),

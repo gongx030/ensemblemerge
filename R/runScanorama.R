@@ -13,7 +13,7 @@ run_Scanorama <- function(params, data){
   sc <- import("scanpy")
   sr <- import("scanorama")
   anndata <- import("anndata")
-  np <- import("numpy")
+  # np <- import("numpy")
 
 	features <- VariableFeatures(data)
 	object.list <- SplitObject(data, split.by = params@batch)
@@ -26,14 +26,12 @@ run_Scanorama <- function(params, data){
 		gene_list[[i]] <- rownames(object.list[[i]])
 	}
 
-	reticulate::py_capture_output(
-		integrated.corrected.data <- sr$correct(
-			assay_list, 
-			gene_list, 
-			return_dimred = TRUE, 
-			return_dense = TRUE, 
-			dimred = params@npcs
-		)
+	integrated.corrected.data <- sr$correct(
+		assay_list, 
+		gene_list, 
+		return_dimred = TRUE, 
+		return_dense = TRUE, 
+		dimred = params@npcs
 	)
 
 	intdimred <- do.call('rbind', integrated.corrected.data[[1]])

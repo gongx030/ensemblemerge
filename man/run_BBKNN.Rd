@@ -15,5 +15,5 @@ run_BBKNN(params, data)
 returns a Seurat object with integrated data
 }
 \description{
-Adopted from https://github.com/Teichlab/bbknn
+Adopted from https://scanpy-tutorials.readthedocs.io/en/latest/integrating-data-using-ingest.html#BBKNN
 }

@@ -4,12 +4,14 @@
 \alias{Preprocess}
 \title{The generic function of Preprocess}
 \usage{
-Preprocess(data, params, ...)
+Preprocess(data, params, merge, ...)
 }
 \arguments{
 \item{data}{a data object}
 
 \item{params}{a parameter object}
+
+\item{merge}{a merge object}
 
 \item{...}{Other arguments}
 }
