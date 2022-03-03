@@ -277,7 +277,8 @@ setMethod(
 		)
 
 		if (ncol(rowData(data)) > 0){
-			seurat[[params@preprocess@raw_assay]][[]] <- as.data.frame(rowData(data))
+			d <- as.data.frame(rowData(data))
+			seurat[[params@preprocess@raw_assay]]@meta.features <- d
 		}
 
 		Merge(seurat, params, ...)
