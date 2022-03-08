@@ -317,6 +317,11 @@ setMethod(
 			sprintf('Merge | running %s', params@constituent[[i]]@name) %>% message()
 			d <- Merge(d, params@constituent[[i]])
 
+			# it is likely that ncol(d) will be smaller than ncol(data) due to the cell-wise filtering
+			# in this case, only the cells present in `d` will be kept in `data`
+			if (ncol(d) < ncol(data))
+				data <- data[, colnames(d)]
+
 			if (is(params@constituent[[i]], 'BBKNNMerge')){
 
 				# BBKNN does not have latent representations

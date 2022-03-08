@@ -137,7 +137,7 @@ setClass(
 	),
   prototype(
     min_cells = 10L,
-    min_genes = 0L,
+    min_genes = 300L,
 		norm_data = TRUE,
 		scaling = TRUE,
 		norm_method = "LogNormalize",
