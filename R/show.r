@@ -155,7 +155,6 @@ setMethod(
 		object
 	){
 		callNextMethod()
-		sprintf('%20.20s: %9.9s [%s]', 'ridge_regress', object@ridge_regress, 'whether or not performing ridge regression') %>% message()
 		sprintf('%20.20s: %9.9s [%s]', 'confounder_key', object@confounder_key, 'confounder key') %>% message()
 	}
 )
