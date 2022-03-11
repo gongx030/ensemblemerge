@@ -10,7 +10,7 @@
 		"scVI"
 	)
   ### checking valid parameters ###
-  if(!all(x%in% availableMethods)){
+  if(!all(x%in% available_methods)){
     stop(sprintf("method must be the following: %s", paste(available_methods, collapse = ", ")))
   }
 }
