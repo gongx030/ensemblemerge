@@ -2,6 +2,8 @@
 #' 
 #' @param data a Seurat object
 #' @param params a BaseMerge object
+#' @param latent Whether or not use the latent representation to build the SNN (default: FALSE)
+#' @param k.param	Defines k for the k-nearest neighbor algorithm (default: 20L)
 #' @param ... Additional arguments
 #'
 #' @importFrom Seurat FindNeighbors RunUMAP 
@@ -15,62 +17,34 @@ setMethod(
 		data = 'Seurat',
 		params = "BaseMerge"
 	),
-	function(data, params, ...) {
+	function(
+		data, 
+		params, 
+		latent = FALSE,
+		k.param = 20L,
+		...
+	) {
 
-		if (params@latent){
-    	data <- FindNeighbors(
-				data, 
-				compute.SNN = TRUE, 
-				reduction = params@name,
-				dims = 1:params@npcs, 
-				graph.name = c(params@knn_name, params@snn_name),
-			)
+		if (latent){
+			stopifnot(!is.null(x@reductions[[params@name]]))
+			reduction <- params@name
+			dims <- 1:ncol(x@reductions[[params@name]])
 		}else{
-			data <- RunUMAP(
-				data, 
-				reduction = params@name, 
-				dims = 1:params@npcs,
-				reduction.name = params@umap_name, 
-				reduction.key = params@umap_key
-			)
-    	data <- FindNeighbors(
-				data, 
-				compute.SNN = TRUE, 
-				reduction = params@umap_name, 
-				dims = 1:params@umap_dim, 
-				graph.name = c(params@knn_name, params@snn_name)
-			)	
+			stopifnot(!is.null(x@reductions[[params@umap_name]]))
+			reduction <- params@umap_name
+			dims <- 1:ncol(x@reductions[[params@umap_name]])
 		}
-		data
-	}
-)
-
-#' Get a neighbor graph
-#' 
-#' @param data a Seurat object
-#' @param params a EnsembleMerge object
-#' @param ... Additional arguments
-#'
-#' @importFrom Seurat FindNeighbors 
-#'
-#' @return returns a Seurat object with neighboring information
-#' @export
-#'
-setMethod(
-	"getNeighborGraph", 
-	signature(
-		data = 'Seurat',
-		params = "EnsembleMerge"
-	),
-	function(data, params, ...) {
 
    	data <- FindNeighbors(
 			data, 
 			compute.SNN = TRUE, 
-			reduction = params@umap_name,
-			dims = 1:params@umap_dim, 
-			graph.name = c(params@knn_name, params@snn_name)
+			reduction = reduction,
+			dims = dims,
+			k.param = k.param,
+			graph.name = c(params@knn_name, params@snn_name),
+			verbose = FALSE
 		)
+
 		data
 	}
 )
