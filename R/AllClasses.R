@@ -61,21 +61,40 @@ check_package <- function(object){
 
 .check_dependences <- function(object){
 
-	res <- lapply(1:length(object@dependences), function(i){
-		check_package(object@dependences[[i]])
-	})
+	if (length(object@dependences) > 0){
+		res <- lapply(1:length(object@dependences), function(i){
+			check_package(object@dependences[[i]])
+		})
 
-	res <- res[!sapply(res, is.null)]
-	if (length(res) == 0){
-		TRUE
-	}else{
-		for (i in 1:length(res)){
-			res[[i]] %>% message()
+		res <- res[!sapply(res, is.null)]
+		if (length(res) == 0){
+			return(TRUE)
+		}else{
+			for (i in 1:length(res)){
+				res[[i]] %>% message()
+			}
+			return('missing packages')
 		}
-		return('missing packages')
 	}
+	return(TRUE)
 }
 
+.check_method <- function(x){
+	available_methods <- c(
+		 "Seurat",
+		 "Scanorama",
+		 "Harmony",
+		 "Liger",
+		 "BBKNN",
+		 "Uncorrected",
+		 "fastMNN",
+		 "scVI"
+	 )
+  ### checking valid parameters ###
+  if(!all(x%in% available_methods)){
+		stop(sprintf("method must be the following: %s", paste(available_methods, collapse = ", ")))
+	}
+}
 
 #' RPackage
 #' 
@@ -470,4 +489,48 @@ setClass(
 			new('PythonPackage', package_name = 'scvi-tools', package_version = '0.14.5')
 		)
 	)
+)
+
+
+#' The EnsembleMerge class
+#'
+#' @export
+#'
+setClass(
+	'EnsembleMerge',
+	representation(
+		constituent = 'MethodList'
+	),
+	contains = c('BaseMerge'),
+  prototype(
+		name = "Ensemble"
+	)
+)
+
+
+#' @importFrom methods callNextMethod 
+#'
+setMethod(
+	'initialize', 
+	'EnsembleMerge', 
+	function(.Object, methods, ...){
+
+		.check_method(methods)
+
+		ml <- new('MethodList', lapply(methods, function(method){
+			switch(
+				 method,
+				 "Seurat" = new("SeuratMerge"),
+				 "Harmony" = new("HarmonyMerge"),
+				 "Scanorama" = new("ScanoramaMerge"),
+				 "Liger" = new("LigerMerge"),
+				 "BBKNN" = new("BBKNNMerge"),
+				 "Uncorrected" = new("UncorrectedMerge"),
+				 "fastMNN" = new("FastMNNMerge"),
+				 "scVI" = new("scVIMerge")
+				 )
+		}))
+		.Object@constituent <- ml
+		callNextMethod(.Object, ...)
+	}
 )
