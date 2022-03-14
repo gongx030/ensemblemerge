@@ -542,8 +542,7 @@ setMethod(
 		methods_without_latent <- c('BBKNN')
 
 		for (i in 1:length(methods)){
-			class_name <- sprintf('%sMerge', methods[i])
-			p <- new(class_name, check_dependencies = FALSE)
+			p <- .new_object(methods[i], check_dependencies = FALSE)
 			if (.Object@latent){
 				.Object@constituent_reduction_names[i] <- p@name
 				exist <- methods[i] %in% methods_without_latent

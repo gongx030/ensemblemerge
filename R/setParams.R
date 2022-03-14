@@ -23,17 +23,7 @@ setParams <- function(
 	.check_method(methods)
 
 	ml <- new('MethodList', lapply(methods, function(method){
-	  m <- switch(
- 			method,
-			"Seurat" = new("SeuratMerge"),
-			"Harmony" = new("HarmonyMerge"),
-			"Scanorama" = new("ScanoramaMerge"),
-			"Liger" = new("LigerMerge"),
-			"BBKNN" = new("BBKNNMerge"),
-			"Uncorrected" = new("UncorrectedMerge"),
-			"fastMNN" = new("FastMNNMerge"),
-			"scVI" = new("scVIMerge")
-		)
+		m <- .new_object(method)
 		m@npcs <- npcs
 		m@raw_assay <- raw_assay
 		m@batch <- batch
@@ -48,3 +38,16 @@ setParams <- function(
 
 }
 
+.new_object <- function(x, ...){
+  switch(
+		x,
+		"Seurat" = new("SeuratMerge", ...),
+		"Harmony" = new("HarmonyMerge", ...),
+		"Scanorama" = new("ScanoramaMerge", ...),
+		"Liger" = new("LigerMerge", ...),
+		"BBKNN" = new("BBKNNMerge", ...),
+		"Uncorrected" = new("UncorrectedMerge", ...),
+		"fastMNN" = new("FastMNNMerge", ...),
+		"scVI" = new("scVIMerge", ...)
+	)
+}
