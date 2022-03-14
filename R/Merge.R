@@ -291,6 +291,7 @@ setMethod(
 #' @param ... Additional arguments
 #' @importFrom methods is
 #' @importFrom uwot umap
+#' @importFrom Seurat RunUMAP
 #'
 #' @return returns a data object with integrated data
 #'
@@ -352,5 +353,3 @@ setMethod(
 	}
 )
 	
-
-

@@ -291,7 +291,8 @@ setClass(
 		knn_name = 'character',
 		seed = 'integer',
 		raw_assay = 'character',
-		batch = "character"
+		batch = "character",
+		check_dependencies = 'logical'
 	),
   prototype(
 		pca_name = 'pca',
@@ -299,20 +300,22 @@ setClass(
 		umap_dim = 2L,
 		seed = 123L,
 		raw_assay = 'RNA',
-		batch = 'batch'
+		batch = 'batch',
+		check_dependencies = TRUE
 	)
 )
 
 #' @importFrom methods callNextMethod 
 #'
-setMethod('initialize', 'BaseMerge', function(.Object, ...){
-	.check_dependences(.Object)
+setMethod('initialize', 'BaseMerge', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
 	.Object@reduction_key <- sprintf('%s_', .Object@name)
 	.Object@umap_name <- sprintf('%sUMAP', .Object@name)
 	.Object@umap_key <- sprintf('%sUMAP_', .Object@name)
 	.Object@snn_name <- sprintf('%sSNN', .Object@name)
 	.Object@knn_name <- sprintf('%sKNN', .Object@name)
-	return(.Object)
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 })
 
 
@@ -499,11 +502,25 @@ setClass(
 setClass(
 	'EnsembleMerge',
 	representation(
-		constituent = 'MethodList'
+		name = 'character',
+		umap_name = 'character',
+		umap_key = 'character',
+		umap_dim = 'integer',
+		snn_name = 'character',
+		knn_name = 'character',
+		raw_assay = 'character',
+		constituent_reduction_names = 'character',
+		constituent_knn_names = 'character',
+		constituent_snn_names = 'character',
+		k.param = 'integer',
+		latent = 'logical'
 	),
-	contains = c('BaseMerge'),
   prototype(
-		name = "Ensemble"
+		name = "Ensemble",
+		umap_dim = 2L,
+		raw_assay = 'RNA',
+		k.param = 20L,
+		latent = FALSE
 	)
 )
 
@@ -517,20 +534,28 @@ setMethod(
 
 		.check_method(methods)
 
-		ml <- new('MethodList', lapply(methods, function(method){
-			switch(
-				 method,
-				 "Seurat" = new("SeuratMerge"),
-				 "Harmony" = new("HarmonyMerge"),
-				 "Scanorama" = new("ScanoramaMerge"),
-				 "Liger" = new("LigerMerge"),
-				 "BBKNN" = new("BBKNNMerge"),
-				 "Uncorrected" = new("UncorrectedMerge"),
-				 "fastMNN" = new("FastMNNMerge"),
-				 "scVI" = new("scVIMerge")
-				 )
-		}))
-		.Object@constituent <- ml
-		callNextMethod(.Object, ...)
+		.Object@umap_name <- sprintf('%sUMAP', .Object@name)
+		.Object@umap_key <- sprintf('%sUMAP_', .Object@name)
+		.Object@snn_name <- sprintf('%sSNN', .Object@name)
+		.Object@knn_name <- sprintf('%sKNN', .Object@name)
+		.Object <- callNextMethod(.Object, ...)
+		methods_without_latent <- c('BBKNN')
+
+		for (i in 1:length(methods)){
+			class_name <- sprintf('%sMerge', methods[i])
+			p <- new(class_name, check_dependencies = FALSE)
+			if (.Object@latent){
+				.Object@constituent_reduction_names[i] <- p@name
+				exist <- methods[i] %in% methods_without_latent
+				if (exist){
+					.Object@constituent_reduction_names[i] <- p@umap_name
+				}
+			}else{
+				.Object@constituent_reduction_names[i] <- p@umap_name
+			}
+			.Object@constituent_snn_names[i] <- p@snn_name
+			.Object@constituent_knn_names[i] <- p@knn_name
+		}
+		.Object
 	}
 )

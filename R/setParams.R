@@ -20,21 +20,7 @@ setParams <- function(
 	...
 ){
 
-	availableMethods = c(
-		"Seurat", 
-		"Scanorama", 
-		"Harmony", 
-		"Liger", 
-		"BBKNN", 
-		"Uncorrected", 
-		"fastMNN", 
-		"scVI"
-	) # list available availableMethods
-
-  ### checking valid parameters ###
-  if(!all(methods %in% availableMethods)){
-    stop(sprintf("method must be the following: %s", paste(availableMethods, collapse = ", ")))
-  }
+	.check_method(methods)
 
 	ml <- new('MethodList', lapply(methods, function(method){
 	  m <- switch(

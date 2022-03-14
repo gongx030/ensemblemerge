@@ -4,10 +4,12 @@
 \alias{ensemble}
 \title{The generic function of ensemble}
 \usage{
-ensemble(x, ...)
+ensemble(x, params, ...)
 }
 \arguments{
 \item{x}{a data object}
+
+\item{params}{a parameter object}
 
 \item{...}{Other arguments}
 }

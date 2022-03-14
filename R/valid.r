@@ -71,3 +71,31 @@ setMethod(
 
 	}
 )
+
+#' Validate a Seurat object before ensembling
+#'
+#' @param x a Seurat object
+#' @param params a EnsembleMerge object
+#' @param ... Additional arguments
+#'
+setMethod(
+	'valid',
+	signature(
+		x = 'Seurat',
+		params = 'EnsembleMerge'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		exist <-  params@constituent_reduction_names %in% names(x@reductions)
+		if (any(!exist)){
+			stop(sprintf('The UAMP reduction does not exist for the following methods: %s', paste(params@constituent_reduction_names[!exist], collapse = ',')))
+		}
+
+		return(TRUE)
+
+	}
+)
