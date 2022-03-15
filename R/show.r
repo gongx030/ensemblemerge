@@ -156,7 +156,6 @@ setMethod(
 		object
 	){
 		callNextMethod()
-		sprintf('%20.20s: %21.21s [%s]', 'confounder_key', object@confounder_key, 'confounder key') %>% message()
 	}
 )
 

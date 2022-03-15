@@ -1,8 +1,8 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single
     package
-Version: 2.1.1-015
-Date: 2022-03-14
+Version: 2.1.1-016
+Date: 2022-03-15
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Description: EnsembleMerge provides a unified interface for individual
