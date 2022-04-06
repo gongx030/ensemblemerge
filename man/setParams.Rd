@@ -5,6 +5,7 @@
 \title{Set parameters for integration}
 \usage{
 setParams(
+  task = "integration",
   methods = "Seurat",
   npcs = 20L,
   raw_assay = "RNA",
@@ -13,6 +14,8 @@ setParams(
 )
 }
 \arguments{
+\item{task}{Task names}
+
 \item{methods}{The method names (default: 'Seurat')}
 
 \item{npcs}{the size of latent dimension (default: 20L)}

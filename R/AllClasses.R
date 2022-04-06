@@ -127,7 +127,15 @@ setClass(
 	)
 )
 
-
+#' The BasePreprocess class
+#'
+setClass(
+	'Task',
+	representation(
+	),
+	prototype(
+	)
+)
 
 #' The BasePreprocess class
 #'

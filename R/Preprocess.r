@@ -4,9 +4,9 @@
 #'
 #' @param data a Seurat object
 #' @param params a SeuratPreprocess object 
-#' @param merge a BaseMerge object
+#' @param output Output type ('Seurat' or 'SeuratList')
 #' @param ... Additional arguments
-#' @return a Seurat object (if there is only one batch), or a list of Seurat objects
+#' @return a Seurat object (if there is only one batch), or a SeuratList
 
 #' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures
 #'
@@ -14,13 +14,12 @@ setMethod(
 	'Preprocess',
 	signature(
 		data  = 'Seurat',
-		params = 'SeuratPreprocess',
-		merge = 'BaseMerge'
+		params = 'SeuratPreprocess'
 	),
 	function(
 		data,
 		params,
-		merge,
+		output = 'Seurat',
 		...
 	){
 
@@ -66,9 +65,11 @@ setMethod(
 			)
 		}
 
-		if (is(merge, 'SeuratMerge')){
+		if (output == 'SeuratList'){
+
 			new('SeuratList', batch_list)
-		}else{
+
+		}else if (output == 'Seurat'){
 			# select features that are repeatedly variable across datasets for integration
 			features <- SelectIntegrationFeatures(
 				object.list = batch_list,
@@ -77,7 +78,49 @@ setMethod(
 			data@assays[[data@active.assay]]@var.features <- features
 			data <- ScaleData(object = data, verbose = FALSE)
 			data
+		}else
+			stop(sprintf('unknown output: %s', output))
+
+	}
+)
+
+#' Preprocess a SummarizedExperiment objects by the Seurat pipeline
+#'
+#' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
+#'
+#' @param data a Seurat object
+#' @param params a SeuratPreprocess object 
+#' @param counts the assay field for raw counts in a SingleCellExperiment object (default: 'counts')
+#' @param ... Additional arguments
+#' @return a Seurat object (if there is only one batch), or a SeuratList
+
+#' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures
+#'
+setMethod(
+	'Preprocess',
+	signature(
+		data  = 'SummarizedExperiment',
+		params = 'SeuratPreprocess'
+	),
+	function(
+		data,
+		params,
+		counts = 'counts',
+		...
+	){
+
+		seurat <- CreateSeuratObject(
+			counts = assays(data)[[counts]], # Unnormalized data such as raw counts or TPMs
+			meta.data = as.data.frame(colData(data)),
+			assay = params@raw_assay
+		)
+
+		if (ncol(rowData(data)) > 0){
+			d <- as.data.frame(rowData(data))
+			seurat[[params@raw_assay]]@meta.features <- d
 		}
+
+		Preprocess(seurat, params, ...)
 
 	}
 )

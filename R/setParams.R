@@ -1,5 +1,6 @@
 #' Set parameters for integration
 #'
+#' @param task Task names
 #' @param methods The method names (default: 'Seurat')
 #' @param npcs the size of latent dimension (default: 20L)
 #' @param raw_assay Assay field in the Seurat object for the raw counts (default: 'RNA')
@@ -13,6 +14,7 @@
 #' @export
 #'
 setParams <- function(
+	task = 'integration',
 	methods = "Seurat", 
 	npcs = 20L,
 	raw_assay = 'RNA',
