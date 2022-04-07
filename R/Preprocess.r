@@ -109,6 +109,9 @@ setMethod(
 		...
 	){
 
+		# This need to be implemented
+		# stopifnot(valid(data, params))
+
 		seurat <- CreateSeuratObject(
 			counts = assays(data)[[counts]], # Unnormalized data such as raw counts or TPMs
 			meta.data = as.data.frame(colData(data)),

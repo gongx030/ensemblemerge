@@ -129,16 +129,6 @@ setClass(
 
 #' The BasePreprocess class
 #'
-setClass(
-	'Task',
-	representation(
-	),
-	prototype(
-	)
-)
-
-#' The BasePreprocess class
-#'
 #' @slot min_cells the minimum number of cells that a gene should be expressed.
 #' @slot min_genes the minimum number of genes that a cell should express.
 #' @slot norm_data whether or not normalizing the data
@@ -566,3 +556,4 @@ setMethod(
 		.Object
 	}
 )
+

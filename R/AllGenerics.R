@@ -29,3 +29,19 @@ setGeneric("valid", function(x, params, ...) standardGeneric("valid"))
 #' @param ... Other arguments
 #'
 setGeneric("ensemble", function(x, params, ...) standardGeneric("ensemble"))
+
+#' The generic function of Annotate
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("Annotate", function(x, params, ...) standardGeneric("Annotate"))
+
+#' The generic function of Embed
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("Embed", function(x, params, ...) standardGeneric("Embed"))
