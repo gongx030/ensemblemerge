@@ -1,15 +1,3 @@
-#' @importFrom methods callNextMethod 
-#'
-setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TRUE, ...){
-	if (check_dependencies)
-		.check_dependences(.Object)
-	.Object@cluster_name <- .Object@name
-	.Object@snn_name <- sprintf('%sSNN', .Object@name)
-	.Object@knn_name <- sprintf('%sKNN', .Object@name)
-	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
-})
-
-
 #' The LouvainCluster class
 #'
 #' @slot k_param Defines k for the k-nearest neighbor algorithm

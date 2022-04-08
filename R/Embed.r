@@ -1,23 +1,3 @@
-#' The BaseEmbed class
-#'
-setClass(
-	'BaseEmbed',
-	representation(
-		name = 'character',
-		reduction_key = 'character',
-		reduction_name = 'character',
-		ndims = 'integer',
-		seed = 'integer',
-		dependences = 'list',
-		check_dependencies = 'logical'
-	),
-	prototype(
-		ndims = 20L,						
-		seed = 123L,
-		check_dependencies = TRUE
-	)
-)
-
 #' @importFrom methods callNextMethod 
 #'
 setMethod('initialize', 'BaseEmbed', function(.Object, check_dependencies = TRUE, ...){
@@ -44,7 +24,7 @@ setClass(
 
 #' Embed a Seurat object with PCA
 #'
-#' @param data a Seurat object
+#' @param x a Seurat object
 #' @param params a PCAEmbed object
 #' @param ... Additional arguments
 #' @return returns a data object with PCA embedding
@@ -64,6 +44,7 @@ setMethod(
 	){
 		# to be implemented
 		# 1. params@ndims should not be greater than # cells
+		# 2. check whether the data has been preprocessed
 		# stopifnot(valid(x, params))	
 
 		x <- ScaleData(object = x, verbose = FALSE)
@@ -80,7 +61,7 @@ setMethod(
 
 #' Embed a SeuratList
 #'
-#' @param data a SeuratList object
+#' @param x a SeuratList object
 #' @param params a PCAEmbed object
 #' @param ... Additional arguments
 #' @return returns a SeuratList object with latent embedding

@@ -45,3 +45,11 @@ setGeneric("Annotate", function(x, params, ...) standardGeneric("Annotate"))
 #' @param ... Other arguments
 #'
 setGeneric("Embed", function(x, params, ...) standardGeneric("Embed"))
+
+#' The generic function of Cluster
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("Cluster", function(x, params, ...) standardGeneric("Cluster"))

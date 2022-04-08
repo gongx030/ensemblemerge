@@ -96,6 +96,12 @@ check_package <- function(object){
 	}
 }
 
+.check_genome <- function(x){
+	stopifnot(x %in% c('hg19', 'mm10'))
+	return(TRUE)
+}
+
+
 #' RPackage
 #' 
 #' The base params object for R packages
@@ -152,6 +158,7 @@ setClass(
 		raw_assay = 'character',
 		batch = "character"
 	),
+	contains = 'VIRTUAL',
   prototype(
     min_cells = 10L,
     min_genes = 300L,
@@ -162,52 +169,6 @@ setClass(
 		numHVG = 2000L,
 		raw_assay = 'RNA',
 		batch = 'batch'
-	)
-)
-
-#' The SeuratPreprocess class
-#'
-#' @slot selection.method The gene selection method
-#' @slot batchwise whether or not performing batchwise data normalization and HVG selection
-#'
-setClass(
-	'SeuratPreprocess', 
-	representation(
-		selection.method = 'character',
-		batchwise = 'logical'
-	),
-	contains = c('BasePreprocess'),
-  prototype(
-		selection.method = 'vst',
-		batchwise = FALSE
-	)
-)
-
-
-#' ScanpyPreprocess
-#'
-#' @export
-#'
-setClass(
-	'ScanpyPreprocess', 
-	representation(
-    svd_solver = "character",
-    nhvg = "integer",
-    n_neighbors = "integer",
-		min_mean = 'numeric',
-		max_mean = 'integer',
-		min_disp = 'numeric'
-	),
-	contains = 'BasePreprocess',
-  prototype(
-		min_genes = 200L,
-		min_cells  = 3L,
-		svd_solver = "arpack",
-		nhvg = 2000L,
-		n_neighbors = 10L,
-		min_mean = 0.0125, 
-		max_mean = 3L, 
-		min_disp = 0.5
 	)
 )
 
@@ -556,4 +517,87 @@ setMethod(
 		.Object
 	}
 )
+
+#' The BaseEmbed class
+#'
+setClass(
+	'BaseEmbed',
+	representation(
+		name = 'character',
+		reduction_key = 'character',
+		reduction_name = 'character',
+		ndims = 'integer',
+		seed = 'integer',
+		preprocess = 'BasePreprocess',
+		dependences = 'list',
+		check_dependencies = 'logical'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		ndims = 20L,						
+		seed = 123L,
+		check_dependencies = TRUE
+	)
+)
+
+
+#' The BaseCluster class
+#'
+setClass(
+	'BaseCluster',
+	representation(
+		name = 'character',
+		cluster_name = 'character',
+		k = 'integer',
+		embedding = 'BaseEmbed',
+		seed = 'integer',
+		dependences = 'list',
+		check_dependencies = 'logical'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		seed = 123L,
+		check_dependencies = TRUE
+	)
+)
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object@cluster_name <- .Object@name
+	.Object@snn_name <- sprintf('%sSNN', .Object@name)
+	.Object@knn_name <- sprintf('%sKNN', .Object@name)
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+})
+
+
+
+#' The BaseAnnotate class
+#'
+setClass(
+	'BaseAnnotate',
+	representation(
+		name = 'character',
+		annotate_name = 'character',
+		dependences = 'list',
+		check_dependencies = 'logical',
+		genome = 'character'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		check_dependencies = TRUE	,
+		genome = ''
+	)
+)
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'BaseAnnotate', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object@annotate_name <- .Object@name
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+})
 

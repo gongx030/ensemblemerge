@@ -1,3 +1,50 @@
+#' The SeuratPreprocess class
+#'
+#' @slot selection.method The gene selection method
+#' @slot batchwise whether or not performing batchwise data normalization and HVG selection
+#'
+setClass(
+	'SeuratPreprocess', 
+	representation(
+		selection.method = 'character',
+		batchwise = 'logical'
+	),
+	contains = c('BasePreprocess'),
+  prototype(
+		selection.method = 'vst',
+		batchwise = FALSE
+	)
+)
+
+
+#' ScanpyPreprocess
+#'
+#' @export
+#'
+setClass(
+	'ScanpyPreprocess', 
+	representation(
+    svd_solver = "character",
+    nhvg = "integer",
+    n_neighbors = "integer",
+		min_mean = 'numeric',
+		max_mean = 'integer',
+		min_disp = 'numeric'
+	),
+	contains = 'BasePreprocess',
+  prototype(
+		min_genes = 200L,
+		min_cells  = 3L,
+		svd_solver = "arpack",
+		nhvg = 2000L,
+		n_neighbors = 10L,
+		min_mean = 0.0125, 
+		max_mean = 3L, 
+		min_disp = 0.5
+	)
+)
+
+
 #' Preprocess a Seurat objects by the Seurat pipeline
 #'
 #' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
