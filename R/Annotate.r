@@ -1,3 +1,30 @@
+#' Annotate a SeuratList
+#'
+#' @param x a SeuratList object
+#' @param params a BaseAnnotate object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with cell-wise annotation
+#'
+setMethod(
+	'Annotate',
+	signature(
+		x = 'SeuratList',
+		params = 'BaseAnnotate'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		for (i in 1:length(x)){
+			x[[i]] <- Annotate(x[[i]], params, ...)
+		}
+		x
+	}
+)
+
+
 #' The scCATCHAnnotate class
 #'
 setClass(
@@ -104,19 +131,45 @@ setMethod(
 	}
 )
 
-
-#' Annotate a SeuratList
+#' The SCINAAnnotate class
 #'
-#' @param x a SeuratList object
-#' @param params a BaseAnnotate object
+setClass(
+	'SCINAAnnotate',
+	representation(
+	),
+	contains = c('BaseAnnotate'),
+	prototype(
+		dependences = list(
+			new('RPackage', package_name = 'SCINA', package_version = '1.2.0')
+		),
+	),
+	validity = function(object){
+		msg <- NULL
+		return(msg)
+	}
+)
+
+#' @importFrom methods callNextMethod 
+#'
+setMethod('initialize', 'SCINAAnnotate', function(.Object, check_dependencies = TRUE, ...){
+	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+	.Object
+})
+
+
+#' Annotate a Seurat object with SCINA (https://github.com/jcao89757/SCINA)
+#'
+#' @param x a Seurat object
+#' @param params a SCINAAnnotate object
 #' @param ... Additional arguments
-#' @return returns a SeuratList object with cell-wise annotation
+#' @return returns a data object with cell-wise annotation
+#' @importFrom rlang .data
 #'
 setMethod(
 	'Annotate',
 	signature(
-		x = 'SeuratList',
-		params = 'BaseAnnotate'
+		x = 'Seurat',
+		params = 'SCINAAnnotate'
 	),
 	function(
 		x,
@@ -124,9 +177,42 @@ setMethod(
 		...
 	){
 
-		for (i in 1:length(x)){
-			x[[i]] <- Annotate(x[[i]], params, ...)
-		}
+		# yet to be implemented
+		# stopifnot(valid(x, params))
+
+		browser()
+
+		tissues <- scCATCH::cellmatch %>%
+			filter(.data$cancer == params@cancer & .data$species == params@species) %>%
+			pull(.data$tissue) %>%
+			unique()
+
+		if (length(params@tissue) == 0)
+			params@tissue <- tissues
+
+		if (!all(params@tissue %in% tissues))
+			stop(sprintf('params@tissue must be one of the following: %s', paste(tissues, collapse = ',')))
+
+		raw_assay <- params@cluster@embedding@preprocess@raw_assay
+		cls <- x[[params@cluster@cluster_name]][, 1] %>%
+			as.character()
+
+		obj <- scCATCH::createscCATCH(data = x@assays[[raw_assay]]@data, cluster = cls)
+		obj <- scCATCH::findmarkergene(
+			object = obj, 
+			species = params@species, 
+			marker = scCATCH::cellmatch, 
+			tissue = params@tissue, 
+			cell_min_pct = params@cell_min_pct,
+			logfc = params@logfc,
+			pvalue = params@pvalue,
+			cancer = params@cancer,
+			verbose = FALSE
+		)
+		obj <- scCATCH::findcelltype(object = obj, verbose = FALSE)
+
+		rownames(obj@celltype) <- obj@celltype[, 'cluster']
+		x@meta.data[[params@annotate_name]] <- obj@celltype[obj@meta$cluster, 'cell_type']
 		x
 	}
 )
