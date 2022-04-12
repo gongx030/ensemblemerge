@@ -13,5 +13,7 @@ The SeuratPreprocess class
 \item{\code{selection.method}}{The gene selection method}
 
 \item{\code{batchwise}}{whether or not performing batchwise data normalization and HVG selection}
+
+\item{\code{output}}{The output format}
 }}
 

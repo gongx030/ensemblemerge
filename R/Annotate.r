@@ -61,9 +61,7 @@ setClass(
 #' @importFrom methods callNextMethod 
 #'
 setMethod('initialize', 'scCATCHAnnotate', function(.Object, check_dependencies = TRUE, ...){
-
 	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
-
 	if (.Object@genome == 'mm10'){
 		.Object@species <- 'Mouse'
 	}else if (.Object@genome == 'hg19'){
@@ -136,15 +134,34 @@ setMethod(
 setClass(
 	'SCINAAnnotate',
 	representation(
+		species = 'character',
+		cancer = 'character',
+		max_iter = 'integer',
+		convergence_n = 'integer',
+		convergence_rate = 'numeric',
+		sensitivity_cutoff = 'numeric',
+		rm_overlap = 'logical',
+		allow_unknown = 'logical'
 	),
 	contains = c('BaseAnnotate'),
 	prototype(
+		name = 'SCINAAnnotate',
+		cancer = 'Normal',
+		max_iter = 100L,
+		convergence_n = 10L,
+		convergence_rate = 0.999,
+		sensitivity_cutoff = 0.9,
+		rm_overlap = FALSE,
+		allow_unknown = TRUE,
 		dependences = list(
-			new('RPackage', package_name = 'SCINA', package_version = '1.2.0')
-		),
+			new('RPackage', package_name = 'SCINA', package_version = '1.2.0'),
+			new('RPackage', package_name = 'scCATCH', package_version = '3.0')
+		)
 	),
 	validity = function(object){
 		msg <- NULL
+		if (!object@genome %in% c('hg19', 'mm10'))
+			msg <- sprintf('unknown genome: %s', object@genome)
 		return(msg)
 	}
 )
@@ -153,6 +170,11 @@ setClass(
 #'
 setMethod('initialize', 'SCINAAnnotate', function(.Object, check_dependencies = TRUE, ...){
 	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+	if (.Object@genome == 'mm10'){
+		.Object@species <- 'Mouse'
+	}else if (.Object@genome == 'hg19'){
+		.Object@species <- 'Human'
+	}
 	.Object
 })
 
@@ -180,39 +202,26 @@ setMethod(
 		# yet to be implemented
 		# stopifnot(valid(x, params))
 
-		browser()
-
-		tissues <- scCATCH::cellmatch %>%
+		signatures <- scCATCH::cellmatch %>%
 			filter(.data$cancer == params@cancer & .data$species == params@species) %>%
-			pull(.data$tissue) %>%
-			unique()
+			select(gene, celltype)
 
-		if (length(params@tissue) == 0)
-			params@tissue <- tissues
+		signatures <- split(signatures$gene, list(signatures$celltype))
 
-		if (!all(params@tissue %in% tissues))
-			stop(sprintf('params@tissue must be one of the following: %s', paste(tissues, collapse = ',')))
+		raw_assay <- params@preprocess@raw_assay
 
-		raw_assay <- params@cluster@embedding@preprocess@raw_assay
-		cls <- x[[params@cluster@cluster_name]][, 1] %>%
-			as.character()
-
-		obj <- scCATCH::createscCATCH(data = x@assays[[raw_assay]]@data, cluster = cls)
-		obj <- scCATCH::findmarkergene(
-			object = obj, 
-			species = params@species, 
-			marker = scCATCH::cellmatch, 
-			tissue = params@tissue, 
-			cell_min_pct = params@cell_min_pct,
-			logfc = params@logfc,
-			pvalue = params@pvalue,
-			cancer = params@cancer,
-			verbose = FALSE
+		results <- SCINA::SCINA(
+			x@assays[[raw_assay]]@data, 
+			signatures,
+			max_iter = params@max_iter,
+			convergence_n = params@convergence_n,
+			convergence_rate = params@convergence_rate,
+			sensitivity_cutoff = params@sensitivity_cutoff,
+			rm_overlap = params@rm_overlap,
+			allow_unknown = params@allow_unknown
 		)
-		obj <- scCATCH::findcelltype(object = obj, verbose = FALSE)
 
-		rownames(obj@celltype) <- obj@celltype[, 'cluster']
-		x@meta.data[[params@annotate_name]] <- obj@celltype[obj@meta$cluster, 'cell_type']
+		x@meta.data[[params@annotate_name]] <- results$cell_labels
 		x
 	}
 )

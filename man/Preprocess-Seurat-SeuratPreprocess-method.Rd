@@ -4,16 +4,16 @@
 \alias{Preprocess,Seurat,SeuratPreprocess-method}
 \title{Preprocess a Seurat objects by the Seurat pipeline}
 \usage{
-\S4method{Preprocess}{Seurat,SeuratPreprocess}(data, params, output = "Seurat", ...)
+\S4method{Preprocess}{Seurat,SeuratPreprocess}(data, params, ...)
 }
 \arguments{
 \item{data}{a Seurat object}
 
 \item{params}{a SeuratPreprocess object}
 
-\item{output}{Output type ('Seurat' or 'SeuratList')}
-
 \item{...}{Additional arguments}
+
+\item{output}{Output type ('Seurat' or 'SeuratList')}
 }
 \value{
 a Seurat object (if there is only one batch), or a SeuratList

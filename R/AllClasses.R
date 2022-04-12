@@ -579,6 +579,7 @@ setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TR
 setClass(
 	'BaseAnnotate',
 	representation(
+		preprocess = 'BasePreprocess',
 		name = 'character',
 		annotate_name = 'character',
 		dependences = 'list',

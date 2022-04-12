@@ -1,8 +1,8 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single
     package
-Version: 2.1.2-003
-Date: 2022-04-08
+Version: 2.1.3-002
+Date: 2022-04-12
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Wuming Gong <gongx030@umn.edu>
 Description: EnsembleMerge provides a unified interface for individual
@@ -33,7 +33,8 @@ Suggests:
     harmony,
     rliger (>= 0.5.0),
     sceasy (>= 0.0.6),
-		scCATCH (>= 3.0)
+		scCATCH (>= 3.0),
+		SCINA (>= 1.2.0)
 Remotes: 
     cellgeni/sceasy
 biocViews:

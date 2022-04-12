@@ -1,3 +1,30 @@
+#' Cluster a SeuratList
+#'
+#' @param x a SeuratList object
+#' @param params a BaseCluster object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with clusters
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'SeuratList',
+		params = 'BaseCluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		for (i in 1:length(x)){
+			x[[i]] <- Cluster(x[[i]], params, ...)
+		}
+		x
+	}
+)
+
+
 #' The LouvainCluster class
 #'
 #' @slot k_param Defines k for the k-nearest neighbor algorithm
@@ -65,31 +92,5 @@ setMethod(
 		 x[['seurat_clusters']] <- NULL
 		 x
 
-	}
-)
-
-#' Cluster a SeuratList
-#'
-#' @param x a SeuratList object
-#' @param params a BaseCluster object
-#' @param ... Additional arguments
-#' @return returns a SeuratList object with clusters
-#'
-setMethod(
-	'Cluster',
-	signature(
-		x = 'SeuratList',
-		params = 'BaseCluster'
-	),
-	function(
-		x,
-		params,
-		...
-	){
-
-		for (i in 1:length(x)){
-			x[[i]] <- Cluster(x[[i]], params, ...)
-		}
-		x
 	}
 )

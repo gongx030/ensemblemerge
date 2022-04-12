@@ -2,18 +2,27 @@
 #'
 #' @slot selection.method The gene selection method
 #' @slot batchwise whether or not performing batchwise data normalization and HVG selection
+#' @slot output The output format
 #'
 setClass(
 	'SeuratPreprocess', 
 	representation(
 		selection.method = 'character',
-		batchwise = 'logical'
+		batchwise = 'logical',
+		output = 'character'
 	),
 	contains = c('BasePreprocess'),
   prototype(
 		selection.method = 'vst',
-		batchwise = FALSE
-	)
+		batchwise = FALSE,
+		output = 'Seurat'
+	),
+	validity = function(object){
+		msg <- NULL
+		if (!object@output%in% c('Seurat', 'SeuratList'))
+			msg <- sprintf('unknown output: %s', object@output)
+		return(msg)
+	}
 )
 
 
@@ -66,7 +75,6 @@ setMethod(
 	function(
 		data,
 		params,
-		output = 'Seurat',
 		...
 	){
 
@@ -112,11 +120,11 @@ setMethod(
 			)
 		}
 
-		if (output == 'SeuratList'){
+		if (params@output == 'SeuratList'){
 
 			new('SeuratList', batch_list)
 
-		}else if (output == 'Seurat'){
+		}else if (params@output == 'Seurat'){
 			# select features that are repeatedly variable across datasets for integration
 			features <- SelectIntegrationFeatures(
 				object.list = batch_list,
@@ -125,9 +133,7 @@ setMethod(
 			data@assays[[data@active.assay]]@var.features <- features
 			data <- ScaleData(object = data, verbose = FALSE)
 			data
-		}else
-			stop(sprintf('unknown output: %s', output))
-
+		}
 	}
 )
 
