@@ -549,7 +549,6 @@ setClass(
 		name = 'character',
 		cluster_name = 'character',
 		k = 'integer',
-		embedding = 'BaseEmbed',
 		seed = 'integer',
 		dependences = 'list',
 		check_dependencies = 'logical'
@@ -567,8 +566,6 @@ setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TR
 	if (check_dependencies)
 		.check_dependences(.Object)
 	.Object@cluster_name <- .Object@name
-	.Object@snn_name <- sprintf('%sSNN', .Object@name)
-	.Object@knn_name <- sprintf('%sKNN', .Object@name)
 	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 })
 
