@@ -204,7 +204,7 @@ setMethod(
 
 		signatures <- scCATCH::cellmatch %>%
 			filter(.data$cancer == params@cancer & .data$species == params@species) %>%
-			select(gene, celltype)
+			select(.data$gene, .data$celltype)
 
 		signatures <- split(signatures$gene, list(signatures$celltype))
 

@@ -60,7 +60,6 @@ setClass(
 #'
 #' @param data a Seurat object
 #' @param params a SeuratPreprocess object 
-#' @param output Output type ('Seurat' or 'SeuratList')
 #' @param ... Additional arguments
 #' @return a Seurat object (if there is only one batch), or a SeuratList
 

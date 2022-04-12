@@ -252,7 +252,7 @@ setMethod(
 				batch <- x[[params@preprocess@batch]][, 1]
 		}
 
-    results <- myscLCA(
+    results <- scLCA::myscLCA(
 			x@assays[[raw_assay]]@data,
 			cor.thresh = params@cor_thresh,
 			clust.max = params@clust_max, 
