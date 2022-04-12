@@ -59,7 +59,7 @@ setMethod('initialize', 'LouvainCluster', function(.Object, check_dependencies =
 #' @param x a Seurat object
 #' @param params a LouvainCluster object
 #' @param ... Additional arguments
-#' @return returns a data object with PCA embedding
+#' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
 #' @importFrom Seurat FindClusters
 #'
@@ -144,7 +144,7 @@ setMethod('initialize', 'LeidenCluster', function(.Object, check_dependencies = 
 #' @param x a Seurat object
 #' @param params a LeidenCluster object
 #' @param ... Additional arguments
-#' @return returns a data object with PCA embedding
+#' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
 #' @importFrom Seurat FindClusters
 #'
@@ -224,9 +224,10 @@ setClass(
 #' @param x a Seurat object
 #' @param params a LeidenCluster object
 #' @param ... Additional arguments
-#' @return returns a data object with PCA embedding
+#' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
 #' @importFrom Seurat FindClusters
+#' @references Cheng C, Easton J, Rosencrance C, Li Y, Ju B, Williams J, Mulder HL, Pang Y, Chen W, Chen X. Latent cellular analysis robustly reveals subtle diversity in large-scale single-cell RNA-seq data. Nucleic Acids Res. 2019 Dec 16;47(22):e143. doi: 10.1093/nar/gkz826. PMID: 31566233; PMCID: PMC6902034.
 #'
 setMethod(
 	'Cluster',

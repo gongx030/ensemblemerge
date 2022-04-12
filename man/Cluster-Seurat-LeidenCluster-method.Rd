@@ -14,7 +14,7 @@
 \item{...}{Additional arguments}
 }
 \value{
-returns a data object with PCA embedding
+returns a data object with clustering results in meta data
 }
 \description{
 Cluster a Seurat object by Leiden method

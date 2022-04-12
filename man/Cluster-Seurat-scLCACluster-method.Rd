@@ -14,8 +14,11 @@
 \item{...}{Additional arguments}
 }
 \value{
-returns a data object with PCA embedding
+returns a data object with clustering results in meta data
 }
 \description{
 Cluster a Seurat object by scLCA (https://bitbucket.org/scLCA/single_cell_lca/src/master/)
+}
+\references{
+Cheng C, Easton J, Rosencrance C, Li Y, Ju B, Williams J, Mulder HL, Pang Y, Chen W, Chen X. Latent cellular analysis robustly reveals subtle diversity in large-scale single-cell RNA-seq data. Nucleic Acids Res. 2019 Dec 16;47(22):e143. doi: 10.1093/nar/gkz826. PMID: 31566233; PMCID: PMC6902034.
 }

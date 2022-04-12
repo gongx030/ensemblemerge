@@ -12,8 +12,6 @@
 \item{params}{a SeuratPreprocess object}
 
 \item{...}{Additional arguments}
-
-\item{output}{Output type ('Seurat' or 'SeuratList')}
 }
 \value{
 a Seurat object (if there is only one batch), or a SeuratList

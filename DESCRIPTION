@@ -34,9 +34,13 @@ Suggests:
     rliger (>= 0.5.0),
     sceasy (>= 0.0.6),
 		scCATCH (>= 3.0),
-		SCINA (>= 1.2.0)
+		SCINA (>= 1.2.0),
+		RMTstat (>= 0.3),
+		mclust (>= 5.4.9),
+		cluster (>= 2.1.2)
 Remotes: 
     cellgeni/sceasy
+		bitbucket::scLCA/single_cell_lca
 biocViews:
 Encoding: UTF-8
 LazyData: true
