@@ -540,6 +540,16 @@ setClass(
 	)
 )
 
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'BaseEmbed', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object@reduction_key <- sprintf('%s_', .Object@name)
+	.Object@reduction_name <- .Object@name
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+})
+
 
 #' The BaseCluster class
 #'

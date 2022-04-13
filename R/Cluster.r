@@ -268,3 +268,223 @@ setMethod(
 
 	}
 )
+
+
+#' The scCCESSKmeansCluster class
+#'
+setClass(
+	'scCCESSCluster',
+	representation(
+		preprocess = 'BasePreprocess',
+		criteria_method = 'character',
+		clust_min = 'integer',
+		clust_max = 'integer',
+		ensemble_sizes = 'integer',
+		cores = 'integer',
+		batch_size = 'integer',
+		max_random_projection = 'integer',
+		ndims = 'integer',
+		hidden_dims = 'integer',
+		learning_rate = 'numeric',
+		epochs = 'integer'
+	),
+	contains = c('BaseCluster'),
+	prototype(
+		criteria_method = 'NMI',
+		clust_min = 5L,
+		clust_max = 15L,
+		ensemble_sizes = 10L,
+		cores = 8L,
+		batch_size = 64L,
+		max_random_projection = 2048L,
+		ndims = 16L,
+		hidden_dims = 128L,
+		learning_rate = 0.001,
+		epochs = 100L,
+		dependences = list(
+			new('RPackage', package_name = 'tensorflow', package_version = '2.8.0'),
+			new('RPackage', package_name = 'keras', package_version = '2.8.0'),
+			new('RPackage', package_name = 'clue', package_version = '0.3.60'),
+			new('RPackage', package_name = 'scCCESS', package_version = '0.2.0'),
+			new('PythonPackage', package_name = 'tensorflow', package_version = '2.8.0'),
+			new('PythonPackage', package_name = 'keras', package_version = '2.8.0')
+		)
+	)
+)
+
+setClass(
+	'scCCESSKmeansCluster',
+	representation(
+	),
+	contains = 'scCCESSCluster',
+	prototype(
+		name = 'scCCESSKmeansCluster'
+	)	
+)
+
+#' Cluster a Seurat object by scCCESS K-means (https://github.com/PYangLab/scCCESS)
+#'
+#' @param x a Seurat object
+#' @param params a LeidenCluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @importFrom methods is
+#' @importFrom Seurat FindClusters
+#' @importFrom stats kmeans
+#' @references Geddes TA, Kim T, Nan L, Burchfield JG, Yang JYH, Tao D, et al. Autoencoder-based cluster ensembles for single-cell RNA-seq data analysis. BMC Bioinformatics. 2019;20:660.
+#' According to https://github.com/PYangLab/scCCESS#installation, we used an unofficial `SIMLR` version (https://github.com/yulijia/SIMLR)
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'Seurat',
+		params = 'scCCESSKmeansCluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		# to be implemented
+		# 1. whether the embedding is available
+		# stopifnot(valid(x, params))	
+
+		raw_assay <- params@preprocess@raw_assay
+
+		# by default genes_as_rows = T and scale =F 
+		# https://github.com/PYangLab/scCCESS/blob/5a79afe0e608717a1a929124b7e7ccf2c66df176/R/scCCESS.R#L330
+
+		k <- scCCESS::estimate_k(
+			x@assays[[raw_assay]]@scale.data,
+			seed = params@seed, 
+			cluster_func = function(x,centers) { 
+				set.seed(42)
+				kmeans(x, centers)
+			},
+			criteria_method = params@criteria_method,
+			krange = params@clust_min:params@clust_max,
+			ensemble_sizes = params@ensemble_sizes,
+			cores = params@cores
+		)
+
+		cluster <- scCCESS::ensemble_cluster(
+			x@assays[[raw_assay]]@scale.data,
+			seed = params@seed,
+			cluster_func = function(x) {
+				set.seed(1)
+				kmeans(x, centers = k)
+			}, 
+			cores = params@cores,
+			genes_as_rows = TRUE, 
+			ensemble_sizes = params@ensemble_sizes,
+			verbose = 0, 	# silent
+			scale = FALSE, 
+			batch_size = params@batch_size,
+			max_random_projection = params@max_random_projection,
+			encoded_dim = params@ndims,
+			hidden_dims = params@hidden_dims,
+			learning_rate = params@learning_rate,
+			epochs = params@epochs
+		)
+
+		# ensemble_cluster returns a list of length len(ensemble_sizes) containing vectors of
+		# consensus clusters per cell. Each ensemble clustering is generated
+		# using a number of individual clusterings given by the
+		# corresponding element in the ensemble_sizes argument.
+
+	 	x[[params@cluster_name]] <- cluster[[1]]
+	 	x
+
+	}
+)
+
+
+setClass(
+	'scCCESSSIMLRCluster',
+	representation(
+	),
+	contains = 'scCCESSCluster',
+	prototype(
+		name = 'scCCESSSIMLRCluster',
+		dependences = list(
+			new('RPackage', package_name = 'SIMLR', package_version = '1.18.0')
+		)
+	)	
+)
+
+#' Cluster a Seurat object by scCCESS SMILR (https://github.com/PYangLab/scCCESS)
+#'
+#' @param x a Seurat object
+#' @param params a LeidenCluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @importFrom methods is
+#' @importFrom Seurat FindClusters
+#' @references Geddes TA, Kim T, Nan L, Burchfield JG, Yang JYH, Tao D, et al. Autoencoder-based cluster ensembles for single-cell RNA-seq data analysis. BMC Bioinformatics. 2019;20:660.
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'Seurat',
+		params = 'scCCESSSIMLRCluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		# to be implemented
+		# 1. whether the embedding is available
+		# stopifnot(valid(x, params))	
+
+		raw_assay <- params@preprocess@raw_assay
+
+		# by default genes_as_rows = T and scale =F 
+		# https://github.com/PYangLab/scCCESS/blob/5a79afe0e608717a1a929124b7e7ccf2c66df176/R/scCCESS.R#L330
+		# to be consistent, we used scaled data for 
+
+		k <- scCCESS::estimate_k(
+			x@assays[[raw_assay]]@scale.data,
+			seed = params@seed, 
+			cluster_func = function(x, centers) {
+				set.seed(42);
+				SIMLR::SIMLR_Large_Scale(t(x), c = centers,kk = 15)
+			},
+			criteria_method = params@criteria_method,
+			krange = params@clust_min:params@clust_max,
+			ensemble_sizes = params@ensemble_sizes,
+			cores = params@cores
+		)
+
+		cluster <- scCCESS::ensemble_cluster(
+			x@assays[[raw_assay]]@scale.data,
+			seed = params@seed,
+			cluster_func = function(x) {
+				set.seed(1)
+				SIMLR::SIMLR_Large_Scale(t(x), c=k,kk=15)
+			}, 
+			cores = params@cores,
+			genes_as_rows = TRUE, 
+			ensemble_sizes = params@ensemble_sizes,
+			verbose = 0, 	# silent
+			scale = FALSE, 
+			batch_size = params@batch_size,
+			max_random_projection = params@max_random_projection,
+			encoded_dim = params@ndims,
+			hidden_dims = params@hidden_dims,
+			learning_rate = params@learning_rate,
+			epochs = params@epochs
+		)
+
+		# ensemble_cluster returns a list of length len(ensemble_sizes) containing vectors of
+		# consensus clusters per cell. Each ensemble clustering is generated
+		# using a number of individual clusterings given by the
+		# corresponding element in the ensemble_sizes argument.
+
+	 	x[[params@cluster_name]] <- cluster[[1]]
+	 	x
+
+	}
+)

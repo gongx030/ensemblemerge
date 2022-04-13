@@ -1,8 +1,8 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single
     package
-Version: 2.1.5-001
-Date: 2022-04-12
+Version: 2.1.6-002
+Date: 2022-04-13
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Wuming Gong <gongx030@umn.edu>
 Description: EnsembleMerge provides a unified interface for individual
@@ -37,10 +37,16 @@ Suggests:
 		SCINA (>= 1.2.0),
 		RMTstat (>= 0.3),
 		mclust (>= 5.4.9),
-		cluster (>= 2.1.2)
+		cluster (>= 2.1.2),
+		tensorflow (>= 2.8.0),
+		keras (>= 2.8.0),
+		clue (>= 0.3.60),
+		parallel
 Remotes: 
-    cellgeni/sceasy
-		bitbucket::scLCA/single_cell_lca
+    cellgeni/sceasy,
+		bitbucket::scLCA/single_cell_lca,
+		PYangLab/scCCESS,
+		yulijia/SIMLR
 biocViews:
 Encoding: UTF-8
 LazyData: true

@@ -121,6 +121,9 @@ setMethod(
 
 		if (params@output == 'SeuratList'){
 
+			for (i in 1:length(batch_list)){
+				batch_list[[i]] <- ScaleData(object = batch_list[[i]], verbose = FALSE)
+			}
 			new('SeuratList', batch_list)
 
 		}else if (params@output == 'Seurat'){
