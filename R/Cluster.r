@@ -560,3 +560,76 @@ setMethod(
 		x
 	}
 )
+
+
+setClass(
+	'SIMLRCluster',
+	representation(
+		preprocess = 'BasePreprocess',
+		clust_min = 'integer',
+		clust_max = 'integer',
+		cores_ratio = 'numeric',
+		param_k = 'numeric',
+		param_kk = 'numeric'
+	),
+	contains = c('BaseCluster'),
+	prototype(
+		name = 'SIMLRCluster',
+		clust_min = 2L,
+		clust_max = 15L,
+		cores_ratio = 1,
+		param_k = 10,
+		param_kk = 100,
+		dependences = list(
+			new('RPackage', package_name = 'SIMLR', package_version = '1.18.0')
+		)
+	)
+)
+
+
+#' Cluster a Seurat object by SIMLR (https://www.bioconductor.org/packages/release/bioc/html/SIMLR.html)
+#'
+#' @param x a Seurat object
+#' @param params a SC3Cluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @importFrom SingleCellExperiment SingleCellExperiment
+#' @references Wang, B., Zhu, J., Pierson, E. et al. Visualization and analysis of single-cell RNA-seq data by kernel-based similarity learning. Nat Methods 14, 414–416 (2017). https://doi.org/10.1038/nmeth.4207
+#' @references Wang B, Ramazzotti D, De Sano L, Zhu J, Pierson E, Batzoglou S. SIMLR: A Tool for Large-Scale Genomic Analyses by Multi-Kernel Learning. Proteomics. 2018 Jan;18(2). doi: 10.1002/pmic.201700232. PMID: 29265724.
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'Seurat',
+		params = 'SIMLRCluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		raw_assay <- params@preprocess@raw_assay
+
+		set.seed(params@seed)
+		NUMC <-  params@clust_min:params@clust_max
+		results <- SIMLR::SIMLR_Estimate_Number_of_Clusters(
+			x@assays[[raw_assay]]@scale.data,
+			NUMC = NUMC,
+			cores.ratio = params@cores_ratio
+		)
+		k <- NUMC[which.min(results$K1)]
+
+		results <- SIMLR::SIMLR_Large_Scale(
+			X = x@assays[[raw_assay]]@scale.data, 
+			c = k, 
+			k = params@param_k,
+			kk = params@param_kk,
+			if.impute = FALSE, 
+			normalize = FALSE
+		)
+
+		x[[params@cluster_name]] <- results$y$cluster
+		x
+	}
+)
