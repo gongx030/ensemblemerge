@@ -48,7 +48,6 @@ setClass(
 #' @importFrom methods callNextMethod
 #'
 setMethod('initialize', 'LouvainCluster', function(.Object, check_dependencies = TRUE, ...){
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 	.Object@snn_name <- sprintf('%sSNN', .Object@name)
 	.Object@knn_name <- sprintf('%sKNN', .Object@name)
 	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
@@ -133,7 +132,6 @@ setClass(
 #' @importFrom methods callNextMethod
 #'
 setMethod('initialize', 'LeidenCluster', function(.Object, check_dependencies = TRUE, ...){
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 	.Object@snn_name <- sprintf('%sSNN', .Object@name)
 	.Object@knn_name <- sprintf('%sKNN', .Object@name)
 	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
@@ -246,6 +244,7 @@ setMethod(
 		# stopifnot(valid(x, params))	
 
 		raw_assay <- params@preprocess@raw_assay
+		h <- x@assays[[raw_assay]]@meta.features[[params@preprocessing@feature_field]]
 
 		batch <- NULL
 		if (!is.null(x[[params@preprocess@batch]])){
@@ -254,7 +253,7 @@ setMethod(
 		}
 
     results <- scLCA::myscLCA(
-			x@assays[[raw_assay]]@data,
+			x@assays[[raw_assay]]@data[h, ],
 			cor.thresh = params@cor_thresh,
 			clust.max = params@clust_max, 
 			trainingSetSize = params@training_set_size, 
@@ -291,7 +290,7 @@ setClass(
 	contains = c('BaseCluster'),
 	prototype(
 		criteria_method = 'NMI',
-		clust_min = 5L,
+		clust_min = 2L,
 		clust_max = 15L,
 		ensemble_sizes = 10L,
 		cores = 8L,
@@ -329,7 +328,6 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
-#' @importFrom Seurat FindClusters
 #' @importFrom stats kmeans
 #' @references Geddes TA, Kim T, Nan L, Burchfield JG, Yang JYH, Tao D, et al. Autoencoder-based cluster ensembles for single-cell RNA-seq data analysis. BMC Bioinformatics. 2019;20:660.
 #' According to https://github.com/PYangLab/scCCESS#installation, we used an unofficial `SIMLR` version (https://github.com/yulijia/SIMLR)
@@ -420,7 +418,6 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
-#' @importFrom Seurat FindClusters
 #' @references Geddes TA, Kim T, Nan L, Burchfield JG, Yang JYH, Tao D, et al. Autoencoder-based cluster ensembles for single-cell RNA-seq data analysis. BMC Bioinformatics. 2019;20:660.
 #'
 setMethod(
@@ -486,5 +483,80 @@ setMethod(
 	 	x[[params@cluster_name]] <- cluster[[1]]
 	 	x
 
+	}
+)
+
+
+setClass(
+	'SC3Cluster',
+	representation(
+		preprocess = 'BasePreprocess',
+		d_region_min = 'numeric',
+		d_region_max = 'numeric'
+	),
+	contains = c('BaseCluster'),
+	prototype(
+		name = 'SC3Cluster',
+		d_region_min = 0.04,
+		d_region_max = 0.07, 
+		dependences = list(
+			new('RPackage', package_name = 'SC3', package_version = '1.22.0')
+		)
+	)
+)
+
+
+#' Cluster a Seurat object by SC3 (http://bioconductor.org/packages/release/bioc/html/SC3.html)
+#'
+#' @param x a Seurat object
+#' @param params a SC3Cluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @importFrom methods is
+#' @importFrom SingleCellExperiment SingleCellExperiment
+#' @references Kiselev VY, Kirschner K, Schaub MT, Andrews T, Yiu A, Chandra T, Natarajan KN, Reik W, Barahona M, Green AR, Hemberg M (2017). “SC3 - consensus clustering of single-cell RNA-Seq data.” Nature Methods. http://dx.doi.org/10.1038/nmeth.4236.
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'Seurat',
+		params = 'SC3Cluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		raw_assay <- params@preprocess@raw_assay
+		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+
+		# it appears that SC3 only takes dense matrix as the input
+		sce <- SingleCellExperiment(
+			assays = list(
+				counts = x@assays[[raw_assay]]@counts[h, ] %>% as.matrix(),
+				logcounts = log2(x@assays[[raw_assay]]@counts[h, ] + 1) %>% as.matrix()
+			),
+			rowData = data.frame(feature_symbol = rownames(x)[h])
+		)	
+
+		sce <- SC3::sc3(
+			sce, 
+			gene_filter = FALSE,
+			d_region_min = params@d_region_min,
+			d_region_max = params@d_region_max,
+			svm_num_cells = NULL, 
+			svm_train_inds = NULL,
+			svm_max = 5000, 
+			n_cores = NULL, 
+			kmeans_nstart = NULL,
+			kmeans_iter_max = 1e+09, 
+			k_estimator = TRUE, 
+			biology = FALSE,
+			rand_seed = params@seed
+		)
+
+		x[[params@cluster_name]] <- colData(sce)[, 1]
+		x
 	}
 )

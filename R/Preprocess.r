@@ -9,7 +9,8 @@ setClass(
 	representation(
 		selection.method = 'character',
 		batchwise = 'logical',
-		output = 'character'
+		output = 'character',
+		feature_field = 'character'
 	),
 	contains = c('BasePreprocess'),
   prototype(
@@ -21,37 +22,27 @@ setClass(
 		msg <- NULL
 		if (!object@output%in% c('Seurat', 'SeuratList'))
 			msg <- sprintf('unknown output: %s', object@output)
+		if (!object@selection.method %in% c('vst', 'mean.var.plot', 'dispersion'))
+			msg <- sprintf('unknown selection.method: %s', object@selection.method)
 		return(msg)
 	}
 )
 
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'SeuratPreprocess', function(.Object, check_dependencies = TRUE, ...){
 
-#' ScanpyPreprocess
-#'
-#' @export
-#'
-setClass(
-	'ScanpyPreprocess', 
-	representation(
-    svd_solver = "character",
-    nhvg = "integer",
-    n_neighbors = "integer",
-		min_mean = 'numeric',
-		max_mean = 'integer',
-		min_disp = 'numeric'
-	),
-	contains = 'BasePreprocess',
-  prototype(
-		min_genes = 200L,
-		min_cells  = 3L,
-		svd_solver = "arpack",
-		nhvg = 2000L,
-		n_neighbors = 10L,
-		min_mean = 0.0125, 
-		max_mean = 3L, 
-		min_disp = 0.5
-	)
-)
+	if (.Object@selection.method == 'vst')
+		.Object@feature_field <- 'vst.variable'
+	else if (.Object@selection.method == 'mean.var.plot')
+		.Object@feature_field <- 'mvp.variable'
+	else if (.Object@selection.method == 'dispersion')
+		.Object@feature_field <- 'mvp.variable'
+
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+
+})
+
 
 
 #' Preprocess a Seurat objects by the Seurat pipeline
@@ -139,6 +130,7 @@ setMethod(
 	}
 )
 
+
 #' Preprocess a SummarizedExperiment objects by the Seurat pipeline
 #'
 #' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
@@ -182,6 +174,35 @@ setMethod(
 
 	}
 )
+
+
+#' ScanpyPreprocess
+#'
+#' @export
+#'
+setClass(
+	'ScanpyPreprocess', 
+	representation(
+    svd_solver = "character",
+    nhvg = "integer",
+    n_neighbors = "integer",
+		min_mean = 'numeric',
+		max_mean = 'integer',
+		min_disp = 'numeric'
+	),
+	contains = 'BasePreprocess',
+  prototype(
+		min_genes = 200L,
+		min_cells  = 3L,
+		svd_solver = "arpack",
+		nhvg = 2000L,
+		n_neighbors = 10L,
+		min_mean = 0.0125, 
+		max_mean = 3L, 
+		min_disp = 0.5
+	)
+)
+
 
 
 #' Preprocess a Seurat object by the Scanpy pipeline

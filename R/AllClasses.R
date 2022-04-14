@@ -156,7 +156,9 @@ setClass(
     scale_factor = "numeric",
     numHVG = "integer",
 		raw_assay = 'character',
-		batch = "character"
+		batch = "character",
+		dependences = 'list',
+		check_dependencies = 'logical'
 	),
 	contains = 'VIRTUAL',
   prototype(
@@ -168,9 +170,18 @@ setClass(
 		scale_factor = 10000,
 		numHVG = 2000L,
 		raw_assay = 'RNA',
-		batch = 'batch'
+		batch = 'batch',
+		check_dependencies = TRUE
 	)
 )
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'BasePreprocess', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+})
 
 
 #' The MethodList class
