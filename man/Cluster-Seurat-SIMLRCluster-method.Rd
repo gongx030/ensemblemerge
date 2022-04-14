@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{a Seurat object}
 
-\item{params}{a SC3Cluster object}
+\item{params}{a SIMLRCluster object}
 
 \item{...}{Additional arguments}
 }

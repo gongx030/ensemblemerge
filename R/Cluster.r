@@ -590,10 +590,9 @@ setClass(
 #' Cluster a Seurat object by SIMLR (https://www.bioconductor.org/packages/release/bioc/html/SIMLR.html)
 #'
 #' @param x a Seurat object
-#' @param params a SC3Cluster object
+#' @param params a SIMLRCluster object
 #' @param ... Additional arguments
 #' @return returns a data object with clustering results in meta data
-#' @importFrom SingleCellExperiment SingleCellExperiment
 #' @references Wang, B., Zhu, J., Pierson, E. et al. Visualization and analysis of single-cell RNA-seq data by kernel-based similarity learning. Nat Methods 14, 414–416 (2017). https://doi.org/10.1038/nmeth.4207
 #' @references Wang B, Ramazzotti D, De Sano L, Zhu J, Pierson E, Batzoglou S. SIMLR: A Tool for Large-Scale Genomic Analyses by Multi-Kernel Learning. Proteomics. 2018 Jan;18(2). doi: 10.1002/pmic.201700232. PMID: 29265724.
 #'
@@ -631,5 +630,63 @@ setMethod(
 
 		x[[params@cluster_name]] <- results$y$cluster
 		x
+	}
+)
+
+setClass(
+	'CIDRCluster',
+	representation(
+		preprocess = 'BasePreprocess',
+		tag_type = 'character'
+	),
+	contains = c('BaseCluster'),
+	prototype(
+		name = 'CIDRCluster',
+		tag_type = 'raw',
+		dependences = list(
+			new('RPackage', package_name = 'cidr', package_version = '0.1.5')
+		)
+	)
+)
+
+
+#' Cluster a Seurat object by CIDR (https://github.com/VCCRI/CIDR)
+#'
+#' @param x a Seurat object
+#' @param params a CIDRCluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @references Lin, P., Troup, M. & Ho, J.W. CIDR: Ultrafast and accurate clustering through imputation for single-cell RNA-seq data. Genome Biol 18, 59 (2017). https://doi.org/10.1186/s13059-017-1188-0
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'Seurat',
+		params = 'CIDRCluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+#		raw_assay <- params@preprocess@raw_assay
+#		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+#		tags <- x@assays[[raw_assay]]@counts[h, ]  %>% as.matrix()	# cidr only support dense matrix
+
+#		sData <- cidr::scDataConstructor(tags, tagType = params@tag_type)
+#		sData <- cidr::determineDropoutCandidates(
+#			sData, 
+#			min1 = 3, min2 = 8, 
+#			N = 2000, 
+#			alpha = 0.1,
+#			fast = TRUE, 
+#			zerosOnly = FALSE, 
+#			bw_adjust = 1
+#		)
+#		sData <- cidr::wThreshold(sData, cutoff = 0.5, plotTornado = FALSE)
+#		sData <- cidr::scPCA(sData, plotPC = FALSE)
+
+		# memory error error scPCA. See https://github.com/gongx030/ensemblemerge/issues/11
 	}
 )

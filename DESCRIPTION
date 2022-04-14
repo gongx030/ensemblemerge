@@ -1,7 +1,7 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single
     package
-Version: 2.1.8-001
+Version: 2.1.9-001
 Date: 2022-04-14
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Wuming Gong <gongx030@umn.edu>
@@ -45,12 +45,14 @@ Suggests:
 		SC3 (>= 1.22.0),
 		SIMLR (>= 1.18.0),
 		scCCESS (>= 0.2.0),
-		scLCA (>= 0.0.0.9000)
+		scLCA (>= 0.0.0.9000),
+		Spectrum (>= 1.1)
 Remotes: 
     cellgeni/sceasy,
 		bitbucket::scLCA/single_cell_lca,
 		PYangLab/scCCESS,
-		yulijia/SIMLR
+		yulijia/SIMLR,
+		VCCRI/CIDR
 biocViews:
 Encoding: UTF-8
 LazyData: true
