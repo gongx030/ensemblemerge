@@ -98,7 +98,7 @@ setMethod(
 				verbose = FALSE
 			)
 
-		 x[[params@cluster_name]] <- x[['seurat_clusters']]	
+		 x[[params@cluster_name]] <- x[['seurat_clusters']][, 1]	%>% as.factor() %>% as.numeric()
 		 x[['seurat_clusters']] <- NULL
 		 x
 
@@ -182,7 +182,7 @@ setMethod(
 				verbose = FALSE
 			)
 
-		 x[[params@cluster_name]] <- x[['seurat_clusters']]	
+		 x[[params@cluster_name]] <- x[['seurat_clusters']][, 1]	%>% as.factor() %>% as.numeric()
 		 x[['seurat_clusters']] <- NULL
 		 x
 
@@ -688,5 +688,94 @@ setMethod(
 #		sData <- cidr::scPCA(sData, plotPC = FALSE)
 
 		# memory error error scPCA. See https://github.com/gongx030/ensemblemerge/issues/11
+	}
+)
+
+setClass(
+	'SpectrumCluster',
+	representation(
+		preprocess = 'BasePreprocess',
+		method = 'integer',
+		diffusion = 'logical',
+		kerneltype = 'character',
+		clust_max = 'integer',
+		NN = 'integer',
+		NN2 = 'integer',
+		frac = 'numeric',
+		thresh = 'numeric',
+		tunekernel = 'logical',
+		clusteralg = 'character'
+	),
+	contains = c('BaseCluster'),
+	prototype(
+		name = 'SpectrumCluster',
+		method = 1L,
+		diffusion = TRUE,
+		kerneltype = c("density", "stsc"),
+		clust_max = 15L,
+		NN = 3L,
+		NN2 = 7L,
+		frac = 2, 
+		thresh = 7,
+		tunekernel = FALSE,
+		clusteralg = 'GMM',
+		dependences = list(
+			new('RPackage', package_name = 'Spectrum', package_version = '1.1')
+		)
+	)
+)
+
+
+#' Cluster a Seurat object by CIDR (https://github.com/VCCRI/CIDR)
+#'
+#' @param x a Seurat object
+#' @param params a CIDRCluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @references Lin, P., Troup, M. & Ho, J.W. CIDR: Ultrafast and accurate clustering through imputation for single-cell RNA-seq data. Genome Biol 18, 59 (2017). https://doi.org/10.1186/s13059-017-1188-0
+#'
+setMethod(
+	'Cluster',
+	signature(
+		x = 'Seurat',
+		params = 'SpectrumCluster'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		raw_assay <- params@preprocess@raw_assay
+		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+
+		results <- Spectrum::Spectrum(
+			 x@assays[[raw_assay]]@counts[h, ] %>% as.matrix(),
+			 method = params@method, 
+			 silent = TRUE, 
+			 showres = FALSE,
+			 diffusion = params@diffusion, 
+			 kerneltype = params@kerneltype, 
+			 maxk = params@clust_max,
+			 NN = params@NN, 
+			 NN2 = params@NN2, 
+			 showpca = FALSE, 
+			 frac = params@frac,
+			 thresh = params@thresh,
+			 tunekernel = params@tunekernel,
+			 clusteralg = params@clusteralg,
+			 FASP = FALSE,
+			 FASPk = NULL, 
+			 fixk = NULL,
+			 krangemax = 10, 
+			 runrange = FALSE, 
+			 diffusion_iters = 4,
+			 KNNs_p = 10, 
+			 missing = FALSE
+		 )
+
+		x[[params@cluster_name]] <- results$assignments 
+		x
+
 	}
 )
