@@ -629,7 +629,8 @@ setClass(
 	'BaseGeneMarkers',
 	representation(
 		check_dependencies = 'logical',
-		genome = 'character'
+		genome = 'character',
+		name = 'character'
 	),
 	contains = 'VIRTUAL',
 	prototype(

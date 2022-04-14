@@ -30,6 +30,7 @@ setMethod(
 setClass(
 	'scCATCHAnnotate',
 	representation(
+		gene_marker = 'BaseGeneMarkers',
 		cluster = 'BaseCluster',
 		tissue = 'character',
 		species = 'character',
@@ -49,26 +50,8 @@ setClass(
 		cell_min_pct = 0.25,
 		logfc = 0.25,
 		pvalue = 0.05
-	),
-	validity = function(object){
-		msg <- NULL
-		if (!object@genome %in% c('hg19', 'mm10'))
-			msg <- sprintf('unknown genome: %s', object@genome)
-		return(msg)
-	}
+	)
 )
-
-#' @importFrom methods callNextMethod 
-#'
-setMethod('initialize', 'scCATCHAnnotate', function(.Object, check_dependencies = TRUE, ...){
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
-	if (.Object@genome == 'mm10'){
-		.Object@species <- 'Mouse'
-	}else if (.Object@genome == 'hg19'){
-		.Object@species <- 'Human'
-	}
-	.Object
-})
 
 
 #' Annotate a Seurat object with scCATCH (https://cran.r-project.org/web/packages/scCATCH/index.html)
@@ -94,17 +77,19 @@ setMethod(
 		# yet to be implemented
 		# stopifnot(valid(x, params))
 
-		tissues <- scCATCH::cellmatch %>%
-			filter(.data$cancer == params@cancer & .data$species == params@species) %>%
-			pull(.data$tissue) %>%
-			unique()
-
-		if (length(params@tissue) == 0)
-			params@tissue <- tissues
-
-		if (!all(params@tissue %in% tissues))
-			stop(sprintf('params@tissue must be one of the following: %s', paste(tissues, collapse = ',')))
-
+		cellmatch  <- data.frame(
+			species = NA,
+			tissue = NA,
+			cancer = NA,
+			conditoin = NA,
+			subtype1 = NA,
+			subtype2 = NA,
+			subtype3 = NA,
+			celltype = params@gene_marker@celltype[[params@gene_marker@level]],
+			gene = params@gene_marker@celltype$gene,
+			resource = params@gene_marker@name,
+			pmid = NA
+		)
 		raw_assay <- params@cluster@embedding@preprocess@raw_assay
 		cls <- x[[params@cluster@cluster_name]][, 1] %>%
 			as.character()
@@ -112,13 +97,11 @@ setMethod(
 		obj <- scCATCH::createscCATCH(data = x@assays[[raw_assay]]@data, cluster = cls)
 		obj <- scCATCH::findmarkergene(
 			object = obj, 
-			species = params@species, 
-			marker = scCATCH::cellmatch, 
-			tissue = params@tissue, 
+			if_use_custom_marker = TRUE,
+			marker = cellmatch,
 			cell_min_pct = params@cell_min_pct,
 			logfc = params@logfc,
 			pvalue = params@pvalue,
-			cancer = params@cancer,
 			verbose = FALSE
 		)
 		obj <- scCATCH::findcelltype(object = obj, verbose = FALSE)
@@ -223,7 +206,7 @@ setMethod(
 setClass(
 	'CellAssignAnnotate',
 	representation(
-		gene_marker = 'PanglaoDBGeneMarkers'
+		gene_marker = 'BaseGeneMarkers'
 	),
 	contains = c('BaseAnnotate'),
 	prototype(

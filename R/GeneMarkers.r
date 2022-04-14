@@ -7,6 +7,7 @@ setClass(
 	),
 	contains = 'BaseGeneMarkers',
 	prototype(
+		name = 'PanglaoDBGeneMarkers',
 		check_dependencies = TRUE,
 		genome = 'hg19',
 		level = 'Level4',
