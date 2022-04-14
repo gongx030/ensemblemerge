@@ -158,12 +158,6 @@ setClass(
 			new('RPackage', package_name = 'scCATCH', package_version = '3.0')
 		)
 	),
-	validity = function(object){
-		msg <- NULL
-		if (!object@genome %in% c('hg19', 'mm10'))
-			msg <- sprintf('unknown genome: %s', object@genome)
-		return(msg)
-	}
 )
 
 #' @importFrom methods callNextMethod 
@@ -223,5 +217,157 @@ setMethod(
 
 		x@meta.data[[params@annotate_name]] <- results$cell_labels
 		x
+	}
+)
+
+setClass(
+	'CellAssignAnnotate',
+	representation(
+		gene_marker = 'PanglaoDBGeneMarkers'
+	),
+	contains = c('BaseAnnotate'),
+	prototype(
+		name = 'CellAssignAnnotate',
+		dependences = list(
+			new('RPackage', package_name = 'tensorflow', package_version = '2.8.0'),
+			new('PythonPackage', package_name = 'tensorflow', package_version = '2.8.0'),
+			new('RPackage', package_name = 'cellassign', package_version = '0.99.21'),
+			new('RPackage', package_name = 'scran', package_version = '1.22.1'),
+			new('PythonPackage', package_name = 'tensorflow-probability', package_version = '0.15.0'),
+			new('RPackage', package_name = 'tfprobability', package_version = '0.15.0')
+		)
+	),
+)
+
+#' Annotate a Seurat object with CellAssignAnnotate (https://github.com/Irrationone/cellassign)
+#'
+#' @param x a Seurat object
+#' @param params a CellAssignAnnotate object
+#' @param ... Additional arguments
+#' @return returns a data object with cell-wise annotation
+#' @references Zhang, A.W., O’Flanagan, C., Chavez, E.A. et al. Probabilistic cell-type assignment of single-cell RNA-seq for tumor microenvironment profiling. Nat Methods 16, 1007–1015 (2019). https://doi.org/10.1038/s41592-019-0529-1
+#' @importFrom Seurat GetAssayData
+#'
+setMethod(
+	'Annotate',
+	signature(
+		x = 'Seurat',
+		params = 'CellAssignAnnotate'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		.NotYetImplemented()
+
+		# it is still possible that there are genes not detected in any cells in current batch since the initial filtering
+		# was done on the full datasets, before splitting based upon batch indicator
+#		rc <- rowSums(GetAssayData(x, 'data') > 0)
+#		invalid <- rc < params@preprocess@min_cells
+#		if (any(invalid)){
+#			x <- x[!invalid, ]
+#		}
+
+#		raw_assay <- params@preprocess@raw_assay
+
+		# it appears that SC3 only takes dense matrix as the input
+#		sce <- SingleCellExperiment(
+#			assays = list(
+#				counts = x@assays[[raw_assay]]@counts 
+#			)
+#		)
+#		sce <- scran::computeSumFactors(sce)
+#		s <- sizeFactors(sce)
+
+#		gs <- intersect(rownames(x), params@gene_marker@celltype[, 'gene'])
+#		gm <- params@gene_marker@celltype[params@gene_marker@celltype[, 'gene'] %in% gs, ]
+#		cs <- gm[, params@gene_marker@level]
+#		mm <- sparseMatrix(
+#			i = factor(gm[, 'gene'], gs) %>% as.numeric(),
+#			j = factor(cs, unique(cs)) %>% as.numeric(),
+#			dims = c(length(gs), length(unique(cs))),
+#			dimnames = list(gs, unique(cs))
+#		) %>% 
+#			as.matrix()
+
+#		sce <- sce[gs, ]
+
+#		results <- cellassign::cellassign(
+#			exprs_obj = sce,
+#			marker_gene_info = mm,
+#			s = s, 
+#			learning_rate = 1e-2, 
+#			shrinkage = TRUE,
+#			verbose = FALSE
+#		)
+
+	}
+)
+
+
+setClass(
+	'scMRMAAnnotate',
+	representation(
+		cluster = 'BaseCluster',
+		gene_marker = 'PanglaoDBGeneMarkers'
+	),
+	contains = c('BaseAnnotate'),
+	prototype(
+		name = 'scMRMAAnnotate',
+		dependences = list(
+			new('RPackage', package_name = 'scMRMA', package_version = '1.0')
+		)
+	),
+)
+
+#' Annotate a Seurat object with scMRMAAnnotate (https://github.com/JiaLiVUMC/scMRMA)
+#'
+#' @param x a Seurat object
+#' @param params a CellAssignAnnotate object
+#' @param ... Additional arguments
+#' @return returns a data object with cell-wise annotation
+#' @references Jia Li, Quanhu Sheng, Yu Shyr, Qi Liu, scMRMA: single cell multiresolution marker-based annotation, Nucleic Acids Research, Volume 50, Issue 2, 25 January 2022, Page e7, https://doi.org/10.1093/nar/gkab931
+#'
+setMethod(
+	'Annotate',
+	signature(
+		x = 'Seurat',
+		params = 'scMRMAAnnotate'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		.NotYetImplemented()
+
+		# need to make sure that the rownames of matrix are gene symbols
+
+#		raw_assay <- params@preprocess@raw_assay
+#		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+#	 	cls <- x[[params@cluster@cluster_name]][, 1]
+#		names(cls) <- colnames(x)
+
+#		scMRMA::scMRMA(
+#			x@assays[[raw_assay]]@data[h, ],
+#			species = NULL,
+#			db = NULL,
+#			selfDB = params@gene_marker@celltype,
+#			p = 0.05,
+#			normalizedData = TRUE,
+#			selfClusters = cls,
+#			k = 20
+#		)
+
+		# following error when running `scMRMA`
+		# User-provided cell type database will be used.
+		# Multi Resolution Annotation Started.
+		# Level 1 annotation started.
+		# Error in matrix(NA, nrow = nrow(sub), ncol = length(unique(clusters))) :
+		# non-numeric matrix extent
+
 	}
 )

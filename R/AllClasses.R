@@ -592,8 +592,6 @@ setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TR
 
 
 
-#' The BaseAnnotate class
-#'
 setClass(
 	'BaseAnnotate',
 	representation(
@@ -607,8 +605,14 @@ setClass(
 	contains = 'VIRTUAL',
 	prototype(
 		check_dependencies = TRUE	,
-		genome = ''
-	)
+		genome = 'hg19'
+	),
+	validity = function(object){
+		msg <- NULL
+		if (!object@genome %in% c('hg19', 'mm10'))
+			msg <- sprintf('unknown genome: %s', object@genome)
+		return(msg)
+	}
 )
 
 #' @importFrom methods callNextMethod
@@ -620,3 +624,16 @@ setMethod('initialize', 'BaseAnnotate', function(.Object, check_dependencies = T
 	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 })
 
+
+setClass(
+	'BaseGeneMarkers',
+	representation(
+		check_dependencies = 'logical',
+		genome = 'character'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		check_dependencies = TRUE,
+		genome = 'hg19'
+	),
+)

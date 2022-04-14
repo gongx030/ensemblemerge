@@ -670,6 +670,8 @@ setMethod(
 		...
 	){
 
+		.NotYetImplemented()
+
 #		raw_assay <- params@preprocess@raw_assay
 #		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
 #		tags <- x@assays[[raw_assay]]@counts[h, ]  %>% as.matrix()	# cidr only support dense matrix
