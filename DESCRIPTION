@@ -1,8 +1,8 @@
 Package: ensemblemerge
 Title: Integrates existing sc-RNAseq integration methods into a single
     package
-Version: 2.1.10-001
-Date: 2022-04-14
+Version: 2.1.11-001
+Date: 2022-04-15
 Author: Erik Skie <skiex003@umn.edu>, Wuming Gong <gongx030@umn.edu>
 Maintainer: Wuming Gong <gongx030@umn.edu>
 Description: EnsembleMerge provides a unified interface for individual
@@ -47,7 +47,8 @@ Suggests:
 		scCCESS (>= 0.2.0),
 		scLCA (>= 0.0.0.9000),
 		Spectrum (>= 1.1),
-		scran (>= 1.22.1)
+		scran (>= 1.22.1),
+		scDblFinder (>= 1.8.0) 
 Remotes: 
     cellgeni/sceasy,
 		bitbucket::scLCA/single_cell_lca,

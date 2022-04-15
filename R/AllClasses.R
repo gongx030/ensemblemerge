@@ -133,6 +133,28 @@ setClass(
 	)
 )
 
+setClass(
+	'BaseDoubletDetect', 
+	representation(
+		name = 'character',
+		raw_assay = 'character',
+		dependences = 'list',
+		check_dependencies = 'logical'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		check_dependencies = TRUE	
+	)
+)
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'BaseDoubletDetect', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+})
+
 #' The BasePreprocess class
 #'
 #' @slot min_cells the minimum number of cells that a gene should be expressed.
@@ -158,7 +180,8 @@ setClass(
 		raw_assay = 'character',
 		batch = "character",
 		dependences = 'list',
-		check_dependencies = 'logical'
+		check_dependencies = 'logical',
+		doublet_detect = 'BaseDoubletDetect'
 	),
 	contains = 'VIRTUAL',
   prototype(
@@ -180,7 +203,9 @@ setClass(
 setMethod('initialize', 'BasePreprocess', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
-	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+	.Object@doublet_detect@raw_assay <- .Object@raw_assay
+	.Object
 })
 
 

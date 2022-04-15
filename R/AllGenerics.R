@@ -53,3 +53,12 @@ setGeneric("Embed", function(x, params, ...) standardGeneric("Embed"))
 #' @param ... Other arguments
 #'
 setGeneric("Cluster", function(x, params, ...) standardGeneric("Cluster"))
+
+#' The generic function of DetectDoublet 
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("DetectDoublet", function(x, params, ...) standardGeneric("DetectDoublet"))
+
