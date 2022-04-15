@@ -354,3 +354,71 @@ setMethod(
 
 	}
 )
+
+
+setClass(
+	'clustifyrAnnotate',
+	representation(
+		cluster = 'BaseCluster',
+		gene_marker = 'PanglaoDBGeneMarkers',
+		metric = 'character'
+	),
+	contains = c('BaseAnnotate'),
+	prototype(
+		name = 'clustifyrAnnotate',
+		metric = 'jaccard',
+		dependences = list(
+			new('RPackage', package_name = 'clustifyr', package_version = '1.6.0')
+		)
+	)
+)
+
+#' Annotate a Seurat object with clustifyrAnnotate (https://github.com/rnabioco/clustifyr)
+#'
+#' @param x a Seurat object
+#' @param params a clustifyrAnnotate object
+#' @param ... Additional arguments
+#' @return returns a data object with cell-wise annotation
+#' @references Fu R, Gillen AE, Sheridan RM, et al. clustifyr: an R package for automated single-cell RNA sequencing cluster classification. F1000Res. 2020;9:223. Published 2020 Apr 1. doi:10.12688/f1000research.22969.2
+#'
+setMethod(
+	'Annotate',
+	signature(
+		x = 'Seurat',
+		params = 'clustifyrAnnotate'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		raw_assay <- params@preprocess@raw_assay
+		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+
+		marker <- split(params@gene_marker@celltype[, 'gene'], list(params@gene_marker@celltype[, params@gene_marker@level]))
+
+		cor_mat <- clustifyr::clustify_lists(
+			input = x@assays[[raw_assay]]@data[h, ],
+			metadata = x@meta.data,            # meta.data table containing cell clusters
+			cluster_col = params@cluster@cluster_name,
+			marker = marker,                 # list of known marker genes
+			metric = params@metric,                   # test to use for assigning cell types
+			verbose = FALSE
+		)
+
+		results <- clustifyr::cor_to_call(
+			cor_mat,
+			metadata =  x@meta.data,
+			cluster_col = params@cluster@cluster_name,
+			collapse_to_cluster = FALSE,
+			threshold = 0
+		)
+
+		celltype <- results[['type']] %>% as.vector()
+		names(celltype) <- results[[params@cluster@cluster_name]]
+		x@meta.data[[params@annotate_name]] <- celltype[as.character(x@meta.data[[params@cluster@cluster_name]])]
+		x
+
+	}
+)
