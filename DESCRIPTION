@@ -48,6 +48,7 @@ Suggests:
 		scLCA (>= 0.0.0.9000),
 		Spectrum (>= 1.1),
 		scran (>= 1.22.1),
+		clustifyr (>= 1.6.0),
 		scDblFinder (>= 1.8.0) 
 Remotes: 
     cellgeni/sceasy,
