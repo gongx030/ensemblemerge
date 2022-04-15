@@ -95,8 +95,6 @@ setMethod(
 
 	  for(i in 1:length(batch_list)) {
 
-			batch_list[[i]] <- DetectDoublet(batch_list[[i]], params@doublet_detect)
-
 			if(params@norm_data){
 				batch_list[[i]] <- NormalizeData(
 					batch_list[[i]],
