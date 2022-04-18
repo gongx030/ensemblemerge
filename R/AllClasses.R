@@ -189,6 +189,10 @@ setClass(
 		msg <- NULL
 		if (!object@output%in% c('Seurat', 'SeuratList'))
 			msg <- sprintf('unknown output: %s', object@output)
+
+		if (length(object@preprocess@batch) == 0 && object@batchwise)
+			msg <- '.Object@batchwise is TRUE while .Object@preprocess@batch is absent'
+
 		return(msg)
 	}
 )
