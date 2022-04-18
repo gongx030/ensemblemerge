@@ -46,4 +46,4 @@ x <- Cluster(x, params_cluster)
 | Class | Method | Ref. |
 | --- | --- | --- |
 | `scDblFinderDoubletDetect` | scDblFinde | [[R](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html)][[Paper](https://f1000research.com/articles/10-979)] | 
-| `DoubletFinderDoubletDetect` | DoubletFinder | [[R](https://github.com/chris-mcginnis-ucsf/DoubletFinder)][[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/] | 
+| `DoubletFinderDoubletDetect` | DoubletFinder | [[R](https://github.com/chris-mcginnis-ucsf/DoubletFinder)][[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/)] | 
