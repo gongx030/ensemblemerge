@@ -197,7 +197,7 @@ setClass(
 	representation(
 		clust_max = 'integer',
 		training_set_size = 'integer',
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		zerocorrection = 'numeric',
 		cor_thresh = 'numeric'
 	),
@@ -243,8 +243,8 @@ setMethod(
 		# 1. whether the embedding is available
 		# stopifnot(valid(x, params))	
 
-		raw_assay <- params@preprocess@raw_assay
-		h <- x@assays[[raw_assay]]@meta.features[[params@preprocessing@feature_field]]
+		raw_assay <- params@normalize@assay_name
+		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
 
 		batch <- NULL
 		if (!is.null(x[[params@preprocess@batch]])){
@@ -274,7 +274,7 @@ setMethod(
 setClass(
 	'scCCESSCluster',
 	representation(
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		criteria_method = 'character',
 		clust_min = 'integer',
 		clust_max = 'integer',
@@ -348,7 +348,7 @@ setMethod(
 		# 1. whether the embedding is available
 		# stopifnot(valid(x, params))	
 
-		raw_assay <- params@preprocess@raw_assay
+		raw_assay <- params@normalize@assay_name
 
 		# by default genes_as_rows = T and scale =F 
 		# https://github.com/PYangLab/scCCESS/blob/5a79afe0e608717a1a929124b7e7ccf2c66df176/R/scCCESS.R#L330
@@ -436,7 +436,7 @@ setMethod(
 		# 1. whether the embedding is available
 		# stopifnot(valid(x, params))	
 
-		raw_assay <- params@preprocess@raw_assay
+		raw_assay <- params@normalize@assay_name
 
 		# by default genes_as_rows = T and scale =F 
 		# https://github.com/PYangLab/scCCESS/blob/5a79afe0e608717a1a929124b7e7ccf2c66df176/R/scCCESS.R#L330
@@ -490,7 +490,7 @@ setMethod(
 setClass(
 	'SC3Cluster',
 	representation(
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		d_region_min = 'numeric',
 		d_region_max = 'numeric'
 	),
@@ -528,8 +528,8 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@preprocess@raw_assay
-		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+		raw_assay <- params@normalize@assay_name
+		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
 
 		# it appears that SC3 only takes dense matrix as the input
 		sce <- SingleCellExperiment(
@@ -565,7 +565,7 @@ setMethod(
 setClass(
 	'SIMLRCluster',
 	representation(
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		clust_min = 'integer',
 		clust_max = 'integer',
 		cores_ratio = 'numeric',
@@ -608,7 +608,7 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@preprocess@raw_assay
+		raw_assay <- params@normalize@assay_name
 
 		set.seed(params@seed)
 		NUMC <-  params@clust_min:params@clust_max
@@ -636,7 +636,7 @@ setMethod(
 setClass(
 	'CIDRCluster',
 	representation(
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		tag_type = 'character'
 	),
 	contains = c('BaseCluster'),
@@ -672,8 +672,8 @@ setMethod(
 
 		.NotYetImplemented()
 
-#		raw_assay <- params@preprocess@raw_assay
-#		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+#		raw_assay <- params@normalize@assay_name
+#		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
 #		tags <- x@assays[[raw_assay]]@counts[h, ]  %>% as.matrix()	# cidr only support dense matrix
 
 #		sData <- cidr::scDataConstructor(tags, tagType = params@tag_type)
@@ -696,7 +696,7 @@ setMethod(
 setClass(
 	'SpectrumCluster',
 	representation(
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		method = 'integer',
 		diffusion = 'logical',
 		kerneltype = 'character',
@@ -748,8 +748,8 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@preprocess@raw_assay
-		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+		raw_assay <- params@normalize@assay_name
+		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
 
 		results <- Spectrum::Spectrum(
 			 x@assays[[raw_assay]]@counts[h, ] %>% as.matrix(),

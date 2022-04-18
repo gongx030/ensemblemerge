@@ -4,10 +4,10 @@
 \alias{Preprocess,SummarizedExperiment,SeuratPreprocess-method}
 \title{Preprocess a SummarizedExperiment objects by the Seurat pipeline}
 \usage{
-\S4method{Preprocess}{SummarizedExperiment,SeuratPreprocess}(data, params, counts = "counts", ...)
+\S4method{Preprocess}{SummarizedExperiment,SeuratPreprocess}(x, params, counts = "counts", ...)
 }
 \arguments{
-\item{data}{a Seurat object}
+\item{x}{a Seurat object}
 
 \item{params}{a SeuratPreprocess object}
 

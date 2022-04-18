@@ -75,7 +75,7 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@preprocess@raw_assay
+		raw_assay <- params@normalize@assay_name
 		sce <- SingleCellExperiment(
 			assays = list(
 				counts = x@assays[[raw_assay]]@counts 
@@ -144,11 +144,6 @@ setClass(
 #'
 setMethod('initialize', 'DoubletFinderoubletDetect', function(.Object, check_dependencies = TRUE, ...){
 	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
-	if (is(.Object@preprocess, 'SeuratPreprocess')){
-		.Object@sct <- FALSE
-	}else{
-		.NotYetImplemented()
-	}
 	.Object
 })
 
@@ -174,9 +169,9 @@ setMethod(
 		...
 	){
 
-		params_pca <- new('PCAEmbed', preprocess = params@preprocess, ndims = params@ndims)
+		params_pca <- new('PCAEmbed', normalize = params@normalize, ndims = params@ndims)
 		x2 <- Embed(x, params_pca)
-		res <- DoubletFinder::paramSweep_v3(x2, PCs = 1:params@ndims, sct = params@sct)
+		res <- DoubletFinder::paramSweep_v3(x2, PCs = 1:params@ndims, sct = FALSE)
 		res_sweep <- DoubletFinder::summarizeSweep(res, GT = FALSE)
 
 		# suppress the plotting (https://stackoverflow.com/questions/20363266/how-can-i-suppress-the-creation-of-a-plot-while-calling-a-function-in-r)
@@ -195,7 +190,7 @@ setMethod(
 			pK = pK,
 			nExp = round(params@dbr * ncol(x2)),
 			reuse.pANN = FALSE, 
-			sct = params@sct
+			sct = FALSE
 		)
 
 		is_singlet <- x2@meta.data[[grep('^DF.classifications', colnames(x2@meta.data))[1]]] == 'Singlet'

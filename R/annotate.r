@@ -90,7 +90,7 @@ setMethod(
 			resource = params@gene_marker@name,
 			pmid = NA
 		)
-		raw_assay <- params@cluster@embedding@preprocess@raw_assay
+		raw_assay <- params@cluster@embedding@normalize@assay_name
 		cls <- x[[params@cluster@cluster_name]][, 1] %>%
 			as.character()
 
@@ -185,7 +185,7 @@ setMethod(
 
 		signatures <- split(signatures$gene, list(signatures$celltype))
 
-		raw_assay <- params@preprocess@raw_assay
+		raw_assay <- params@normalize@assay_name
 
 		results <- SCINA::SCINA(
 			x@assays[[raw_assay]]@data, 
@@ -248,12 +248,12 @@ setMethod(
 		# it is still possible that there are genes not detected in any cells in current batch since the initial filtering
 		# was done on the full datasets, before splitting based upon batch indicator
 #		rc <- rowSums(GetAssayData(x, 'data') > 0)
-#		invalid <- rc < params@preprocess@min_cells
+#		invalid <- rc < params@normalize@preprocess@min_cells
 #		if (any(invalid)){
 #			x <- x[!invalid, ]
 #		}
 
-#		raw_assay <- params@preprocess@raw_assay
+#		raw_assay <- params@normalize@assay_name
 
 		# it appears that SC3 only takes dense matrix as the input
 #		sce <- SingleCellExperiment(
@@ -329,8 +329,8 @@ setMethod(
 
 		# need to make sure that the rownames of matrix are gene symbols
 
-#		raw_assay <- params@preprocess@raw_assay
-#		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+#		raw_assay <- params@normalize@assay_name
+#		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
 #	 	cls <- x[[params@cluster@cluster_name]][, 1]
 #		names(cls) <- colnames(x)
 
@@ -393,8 +393,8 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@preprocess@raw_assay
-		h <- x@assays[[raw_assay]]@meta.features[[params@preprocess@feature_field]]
+		raw_assay <- params@normalize@assay_name
+		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
 
 		marker <- split(params@gene_marker@celltype[, 'gene'], list(params@gene_marker@celltype[, params@gene_marker@level]))
 

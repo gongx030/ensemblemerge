@@ -133,29 +133,11 @@ setClass(
 	)
 )
 
-
-#' The BasePreprocess class
-#'
-#' @slot min_cells the minimum number of cells that a gene should be expressed.
-#' @slot min_genes the minimum number of genes that a cell should express.
-#' @slot norm_data whether or not normalizing the data
-#' @slot scaling whether or not scaling the data
-#' @slot norm_method the normalization method 
-#' @slot scale_factor the scaling factor
-#' @slot numHVG number of highly variable genes
-#' @slot raw_assay the raw assay field in a Seurat object
-#' @slot batch character name of batch in dataset metadata
-#'
 setClass(
 	'BasePreprocess', 
 	representation(
     min_cells = "integer",
     min_genes = "integer",
-		norm_data = "logical",
-    scaling = "logical",
-    norm_method = "character",
-    scale_factor = "numeric",
-    numHVG = "integer",
 		raw_assay = 'character',
 		batch = "character",
 		dependences = 'list',
@@ -165,11 +147,6 @@ setClass(
   prototype(
     min_cells = 10L,
     min_genes = 300L,
-		norm_data = TRUE,
-		scaling = TRUE,
-		norm_method = "LogNormalize",
-		scale_factor = 10000,
-		numHVG = 2000L,
 		raw_assay = 'RNA',
 		batch = 'batch',
 		check_dependencies = TRUE
@@ -187,10 +164,53 @@ setMethod('initialize', 'BasePreprocess', function(.Object, check_dependencies =
 
 
 setClass(
+	'BaseNormalize',
+	representation(
+		assay_name = 'character',
+		preprocess = 'BasePreprocess',
+		numHVG = "integer",
+		dependences = 'list',
+		batchwise = 'logical',
+		output = 'character',
+		do.scale = 'logical',
+		do.center = 'logical',
+		check_dependencies = 'logical'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		assay_name = 'RNA',
+		numHVG = 2000L,
+		batchwise = TRUE,
+		output = 'Seurat',
+		do.scale = TRUE,
+		do.center = TRUE,
+		check_dependencies = TRUE
+	),
+	validity = function(object){
+		msg <- NULL
+		if (!object@output%in% c('Seurat', 'SeuratList'))
+			msg <- sprintf('unknown output: %s', object@output)
+		return(msg)
+	}
+)
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'BaseNormalize', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+	.Object
+})
+
+
+
+
+setClass(
 	'BaseDoubletDetect', 
 	representation(
 		name = 'character',
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
@@ -564,7 +584,7 @@ setClass(
 		reduction_name = 'character',
 		ndims = 'integer',
 		seed = 'integer',
-		preprocess = 'BasePreprocess',
+		normalize = 'BaseNormalize',
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
@@ -620,7 +640,7 @@ setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TR
 setClass(
 	'BaseAnnotate',
 	representation(
-		preprocess = 'BasePreprocess',
+		normalize= 'BaseNormalize',
 		name = 'character',
 		annotate_name = 'character',
 		dependences = 'list',

@@ -8,11 +8,11 @@ setGeneric("Merge", function(data, params, ...) standardGeneric("Merge"))
 
 #' The generic function of Preprocess
 #'
-#' @param data a data object
+#' @param x a data object
 #' @param params a parameter object
 #' @param ... Other arguments
 #'
-setGeneric("Preprocess", function(data, params, ...) standardGeneric("Preprocess"))
+setGeneric("Preprocess", function(x, params, ...) standardGeneric("Preprocess"))
 
 #' The generic function of valid
 #'
@@ -61,4 +61,12 @@ setGeneric("Cluster", function(x, params, ...) standardGeneric("Cluster"))
 #' @param ... Other arguments
 #'
 setGeneric("DetectDoublet", function(x, params, ...) standardGeneric("DetectDoublet"))
+
+#' The generic function of Normalize
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("Normalize", function(x, params, ...) standardGeneric("Normalize"))
 

@@ -1,133 +1,85 @@
-#' The SeuratPreprocess class
+#' Preprocess a SeuratList objects by the Seurat pipeline
 #'
-#' @slot selection.method The gene selection method
-#' @slot batchwise whether or not performing batchwise data normalization and HVG selection
-#' @slot output The output format
-#'
+#' @param x a SeuratList object
+#' @param params a BasePreprocess object 
+#' @param ... Additional arguments
+#' @return a SeuratList object 
+setMethod(
+	'Preprocess',
+	signature(
+		x = 'SeuratList',
+		params = 'BasePreprocess'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+		for (i in 1:length(x)){
+			x[[i]] <- Preprocess(x[[i]], params, ...)
+		}
+		x	
+	}
+)
+
 setClass(
 	'SeuratPreprocess', 
 	representation(
-		selection.method = 'character',
-		batchwise = 'logical',
-		output = 'character',
-		feature_field = 'character'
 	),
 	contains = c('BasePreprocess'),
   prototype(
-		selection.method = 'vst',
-		batchwise = FALSE,
-		output = 'Seurat'
-	),
-	validity = function(object){
-		msg <- NULL
-		if (!object@output%in% c('Seurat', 'SeuratList'))
-			msg <- sprintf('unknown output: %s', object@output)
-		if (!object@selection.method %in% c('vst', 'mean.var.plot', 'dispersion'))
-			msg <- sprintf('unknown selection.method: %s', object@selection.method)
-		return(msg)
-	}
+	)
 )
 
 #' @importFrom methods callNextMethod
 #'
 setMethod('initialize', 'SeuratPreprocess', function(.Object, check_dependencies = TRUE, ...){
-
-	if (.Object@selection.method == 'vst')
-		.Object@feature_field <- 'vst.variable'
-	else if (.Object@selection.method == 'mean.var.plot')
-		.Object@feature_field <- 'mvp.variable'
-	else if (.Object@selection.method == 'dispersion')
-		.Object@feature_field <- 'mvp.variable'
-
-	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
-
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+	.Object
 })
 
 
-
-#' Preprocess a Seurat objects by the Seurat pipeline
+#' Preprocess a Seurat objects 
 #'
-#' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
-#'
-#' @param data a Seurat object
-#' @param params a SeuratPreprocess object 
+#' @param x a Seurat object
+#' @param params a BasePreprocess object 
 #' @param ... Additional arguments
 #' @return a Seurat object (if there is only one batch), or a SeuratList
 
-#' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures
+#' @importFrom Seurat GetAssayData
 #'
 setMethod(
 	'Preprocess',
 	signature(
-		data  = 'Seurat',
-		params = 'SeuratPreprocess'
+		x = 'Seurat',
+		params = 'BasePreprocess'
 	),
 	function(
-		data,
+		x,
 		params,
 		...
 	){
 
-		stopifnot(valid(data, params))
+		stopifnot(valid(x, params))
 
-		rc <- rowSums(GetAssayData(data, 'data') > 0)
-		cc <- colSums(GetAssayData(data, 'data') > 0)
+		rc <- rowSums(GetAssayData(x, 'data') > 0)
+		cc <- colSums(GetAssayData(x, 'data') > 0)
 
 		invalid <- rc < params@min_cells
 		if (any(invalid)){
-			data <- data[!invalid, ]
+			x <- x[!invalid, ]
 			sprintf('Preprocess | removing %d genes that are expressed in <%d (min_cells) cells', sum(invalid), params@min_cells) %>% message()
 		}
 
 		invalid <- cc < params@min_genes
 		if (any(invalid)){
-			data <- data[, !invalid]
+			x <- x[, !invalid]
 			sprintf('Preprocess | removing %d cells that have <%d (min_genes) detected genes', sum(invalid), params@min_genes) %>% message()
 		}
 
-		cn <- colnames(data)
-
-		if (params@batchwise){
-			batch_list <- SplitObject(data, split.by = params@batch)
-		}else{
-			batch_list <- list(data)
-		}
-
-	  for(i in 1:length(batch_list)) {
-
-			if(params@norm_data){
-				batch_list[[i]] <- NormalizeData(
-					batch_list[[i]],
-					normalization.method = params@norm_method,
-					scale.factor = params@scale_factor,
-					verbose = FALSE
-				)
-	    }
-	    batch_list[[i]] <- FindVariableFeatures(
-				batch_list[[i]],
-				selection.method = params@selection.method,
-				nfeatures = params@numHVG,
-				verbose = FALSE
-			)
-		}
-
-		if (params@output == 'SeuratList'){
-
-			for (i in 1:length(batch_list)){
-				batch_list[[i]] <- ScaleData(object = batch_list[[i]], verbose = FALSE)
-			}
-			new('SeuratList', batch_list)
-
-		}else if (params@output == 'Seurat'){
-			# select features that are repeatedly variable across datasets for integration
-			features <- SelectIntegrationFeatures(
-				object.list = batch_list,
-				nfeatures = params@numHVG
-			)
-			data@assays[[data@active.assay]]@var.features <- features
-			data <- ScaleData(object = data, verbose = FALSE)
-			data
-		}
+		x	
 	}
 )
 
@@ -136,7 +88,7 @@ setMethod(
 #'
 #' Adopted from https://satijalab.org/seurat/articles/integration_introduction.html
 #'
-#' @param data a Seurat object
+#' @param x a Seurat object
 #' @param params a SeuratPreprocess object 
 #' @param counts the assay field for raw counts in a SingleCellExperiment object (default: 'counts')
 #' @param ... Additional arguments
@@ -147,11 +99,11 @@ setMethod(
 setMethod(
 	'Preprocess',
 	signature(
-		data  = 'SummarizedExperiment',
+		x = 'SummarizedExperiment',
 		params = 'SeuratPreprocess'
 	),
 	function(
-		data,
+		x,
 		params,
 		counts = 'counts',
 		...
@@ -161,15 +113,16 @@ setMethod(
 		# stopifnot(valid(data, params))
 
 		seurat <- CreateSeuratObject(
-			counts = assays(data)[[counts]], # Unnormalized data such as raw counts or TPMs
-			meta.data = as.data.frame(colData(data)),
+			counts = assays(x)[[counts]], # Unnormalized data such as raw counts or TPMs
+			meta.data = as.data.frame(colData(x)),
 			assay = params@raw_assay
 		)
 
-		if (ncol(rowData(data)) > 0){
-			d <- as.data.frame(rowData(data))
+		if (ncol(rowData(x)) > 0){
+			d <- as.data.frame(rowData(x))
 			seurat[[params@raw_assay]]@meta.features <- d
 		}
+
 
 		Preprocess(seurat, params, ...)
 
@@ -208,7 +161,7 @@ setClass(
 
 #' Preprocess a Seurat object by the Scanpy pipeline
 #'
-#' @param data  a Seurat object
+#' @param x a Seurat object
 #' @param params a ScanpyPreprocess object
 #' @param merge a BaseMerge object
 #' @param ... Additional arguments
@@ -217,25 +170,25 @@ setClass(
 #setMethod(
 #	'Preprocess',
 #	signature(
-#		data  = 'Seurat',
+#		x = 'Seurat',
 #		params = 'ScanpyPreprocess',
 #		merge = 'BaseMerge'
 #	),
 #	function(
-#		data,
+#		x,
 #		params,
 #		merge,
 #		...
 #	){
 #
-#		data <- as.SingleCellExperiment(data)
-#		Preprocess(params, data, ...)
+#		x <- as.SingleCellExperiment(x)
+#		Preprocess(params, x, ...)
 #	}
 #)
 
 #' Preprocess a SingleCellExperiment object by the Scanpy pipeline
 #'
-#' @param data a SingleCellExperiment object
+#' @param x a SingleCellExperiment object
 #' @param params a ScanpyPreprocess object
 #' @return returns a SingleCellExperiment object
 #' @param ... Additional arguments
@@ -244,29 +197,29 @@ setClass(
 #setMethod(
 #	'Preprocess',
 #	signature(
-#		data  = 'SingleCellExperiment',
+#		x = 'SingleCellExperiment',
 #		params = 'ScanpyPreprocess'
 #	),
 #	function(
-#		data,
+#		x,
 #		params,
 #		...
 #	){
 #
 #		h5ad_file <- tempfile(fileext = '.h5ad')
-#		data = sceasy::convertFormat(data, from = "sce", to = "anndata", out = h5ad_file)
+#		x = sceasy::convertFormat(x, from = "sce", to = "anndata", out = h5ad_file)
 #		sc <- import("scanpy")
-#		sc$pp$filter_cells(data, min_genes = params@min_genes)
-#		sc$pp$filter_genes(data, min_cells = params@min_cells)
-#		sc$pp$normalize_total(data, target_sum = params@scale_factor)
-#		sc$pp$log1p(data)
-#		sc$pp$highly_variable_genes(data, min_mean = params@min_mean, max_mean= params@max_mean, min_disp = params@min_disp)
-#		sc$pp$scale(data)
-#		sc$tl$pca(data)
-#		data$write(filename = h5ad_file)
-#		data <- zellkonverter::readH5AD(h5ad_file, reader = 'R')
-#		rowData(data)$highly_variable <- as.logical(rowData(data)$highly_variable)
+#		sc$pp$filter_cells(x, min_genes = params@min_genes)
+#		sc$pp$filter_genes(x, min_cells = params@min_cells)
+#		sc$pp$normalize_total(x, target_sum = params@scale_factor)
+#		sc$pp$log1p(x)
+#		sc$pp$highly_variable_genes(x, min_mean = params@min_mean, max_mean= params@max_mean, min_disp = params@min_disp)
+#		sc$pp$scale(x)
+#		sc$tl$pca(x)
+#		x$write(filename = h5ad_file)
+#		x <- zellkonverter::readH5AD(h5ad_file, reader = 'R')
+#		rowData(x)$highly_variable <- as.logical(rowData(x)$highly_variable)
 #		unlink(h5ad_file)
-#		data
+#		x	
 #	}
 #)

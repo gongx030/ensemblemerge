@@ -129,7 +129,7 @@ setMethod(
 		# 2. check whether the data has been preprocessed
 		# stopifnot(valid(x, params))	
 
-		raw_assay <- params@preprocess@raw_assay
+		raw_assay <- params@normalize@assay_name
 
 		results <- scCCESS::encode(
 			x@assays[[raw_assay]]@scale.data,
