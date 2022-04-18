@@ -39,11 +39,11 @@ x <- Cluster(x, params_cluster)
 ## Normalization
 | Class | Method | Ref. |
 | --- | --- | --- |
-| `SCTransformNormalize` | SCTransform | [[R](https://satijalab.org/seurat/articles/sctransform_vignette.html)][[Paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)] | 
-| `SeuratNormalize` | Seurat's default normalization pipeline | [[R](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)][[Paper](https://www.nature.com/articles/nbt.4096)] | 
+| `SCTransformNormalize` | [SCTransform](https://satijalab.org/seurat/articles/sctransform_vignette.html) | [[Paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)] | 
+| `SeuratNormalize` | [Seurat](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)'s default normalization pipeline | [[Paper](https://www.nature.com/articles/nbt.4096)] | 
 
 ## Doublet detection
 | Class | Method | Ref. |
 | --- | --- | --- |
-| `scDblFinderDoubletDetect` | scDblFinder | [[R](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html)][[Paper](https://f1000research.com/articles/10-979)] | 
-| `DoubletFinderDoubletDetect` | DoubletFinder | [[R](https://github.com/chris-mcginnis-ucsf/DoubletFinder)][[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/)] | 
+| `scDblFinderDoubletDetect` | [scDblFinder](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html) | [[Paper](https://f1000research.com/articles/10-979)] | 
+| `DoubletFinderDoubletDetect` | [DoubletFinder](https://github.com/chris-mcginnis-ucsf/DoubletFinder) | [[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/)] | 
