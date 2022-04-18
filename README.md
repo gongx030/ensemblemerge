@@ -24,7 +24,7 @@ x <- DetectDoublet(x, params_doubletdetect)
 
 # dimension reduction
 params_embed <- new('PCAEmbed', normalize = params_normalize)
-x <- Embed(x, params_doubletdetect)
+x <- Embed(x, params_embed)
 
 # clustering
 params_cluster <- new('LouvainCluster', embedding = params_embed)
