@@ -19,7 +19,7 @@ params_normalize <- new('SeuratNormalize', preprocess = params_preprocess)
 x <- Normalize(x, params_normalize)
 
 # doublet removing 
-params_doubletdetect <- new('DoubletFinderoubletDetect',  normalize = params_normalize)
+params_doubletdetect <- new('DoubletFinderDoubletDetect',  normalize = params_normalize)
 x <- DetectDoublet(x, params_doubletdetect)
 
 # dimension reduction
