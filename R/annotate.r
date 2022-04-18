@@ -4,6 +4,7 @@
 #' @param params a BaseAnnotate object
 #' @param ... Additional arguments
 #' @return returns a SeuratList object with cell-wise annotation
+#' @export
 #'
 setMethod(
 	'Annotate',
@@ -61,6 +62,7 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with cell-wise annotation
 #' @importFrom rlang .data
+#' @export
 #'
 setMethod(
 	'Annotate',
@@ -163,6 +165,7 @@ setMethod('initialize', 'SCINAAnnotate', function(.Object, check_dependencies = 
 #' @param ... Additional arguments
 #' @return returns a data object with cell-wise annotation
 #' @importFrom rlang .data
+#' @export
 #'
 setMethod(
 	'Annotate',
@@ -380,6 +383,7 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with cell-wise annotation
 #' @references Fu R, Gillen AE, Sheridan RM, et al. clustifyr: an R package for automated single-cell RNA sequencing cluster classification. F1000Res. 2020;9:223. Published 2020 Apr 1. doi:10.12688/f1000research.22969.2
+#' @export
 #'
 setMethod(
 	'Annotate',
@@ -394,12 +398,12 @@ setMethod(
 	){
 
 		raw_assay <- params@normalize@assay_name
-		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
+		hvg <- x@assays[[raw_assay]]@var.features
 
 		marker <- split(params@gene_marker@celltype[, 'gene'], list(params@gene_marker@celltype[, params@gene_marker@level]))
 
 		cor_mat <- clustifyr::clustify_lists(
-			input = x@assays[[raw_assay]]@data[h, ],
+			input = x@assays[[raw_assay]]@data[hvg, ],	# requires normalized counts
 			metadata = x@meta.data,            # meta.data table containing cell clusters
 			cluster_col = params@cluster@cluster_name,
 			marker = marker,                 # list of known marker genes

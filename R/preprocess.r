@@ -4,6 +4,7 @@
 #' @param params a BasePreprocess object 
 #' @param ... Additional arguments
 #' @return a SeuratList object 
+#' @export
 setMethod(
 	'Preprocess',
 	signature(
@@ -47,7 +48,7 @@ setMethod('initialize', 'SeuratPreprocess', function(.Object, check_dependencies
 #' @param params a BasePreprocess object 
 #' @param ... Additional arguments
 #' @return a Seurat object (if there is only one batch), or a SeuratList
-
+#' @export
 #' @importFrom Seurat GetAssayData
 #'
 setMethod(
@@ -93,7 +94,7 @@ setMethod(
 #' @param counts the assay field for raw counts in a SingleCellExperiment object (default: 'counts')
 #' @param ... Additional arguments
 #' @return a Seurat object (if there is only one batch), or a SeuratList
-
+#' @export
 #' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures
 #'
 setMethod(

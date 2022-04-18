@@ -4,6 +4,7 @@
 #' @param params a BaseDoubletDetect object
 #' @param ... Additional arguments
 #' @return returns a SeuratList object with doublets removed
+#' @export
 #'
 setMethod(
 	'DetectDoublet',
@@ -23,7 +24,6 @@ setMethod(
 		x
 	}
 )
-
 
 setClass(
 	'scDblFinderDoubletDetect',
@@ -62,6 +62,7 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with doublet removed
 #' @references Germain P, Lun A, Macnair W, Robinson M (2021). “Doublet identification in single-cell sequencing data using scDblFinder.” f1000research. doi: 10.12688/f1000research.73600.1.
+#' @export
 #'
 setMethod(
 	'DetectDoublet',
@@ -122,7 +123,7 @@ setMethod(
 
 
 setClass(
-	'DoubletFinderoubletDetect',
+	'DoubletFinderDoubletDetect',
 	representation(
 		dbr = 'numeric',
 		ndims = 'integer',
@@ -142,26 +143,32 @@ setClass(
 
 #' @importFrom methods callNextMethod is 
 #'
-setMethod('initialize', 'DoubletFinderoubletDetect', function(.Object, check_dependencies = TRUE, ...){
+setMethod('initialize', 'DoubletFinderDoubletDetect', function(.Object, check_dependencies = TRUE, ...){
 	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+	if (is(.Object@normalize, 'SeuratNormalize')){
+		.Object@sct <- FALSE
+	}else if (is(.Object@normalize, 'SCTransformNormalize')){
+		.Object@sct <- TRUE 
+	}
 	.Object
 })
 
-#' Doublet detection by DoubletFinderoubletDetect (https://github.com/chris-mcginnis-ucsf/DoubletFinder)
+#' Doublet detection by DoubletFinderDoubletDetect (https://github.com/chris-mcginnis-ucsf/DoubletFinder)
 #'
 #' @param x a Seurat object
-#' @param params a DoubletFinderoubletDetect 
+#' @param params a DoubletFinderDoubletDetect 
 #' @param ... Additional arguments
 #' @return returns a data object with doublet removed
 #' @references McGinnis CS, Murrow LM, Gartner ZJ. DoubletFinder: Doublet Detection in Single-Cell RNA Sequencing Data Using Artificial Nearest Neighbors. Cell Syst. 2019 Apr 24;8(4):329-337.e4. doi: 10.1016/j.cels.2019.03.003. Epub 2019 Apr 3. PMID: 30954475; PMCID: PMC6853612.
 #' @importFrom grDevices png dev.off
+#' @export
 #'
 
 setMethod(
 	'DetectDoublet',
 	signature(
 		x = 'Seurat',
-		params = 'DoubletFinderoubletDetect'
+		params = 'DoubletFinderDoubletDetect'
 	),
 	function(
 		x,
@@ -171,7 +178,7 @@ setMethod(
 
 		params_pca <- new('PCAEmbed', normalize = params@normalize, ndims = params@ndims)
 		x2 <- Embed(x, params_pca)
-		res <- DoubletFinder::paramSweep_v3(x2, PCs = 1:params@ndims, sct = FALSE)
+		res <- DoubletFinder::paramSweep_v3(x2, PCs = 1:params@ndims, sct = params@sct)
 		res_sweep <- DoubletFinder::summarizeSweep(res, GT = FALSE)
 
 		# suppress the plotting (https://stackoverflow.com/questions/20363266/how-can-i-suppress-the-creation-of-a-plot-while-calling-a-function-in-r)
@@ -190,7 +197,7 @@ setMethod(
 			pK = pK,
 			nExp = round(params@dbr * ncol(x2)),
 			reuse.pANN = FALSE, 
-			sct = FALSE
+			sct = params@sct
 		)
 
 		is_singlet <- x2@meta.data[[grep('^DF.classifications', colnames(x2@meta.data))[1]]] == 'Singlet'

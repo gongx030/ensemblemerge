@@ -4,6 +4,7 @@
 #' @param params a BaseCluster object
 #' @param ... Additional arguments
 #' @return returns a SeuratList object with clusters
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -61,6 +62,7 @@ setMethod('initialize', 'LouvainCluster', function(.Object, check_dependencies =
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
 #' @importFrom Seurat FindClusters
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -145,6 +147,7 @@ setMethod('initialize', 'LeidenCluster', function(.Object, check_dependencies = 
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
 #' @importFrom Seurat FindClusters
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -226,6 +229,7 @@ setClass(
 #' @importFrom methods is
 #' @importFrom Seurat FindClusters
 #' @references Cheng C, Easton J, Rosencrance C, Li Y, Ju B, Williams J, Mulder HL, Pang Y, Chen W, Chen X. Latent cellular analysis robustly reveals subtle diversity in large-scale single-cell RNA-seq data. Nucleic Acids Res. 2019 Dec 16;47(22):e143. doi: 10.1093/nar/gkz826. PMID: 31566233; PMCID: PMC6902034.
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -244,7 +248,7 @@ setMethod(
 		# stopifnot(valid(x, params))	
 
 		raw_assay <- params@normalize@assay_name
-		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
+		hvg <- x@assays[[raw_assay]]@var.features
 
 		batch <- NULL
 		if (!is.null(x[[params@preprocess@batch]])){
@@ -253,7 +257,7 @@ setMethod(
 		}
 
     results <- scLCA::myscLCA(
-			x@assays[[raw_assay]]@data[h, ],
+			x@assays[[raw_assay]]@data[hvg, ],
 			cor.thresh = params@cor_thresh,
 			clust.max = params@clust_max, 
 			trainingSetSize = params@training_set_size, 
@@ -331,6 +335,7 @@ setClass(
 #' @importFrom stats kmeans
 #' @references Geddes TA, Kim T, Nan L, Burchfield JG, Yang JYH, Tao D, et al. Autoencoder-based cluster ensembles for single-cell RNA-seq data analysis. BMC Bioinformatics. 2019;20:660.
 #' According to https://github.com/PYangLab/scCCESS#installation, we used an unofficial `SIMLR` version (https://github.com/yulijia/SIMLR)
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -419,6 +424,7 @@ setClass(
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
 #' @references Geddes TA, Kim T, Nan L, Burchfield JG, Yang JYH, Tao D, et al. Autoencoder-based cluster ensembles for single-cell RNA-seq data analysis. BMC Bioinformatics. 2019;20:660.
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -515,6 +521,7 @@ setClass(
 #' @importFrom methods is
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @references Kiselev VY, Kirschner K, Schaub MT, Andrews T, Yiu A, Chandra T, Natarajan KN, Reik W, Barahona M, Green AR, Hemberg M (2017). “SC3 - consensus clustering of single-cell RNA-Seq data.” Nature Methods. http://dx.doi.org/10.1038/nmeth.4236.
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -529,15 +536,15 @@ setMethod(
 	){
 
 		raw_assay <- params@normalize@assay_name
-		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
+		hvg <- x@assays[[raw_assay]]@var.features
 
 		# it appears that SC3 only takes dense matrix as the input
 		sce <- SingleCellExperiment(
 			assays = list(
-				counts = x@assays[[raw_assay]]@counts[h, ] %>% as.matrix(),
-				logcounts = log2(x@assays[[raw_assay]]@counts[h, ] + 1) %>% as.matrix()
+				counts = x@assays[[raw_assay]]@counts[hvg, ] %>% as.matrix(),
+				logcounts = log2(x@assays[[raw_assay]]@counts[hvg, ] + 1) %>% as.matrix()
 			),
-			rowData = data.frame(feature_symbol = rownames(x)[h])
+			rowData = data.frame(feature_symbol = hvg)
 		)	
 
 		sce <- SC3::sc3(
@@ -595,6 +602,7 @@ setClass(
 #' @return returns a data object with clustering results in meta data
 #' @references Wang, B., Zhu, J., Pierson, E. et al. Visualization and analysis of single-cell RNA-seq data by kernel-based similarity learning. Nat Methods 14, 414–416 (2017). https://doi.org/10.1038/nmeth.4207
 #' @references Wang B, Ramazzotti D, De Sano L, Zhu J, Pierson E, Batzoglou S. SIMLR: A Tool for Large-Scale Genomic Analyses by Multi-Kernel Learning. Proteomics. 2018 Jan;18(2). doi: 10.1002/pmic.201700232. PMID: 29265724.
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -735,6 +743,7 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with clustering results in meta data
 #' @references Lin, P., Troup, M. & Ho, J.W. CIDR: Ultrafast and accurate clustering through imputation for single-cell RNA-seq data. Genome Biol 18, 59 (2017). https://doi.org/10.1186/s13059-017-1188-0
+#' @export
 #'
 setMethod(
 	'Cluster',
@@ -749,10 +758,10 @@ setMethod(
 	){
 
 		raw_assay <- params@normalize@assay_name
-		h <- x@assays[[raw_assay]]@meta.features[[params@normalize@feature_field]]
+		hvg <- x@assays[[raw_assay]]@var.features
 
 		results <- Spectrum::Spectrum(
-			 x@assays[[raw_assay]]@counts[h, ] %>% as.matrix(),
+			 x@assays[[raw_assay]]@counts[hvg, ] %>% as.matrix(),
 			 method = params@method, 
 			 silent = TRUE, 
 			 showres = FALSE,

@@ -3,6 +3,7 @@
 #' @param x a SeuratList object
 #' @param params a PCAEmbed object
 #' @param ... Additional arguments
+#' @export
 #' @return returns a SeuratList object with latent embedding
 #'
 setMethod(
@@ -45,6 +46,7 @@ setClass(
 #' @return returns a data object with PCA embedding
 #' @importFrom methods is
 #' @importFrom Seurat ScaleData RunPCA
+#' @export
 #'
 setMethod(
 	'Embed',
@@ -112,6 +114,7 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a data object with embedding results
 #' @importFrom Seurat CreateDimReducObject 
+#' @export
 #'
 setMethod(
 	'Embed',
