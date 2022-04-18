@@ -35,3 +35,15 @@ x <- Cluster(x, params_cluster)
 # params_annotate <- new('clustifyrAnnotate', normalize = params_normalize, gene_marker = params_genemarkers, cluster = params_cluster)
 # x <- Annotate(x, params_annotate)
 ```
+
+## Normalization
+| Class | Method | Ref. |
+| --- | --- | --- |
+| `SCTransformNormalize` | SCTransform | [[R](https://satijalab.org/seurat/articles/sctransform_vignette.html)][[Paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)] | 
+| `SeuratNormalize` | Seurat's default normalization pipeline | [[R](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)][[Paper](https://www.nature.com/articles/nbt.4096)] | 
+
+## Doublet detection
+| Class | Method | Ref. |
+| --- | --- | --- |
+| `scDblFinderDoubletDetect` | scDblFinde | [[R](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html)][[Paper](https://f1000research.com/articles/10-979)] | 
+| `DoubletFinderDoubletDetect` | DoubletFinder | [[R](https://github.com/chris-mcginnis-ucsf/DoubletFinder)][[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/] | 
