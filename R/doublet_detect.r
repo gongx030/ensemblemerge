@@ -153,7 +153,7 @@ setMethod('initialize', 'DoubletFinderDoubletDetect', function(.Object, check_de
 	.Object
 })
 
-#' Doublet detection by DoubletFinderDoubletDetect (https://github.com/chris-mcginnis-ucsf/DoubletFinder)
+#' Doublet detection by DoubletFinder (https://github.com/chris-mcginnis-ucsf/DoubletFinder)
 #'
 #' @param x a Seurat object
 #' @param params a DoubletFinderDoubletDetect 
