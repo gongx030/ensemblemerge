@@ -22,13 +22,18 @@ setMethod(
 		if (any(duplicated(colnames(x))))
 			stop('there are duplicated column names in the input data')
 
+		if (any(duplicated(rownames(x))))
+			stop('there are duplicated row names in the input data')
+
 		if (!params@raw_assay %in% names(x@assays))
 			stop(sprintf('The raw counts are not present in x@assays$%s', params@raw_assay))
 
 		DefaultAssay(x) <- params@raw_assay
 
-		if (!params@batch %in% colnames(x@meta.data))
-			stop(sprintf('the batch field is not present in x[["%s"]]', params@batch))
+		if (length(params@batch) > 0){
+			if (!params@batch %in% colnames(x@meta.data))
+				stop(sprintf('the batch field is not present in x[["%s"]]', params@batch))
+		}
 
 		return(TRUE)
 

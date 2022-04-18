@@ -148,7 +148,6 @@ setClass(
     min_cells = 10L,
     min_genes = 300L,
 		raw_assay = 'RNA',
-		batch = 'batch',
 		check_dependencies = TRUE
 	)
 )
