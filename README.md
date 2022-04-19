@@ -61,7 +61,7 @@ x_merged <- Merge(x, params_merge) # x_merged is a Seurat object
 ## Preprocessing
 
 * cell and gene filtering 
-* Check the integrity of the input data
+* Check the integrity of the input data.  For example, if a `batch` indicator is specified, it will validate whether the meta data is available. 
 * No batch related operations
 
 | Class | Method | Ref. |
@@ -77,6 +77,10 @@ x_merged <- Merge(x, params_merge) # x_merged is a Seurat object
 | `SeuratNormalize` | [Seurat](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)'s default normalization pipeline | [[Paper](https://www.nature.com/articles/nbt.4096)] | 
 
 ## Doublet detection
+
+* The detected doublets are removed. 
+* If a `SeuratList` object is provided, the doublet detection is performed on each batch separately. 
+
 | Class | Method | Ref. |
 | --- | --- | --- |
 | `scDblFinderDoubletDetect` | [scDblFinder](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html) | [[Paper](https://f1000research.com/articles/10-979)] | 
