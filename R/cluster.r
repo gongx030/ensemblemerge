@@ -61,7 +61,7 @@ setMethod('initialize', 'LouvainCluster', function(.Object, check_dependencies =
 #' @param ... Additional arguments
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
-#' @importFrom Seurat FindClusters
+#' @importFrom Seurat FindClusters FindNeighbors
 #' @export
 #'
 setMethod(
@@ -146,7 +146,7 @@ setMethod('initialize', 'LeidenCluster', function(.Object, check_dependencies = 
 #' @param ... Additional arguments
 #' @return returns a data object with clustering results in meta data
 #' @importFrom methods is
-#' @importFrom Seurat FindClusters
+#' @importFrom Seurat FindClusters FindNeighbors
 #' @export
 #'
 setMethod(

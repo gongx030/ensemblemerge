@@ -40,14 +40,59 @@ setMethod(
 	}
 )
 
+#' Validate a Seurat object before normalization
+#'
+#' @param x a Seurat object
+#' @param params a BaseNormalize object
+#' @param ... Additional arguments
+#
+setMethod(
+	'valid',
+	signature(
+		x = 'Seurat',
+		params = 'BaseNormalize'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		valid(x, params@preprocess)
+		return(TRUE)
+	}
+)
+
+#' Validate a SeuratList object before merging
+#'
+#' @param x a SeuratList object
+#' @param params a BaseMerge object
+#' @param ... Additional arguments
+#
+setMethod(
+	'valid',
+	signature(
+		x = 'SeuratList',
+		params = 'BaseMerge'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		for (i in 1:length(x)){
+			valid(x[[i]], params)
+		}
+		return(TRUE)
+	}
+)
+
 #' Validate a Seurat object before merging
 #'
 #' @param x a Seurat object
 #' @param params a BaseMerge object
 #' @param ... Additional arguments
-#'
-#' @importFrom Seurat DefaultAssay<-
-#' @importFrom Matrix rowSums colSums
 #
 setMethod(
 	'valid',
@@ -61,46 +106,8 @@ setMethod(
 		...
 	){
 
-		if (any(duplicated(colnames(x))))
-			stop('there are duplicated column names in the input data')
-
-		if (!params@raw_assay %in% names(x@assays))
-			stop(sprintf('The raw counts are not present in x@assays$%s', params@raw_assay))
-
-		DefaultAssay(x) <- params@raw_assay
-
-		if (!params@batch %in% colnames(x@meta.data))
-			stop(sprintf('the batch field is not present in x[["%s"]]', params@batch))
-
+		valid(x, params@normalize)
 		return(TRUE)
-
 	}
 )
 
-#' Validate a Seurat object before ensembling
-#'
-#' @param x a Seurat object
-#' @param params a EnsembleMerge object
-#' @param ... Additional arguments
-#'
-setMethod(
-	'valid',
-	signature(
-		x = 'Seurat',
-		params = 'EnsembleMerge'
-	),
-	function(
-		x,
-		params,
-		...
-	){
-
-		exist <-  params@constituent_reduction_names %in% names(x@reductions)
-		if (any(!exist)){
-			stop(sprintf('The UAMP reduction does not exist for the following methods: %s', paste(params@constituent_reduction_names[!exist], collapse = ',')))
-		}
-
-		return(TRUE)
-
-	}
-)

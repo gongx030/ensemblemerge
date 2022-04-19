@@ -2,7 +2,7 @@
 % Please edit documentation in R/doublet_detect.r
 \name{DetectDoublet,Seurat,DoubletFinderDoubletDetect-method}
 \alias{DetectDoublet,Seurat,DoubletFinderDoubletDetect-method}
-\title{Doublet detection by DoubletFinderDoubletDetect (https://github.com/chris-mcginnis-ucsf/DoubletFinder)}
+\title{Doublet detection by DoubletFinder (https://github.com/chris-mcginnis-ucsf/DoubletFinder)}
 \usage{
 \S4method{DetectDoublet}{Seurat,DoubletFinderDoubletDetect}(x, params, ...)
 }
@@ -17,7 +17,7 @@
 returns a data object with doublet removed
 }
 \description{
-Doublet detection by DoubletFinderDoubletDetect (https://github.com/chris-mcginnis-ucsf/DoubletFinder)
+Doublet detection by DoubletFinder (https://github.com/chris-mcginnis-ucsf/DoubletFinder)
 }
 \references{
 McGinnis CS, Murrow LM, Gartner ZJ. DoubletFinder: Doublet Detection in Single-Cell RNA Sequencing Data Using Artificial Nearest Neighbors. Cell Syst. 2019 Apr 24;8(4):329-337.e4. doi: 10.1016/j.cels.2019.03.003. Epub 2019 Apr 3. PMID: 30954475; PMCID: PMC6853612.

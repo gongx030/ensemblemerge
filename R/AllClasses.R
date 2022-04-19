@@ -1,6 +1,9 @@
 #' @import Matrix
 #' @importFrom magrittr %>%
 #' @import dplyr
+#' @importFrom methods new 
+#' @importFrom SingleCellExperiment colData rowData
+#' @importFrom SummarizedExperiment assays
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validity
@@ -139,6 +142,7 @@ setClass(
     min_cells = "integer",
     min_genes = "integer",
 		raw_assay = 'character',
+		batchwise = 'logical',
 		batch = "character",
 		dependences = 'list',
 		check_dependencies = 'logical'
@@ -158,6 +162,11 @@ setMethod('initialize', 'BasePreprocess', function(.Object, check_dependencies =
 	if (check_dependencies)
 		.check_dependences(.Object)
 	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+	if (length(.Object@batch) == 0){
+		.Object@batchwise <- FALSE
+	}else{
+		.Object@batchwise <- TRUE
+	}
 	.Object
 })
 
@@ -169,8 +178,6 @@ setClass(
 		preprocess = 'BasePreprocess',
 		numHVG = "integer",
 		dependences = 'list',
-		batchwise = 'logical',
-		output = 'character',
 		do.scale = 'logical',
 		do.center = 'logical',
 		check_dependencies = 'logical'
@@ -179,20 +186,12 @@ setClass(
 	prototype(
 		assay_name = 'RNA',
 		numHVG = 2000L,
-		batchwise = TRUE,
-		output = 'Seurat',
 		do.scale = TRUE,
 		do.center = TRUE,
 		check_dependencies = TRUE
 	),
 	validity = function(object){
 		msg <- NULL
-		if (!object@output%in% c('Seurat', 'SeuratList'))
-			msg <- sprintf('unknown output: %s', object@output)
-
-		if (length(object@preprocess@batch) == 0 && object@batchwise)
-			msg <- '.Object@batchwise is TRUE while .Object@preprocess@batch is absent'
-
 		return(msg)
 	}
 )
@@ -278,49 +277,33 @@ setClass(
 )
 
 
-#' BaseMerge 
-#' 
-#' The BaseMerge class
-#'
-#' @slot pca_name name of PCA results in metadata
-#' @slot dependences a list of dependend packages
-#' @slot name The name of the method used to store the dimension reduction results
-#' @slot npcs the size of latent dimension (default: 20L)
-#' @slot umap_name the name of the UMAP results
-#' @slot umap_key the name of the UMAP key
-#' @slot umap_dim the name of the UMAP dimension (default: 2L)
-#' @slot snn_name the name of SNN results
-#' @slot knn_name the name of the KNN results
-#' @slot raw_assay the raw assay field in a Seurat object
-#' @slot batch character name of batch in dataset metadata
-#'
 setClass(
 	'BaseMerge', 
 	representation(
-    pca_name = "character",
+		normalize = 'BaseNormalize',
 		dependences = 'list',
 		name = 'character',
+		reduction_name = 'character',
 		reduction_key = 'character',
-		npcs = 'integer',
-		umap_name = 'character',
-		umap_key = 'character',
-		umap_dim = 'integer',
-		snn_name = 'character',
-		knn_name = 'character',
+		ndims = 'integer',
 		seed = 'integer',
-		raw_assay = 'character',
-		batch = "character",
-		check_dependencies = 'logical'
+		check_dependencies = 'logical',
+		nfeatures = 'integer',
+		assay_name = 'character'
 	),
+	contains = 'VIRTUAL',
   prototype(
-		pca_name = 'pca',
-		npcs = 20L,
-		umap_dim = 2L,
+		ndims = 20L,
 		seed = 123L,
-		raw_assay = 'RNA',
-		batch = 'batch',
+		nfeatures = 2000L,
 		check_dependencies = TRUE
-	)
+	),
+	validity = function(object){
+		msg <- NULL
+		if (length(object@normalize@preprocess@batch) == 0)
+			msg <- 'object@normalize@preprocess@batch must be specified'
+		return(msg)
+	}
 )
 
 #' @importFrom methods callNextMethod 
@@ -328,254 +311,12 @@ setClass(
 setMethod('initialize', 'BaseMerge', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
+	.Object@reduction_name <- .Object@name
 	.Object@reduction_key <- sprintf('%s_', .Object@name)
-	.Object@umap_name <- sprintf('%sUMAP', .Object@name)
-	.Object@umap_key <- sprintf('%sUMAP_', .Object@name)
-	.Object@snn_name <- sprintf('%sSNN', .Object@name)
-	.Object@knn_name <- sprintf('%sKNN', .Object@name)
+	.Object@assay_name <- sprintf('%sAssay', .Object@name)
 	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 })
 
-
-#' SeuratMerge
-#'
-#' class for merging dataset with Seurat
-#'
-#' @slot k.weight weight for neighbor function
-#'
-setClass(
-	'SeuratMerge', 
-	representation(
-    k.weight = "numeric"
-	),
-	contains = 'BaseMerge',
-  prototype(
-		k.weight = 100,
-		name = 'Seurat',
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
-		)
-	)
-)
-
-#' The HarmonyMerge class
-#'
-#' @slot theta diversity clustering penalty parameter, larger values increase diversity
-#' @slot max_iter_cluster maximum number of learning iterations per cluster
-#'
-#' @export
-#'
-setClass(
-	'HarmonyMerge', 
-	representation(
-    theta = "numeric",
-    max_iter_cluster = "integer"
-	),
-	contains = c('BaseMerge'),
-  prototype(
-		theta = 2,
-		max_iter_cluster = 20L,
-		name = 'Harmony',
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('RPackage', package_name = 'harmony', package_version = '0.1.0')
-		)
-	)
-)
-
-#' The UncorrectedMerge class
-#'
-#' @export
-#'
-setClass(
-	'UncorrectedMerge', 
-	representation(
-	),
-	prototype(
-		name = 'Uncorrected',
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
-		)
-	),
-	contains = c('BaseMerge')
-)
-
-#' The FastMNNMerge class
-#'
-#' @slot n_neighbors number of neighbors used in calculating neighboring graph
-#'
-#' @export
-#'
-setClass(
-	'FastMNNMerge', 
-	representation(
-    n_neighbors = "integer"
-	),
-	contains = c('BaseMerge'),
-  prototype(
-		n_neighbors = 20L,
-		name = 'FastMNN',
-		dependences = list(
-			new('RPackage', package_name = 'batchelor', package_version = '1.10.0'),
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
-		)
-	)
-)
-
-#' The LigerMerge class
-#'
-#' @export
-#'
-setClass(
-	'LigerMerge', 
-	representation(
-    nrep = "integer",
-    lambda = "numeric"
-	),
-	contains = c('BaseMerge'),
-  prototype(
-		nrep = 3L,
-		lambda = 5,
-		name = 'LIGER',
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('RPackage', package_name = 'rliger', package_version = '1.0.0')
-		)
-	)
-)
-
-#' The BBKNNMerge class
-#'
-#' @export
-#'
-setClass(
-	'BBKNNMerge', 
-	representation(
-	),
-	contains = 'BaseMerge', 
-  prototype(
-		name = 'BBKNN',
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
-			new('PythonPackage', package_name = 'scanpy', package_version = '1.8'),
-			new('PythonPackage', package_name = 'bbknn', package_version = '1.5.1'),
-			new('PythonPackage', package_name = 'leidenalg', package_version = '0.8.8'),
-			new('RPackage', package_name = 'zellkonverter', package_version = '1.4.0'),
-			new('RPackage', package_name = 'basilisk', package_version = '1.6.0'),
-			new('PythonPackage', package_name = 'umap-learn', package_version = '0.5.2')
-		)
-	)
-)
-
-#' The ScanoramaMerge class
-#'
-#' @export
-#'
-setClass(
-	'ScanoramaMerge',
-	representation(
-	),
-	contains = c('BaseMerge'),
-  prototype(
-		name = "Scanorama",
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
-			new('PythonPackage', package_name = 'scanpy', package_version = '1.8'),
-			new('PythonPackage', package_name = 'scanorama', package_version = '1.7.1'),
-			new('RPackage', package_name = 'zellkonverter', package_version = '1.4.0'),
-			new('RPackage', package_name = 'basilisk', package_version = '1.6.0')
-		)
-	)
-)
-
-#' The scVIMerge class
-#'
-#' @export
-#'
-setClass(
-	'scVIMerge',
-	representation(
-	),
-	contains = c('BaseMerge'),
-  prototype(
-		name = "scVI",
-		dependences = list(
-			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
-			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
-			new('PythonPackage', package_name = 'scanpy', package_version = '1.8'),
-			new('RPackage', package_name = 'zellkonverter', package_version = '1.4.0'),
-			new('RPackage', package_name = 'basilisk', package_version = '1.6.0'),
-			new('PythonPackage', package_name = 'scvi-tools', package_version = '0.14.5')
-		)
-	)
-)
-
-
-#' The EnsembleMerge class
-#'
-#' @export
-#'
-setClass(
-	'EnsembleMerge',
-	representation(
-		name = 'character',
-		umap_name = 'character',
-		umap_key = 'character',
-		umap_dim = 'integer',
-		snn_name = 'character',
-		knn_name = 'character',
-		raw_assay = 'character',
-		constituent_reduction_names = 'character',
-		constituent_knn_names = 'character',
-		constituent_snn_names = 'character',
-		k.param = 'integer',
-		latent = 'logical'
-	),
-  prototype(
-		name = "Ensemble",
-		umap_dim = 2L,
-		raw_assay = 'RNA',
-		k.param = 20L,
-		latent = FALSE
-	)
-)
-
-
-#' @importFrom methods callNextMethod 
-#'
-setMethod(
-	'initialize', 
-	'EnsembleMerge', 
-	function(.Object, methods, ...){
-
-		.check_method(methods)
-
-		.Object@umap_name <- sprintf('%sUMAP', .Object@name)
-		.Object@umap_key <- sprintf('%sUMAP_', .Object@name)
-		.Object@snn_name <- sprintf('%sSNN', .Object@name)
-		.Object@knn_name <- sprintf('%sKNN', .Object@name)
-		.Object <- callNextMethod(.Object, ...)
-		methods_without_latent <- c('BBKNN')
-
-		for (i in 1:length(methods)){
-			p <- .new_object(methods[i], check_dependencies = FALSE)
-			if (.Object@latent){
-				.Object@constituent_reduction_names[i] <- p@name
-				exist <- methods[i] %in% methods_without_latent
-				if (exist){
-					.Object@constituent_reduction_names[i] <- p@umap_name
-				}
-			}else{
-				.Object@constituent_reduction_names[i] <- p@umap_name
-			}
-			.Object@constituent_snn_names[i] <- p@snn_name
-			.Object@constituent_knn_names[i] <- p@knn_name
-		}
-		.Object
-	}
-)
 
 #' The BaseEmbed class
 #'

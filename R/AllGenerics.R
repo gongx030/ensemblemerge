@@ -1,10 +1,10 @@
 #' The generic function of Merge
 #'
-#' @param data a data object
+#' @param x a data object
 #' @param params a parameter object
 #' @param ... Other arguments
 #'
-setGeneric("Merge", function(data, params, ...) standardGeneric("Merge"))
+setGeneric("Merge", function(x, params, ...) standardGeneric("Merge"))
 
 #' The generic function of Preprocess
 #'

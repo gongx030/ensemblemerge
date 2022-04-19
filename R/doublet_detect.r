@@ -77,6 +77,7 @@ setMethod(
 	){
 
 		raw_assay <- params@normalize@assay_name
+
 		sce <- SingleCellExperiment(
 			assays = list(
 				counts = x@assays[[raw_assay]]@counts 
@@ -177,6 +178,7 @@ setMethod(
 	){
 
 		params_pca <- new('PCAEmbed', normalize = params@normalize, ndims = params@ndims)
+
 		x2 <- Embed(x, params_pca)
 		res <- DoubletFinder::paramSweep_v3(x2, PCs = 1:params@ndims, sct = params@sct)
 		res_sweep <- DoubletFinder::summarizeSweep(res, GT = FALSE)

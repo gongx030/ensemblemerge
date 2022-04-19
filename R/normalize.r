@@ -67,34 +67,44 @@ setMethod(
 
 		x@active.assay <- params@assay_name
 
-		if (params@batchwise){
-			vars.to.regress <- params@preprocess@batch
+		if (params@preprocess@batchwise){
+			x <- SplitObject(x, split.by = params@preprocess@batch)
 		}else{
-			vars.to.regress <- NULL
+			x <- list(x)
 		}
 
-		x <- NormalizeData(
-			x,
-			normalization.method = params@norm_method,
-			scale.factor = params@scale_factor,
-			verbose = FALSE
-		)
- 	  x <- FindVariableFeatures(
-			x,
-			selection.method = params@selection.method,
-			nfeatures = params@numHVG,
-			verbose = FALSE
-		)
+		for (i in 1:length(x)){
 
-		x <- ScaleData(
-			x,
-			vars.to.regress = vars.to.regress,
-			do.scale = params@do.scale,
-			do.center = params@do.center,
-			use.umi = FALSE,
-			verbose = FALSE
-		)
-		x
+			x[[i]] <- NormalizeData(
+				x[[i]],
+				normalization.method = params@norm_method,
+				scale.factor = params@scale_factor,
+				verbose = FALSE
+			)
+
+	 	  x[[i]] <- FindVariableFeatures(
+				x[[i]],
+				selection.method = params@selection.method,
+				nfeatures = params@numHVG,
+				verbose = FALSE
+			)
+
+			x[[i]] <- ScaleData(
+				x[[i]],
+				vars.to.regress = NULL,
+				do.scale = params@do.scale,
+				do.center = params@do.center,
+				use.umi = FALSE,
+				verbose = FALSE
+			)
+		}
+
+		if (length(x) == 1){
+			x[[1]]
+		}else{
+			new('SeuratList', x)
+		}
+
 	}
 )
 
@@ -147,35 +157,37 @@ setMethod(
 		...
 	){
 
-		if (params@batchwise){
-			vars.to.regress <- params@preprocess@batch
+		if (params@preprocess@batchwise){
+			x <- SplitObject(x, split.by = params@preprocess@batch)
 		}else{
-			vars.to.regress <- NULL
+			x <- list(x)
 		}
 
-		x <- SCTransform(
-			x,
-			assay = params@preprocess@raw_assay,
-			new.assay.name = params@assay_name,
-			reference.SCT.model = NULL,
-			do.correct.umi = params@do.correct.umi,
-			ncells = params@ncells,
-			residual.features = NULL,
-			variable.features.n = params@numHVG,
-			variable.features.rv.th = NULL,
-			vars.to.regress = vars.to.regress,
-			do.scale = params@do.scale,
-			do.center = params@do.center,
-			conserve.memory = FALSE,
-			return.only.var.genes = TRUE,
-			verbose = FALSE 
-		)
+		for (i in 1:length(x)){
 
-		if (params@output == 'SeuratList'){
-			batch_list <- SplitObject(x, split.by = params@preprocess@batch)
-			new('SeuratList', batch_list)
-		}else if (params@output == 'Seurat'){
-			x
+			x[[i]] <- SCTransform(
+				x[[i]],
+				assay = params@preprocess@raw_assay,
+				new.assay.name = params@assay_name,
+				reference.SCT.model = NULL,
+				do.correct.umi = params@do.correct.umi,
+				ncells = params@ncells,
+				residual.features = NULL,
+				variable.features.n = params@numHVG,
+				variable.features.rv.th = NULL,
+				vars.to.regress = NULL,
+				do.scale = params@do.scale,
+				do.center = params@do.center,
+				conserve.memory = FALSE,
+				return.only.var.genes = TRUE,
+				verbose = FALSE 
+			)
+		}
+
+		if (length(x) == 1){
+			x[[1]]
+		}else{
+			new('SeuratList', x)
 		}
 	}
 )

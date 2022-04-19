@@ -25,8 +25,6 @@ setMethod(
 	}
 )
 
-#' The PCAEmbed class
-#'
 setClass(
 	'PCAEmbed',
 	representation(
@@ -59,16 +57,16 @@ setMethod(
 		params,
 		...
 	){
-		# to be implemented
-		# 1. params@ndims should not be greater than # cells
-		# 2. check whether the data has been preprocessed
-		# stopifnot(valid(x, params))	
-
 		x <- RunPCA(
 			x,
+			assay = params@normalize@assay_name,
 			npcs = params@ndims,
+			rev.pca = FALSE,
+			weight.by.var = TRUE,
 			reduction.name = params@reduction_name,
 			reduction.key = params@reduction_key,
+			seed.use = params@seed,
+			approx = TRUE,
 			verbose = FALSE
 		)
 		x
@@ -76,8 +74,6 @@ setMethod(
 )
 
 
-#' The scCCESSSEmbed class
-#'
 setClass(
 	'scCCESSSEmbed',
 	representation(
@@ -127,10 +123,6 @@ setMethod(
 		params,
 		...
 	){
-		# to be implemented
-		# 1. params@ndims should not be greater than # cells
-		# 2. check whether the data has been preprocessed
-		# stopifnot(valid(x, params))	
 
 		raw_assay <- params@normalize@assay_name
 
@@ -154,6 +146,70 @@ setMethod(
 			assay = DefaultAssay(x)
 		)
 
+		x
+	}
+)
+
+
+setClass(
+	'UMAPEmbed',
+	representation(
+		embedding = 'BaseEmbed',
+		n_neighbors = 'integer',
+		metric = 'character'
+	),
+	contains = c('BaseEmbed'),
+	prototype(
+		n_neighbors = 30L,
+		ndims = 2L,
+		metric = 'cosine'
+	)
+)
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'UMAPEmbed', function(.Object, check_dependencies = TRUE, ...){
+	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+	.Object@name <- sprintf('%sUMAP', .Object@embedding@name)
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+})
+
+
+#' Embed a Seurat object with UMAP
+#'
+#' @param x a Seurat object
+#' @param params a UMAPEmbed object
+#' @param ... Additional arguments
+#' @return returns a data object with embedding results
+#' @importFrom Seurat CreateDimReducObject RunUMAP
+#' @export
+#'
+setMethod(
+	'Embed',
+	signature(
+		x = 'Seurat',
+		params = 'UMAPEmbed'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+		x <- RunUMAP(
+			x,
+			dims = 1:params@embedding@ndims,
+			reduction = params@embedding@reduction_name,
+			assay = params@normalize@assay_name,
+			slot = 'data',
+			umap.method = "uwot",
+			n.neighbors = params@n_neighbors,
+			n.components = params@ndims,
+			metric = params@metric,
+			seed.use = params@seed,
+			verbose = FALSE,
+			reduction.name = params@reduction_name,
+			reduction.key = params@reduction_key
+		)
 		x
 	}
 )

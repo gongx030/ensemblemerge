@@ -4,10 +4,10 @@
 \alias{Merge}
 \title{The generic function of Merge}
 \usage{
-Merge(data, params, ...)
+Merge(x, params, ...)
 }
 \arguments{
-\item{data}{a data object}
+\item{x}{a data object}
 
 \item{params}{a parameter object}
 
