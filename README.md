@@ -36,6 +36,16 @@ x <- Cluster(x, params_cluster)
 # x <- Annotate(x, params_annotate)
 ```
 
+## Preprocessing
+
+`Preprocessing` step performs cell and gene filtering and the integrity check of the dta
+
+| Class | Method | Ref. |
+| --- | --- | --- |
+| `SeuratPreprocess` |  |  | 
+
+
+
 ## Normalization
 | Class | Method | Ref. |
 | --- | --- | --- |
