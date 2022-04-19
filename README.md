@@ -59,3 +59,10 @@ x <- Cluster(x, params_cluster)
 | --- | --- | --- |
 | `scDblFinderDoubletDetect` | [scDblFinder](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html) | [[Paper](https://f1000research.com/articles/10-979)] | 
 | `DoubletFinderDoubletDetect` | [DoubletFinder](https://github.com/chris-mcginnis-ucsf/DoubletFinder) | [[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/)] | 
+
+## De novo integration
+| Class | Method | Ref. |
+| --- | --- | --- |
+| `SeuratMerge` | [Seurat v3](https://satijalab.org/seurat/articles/integration_introduction.html) |  | 
+
+
