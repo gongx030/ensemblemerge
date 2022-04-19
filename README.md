@@ -38,7 +38,9 @@ x <- Cluster(x, params_cluster)
 
 ## Preprocessing
 
-`Preprocessing` step performs cell and gene filtering and the integrity check of the dta
+* cell and gene filtering 
+* Check the integrity of the input data
+* No batch related operations
 
 | Class | Method | Ref. |
 | --- | --- | --- |
