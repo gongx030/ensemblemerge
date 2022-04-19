@@ -11,7 +11,7 @@ library(ensemblemerge)
 x # a Seurat object
 
 # preprocessing
-params_preprocess <- new('SeuratPreprocess', batch = 'batch')
+params_preprocess <- new('SeuratPreprocess')
 x <- Preprocess(x, params_preprocess)
 
 # normalization
@@ -34,6 +34,28 @@ x <- Cluster(x, params_cluster)
 # params_genemarkers <- new('PanglaoDBGeneMarkers', genome = 'hg19')
 # params_annotate <- new('clustifyrAnnotate', normalize = params_normalize, gene_marker = params_genemarkers, cluster = params_cluster)
 # x <- Annotate(x, params_annotate)
+```
+
+## 2. An integration pipeline
+```
+library(ensemblemerge)
+x # a Seurat object
+
+# preprocessing
+params_preprocess <- new('SeuratPreprocess', batch = 'batch')
+x <- Preprocess(x, params_preprocess)
+
+# normalization
+params_normalize <- new('SeuratNormalize', preprocess = params_preprocess)
+x <- Normalize(x, params_normalize) # the returned x is a SeuratList object
+
+# doublet removing 
+params_doubletdetect <- new('scDblFinderDoubletDetect',  normalize = params_normalize)
+x <- DetectDoublet(x, params_doubletdetect)
+
+# integration
+params_merge <- new('SeuratMerge', normalize = params_normalize)
+x_merged <- Merge(x, params_merge) # x_merged is a Seurat object
 ```
 
 ## Preprocessing
