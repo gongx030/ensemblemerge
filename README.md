@@ -63,6 +63,9 @@ x <- Cluster(x, params_cluster)
 ## De novo integration
 | Class | Method | Ref. |
 | --- | --- | --- |
-| `SeuratMerge` | [Seurat v3](https://satijalab.org/seurat/articles/integration_introduction.html) |  | 
+| `SeuratMerge` | [Seurat(v3)](https://satijalab.org/seurat/articles/integration_introduction.html) |  | 
+| `HarmonyMerge` | [Harmony](https://github.com/immunogenomics/harmony) | [[Paper](https://www.nature.com/articles/s41592-019-0619-0)]
+| `FastMNNMerge` | [FastMNN](https://rdrr.io/github/LTLA/batchelor/man/fastMNN.html) | [[Paper](https://www.nature.com/articles/nbt.4091)]
+| `LigerMerge` | [LIGER](https://www.nature.com/articles/s41596-020-0391-8) | [[Paper](https://www.nature.com/articles/s41596-020-0391-8)]
 
 
