@@ -104,7 +104,7 @@ x_merged <- Annotate(x_merged, params_annotate)
 | Class | Method | Ref. |
 | --- | --- | --- |
 | `decontXRemoveAmbientRNA` | [celda](http://bioconductor.org/packages/release/bioc/vignettes/celda/inst/doc/decontX.html) | [[Yang et al. 2020](https://doi.org/10.1186/s13059-020-1950-6)] | 
-
+| `soupXRemoveAmbientRNA` | [SoupX](https://rawcdn.githack.com/constantAmateur/SoupX/204b602418df12e9fdb4b68775a8b486c6504fe4/inst/doc/pbmcTutorial.html) | [[Young et al. 2020](https://academic.oup.com/gigascience/article/9/12/giaa151/6049831?login=true)] | 
 
 ## De novo integration
 | Class | Method | Ref. |
