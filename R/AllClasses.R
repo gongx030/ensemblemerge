@@ -4,12 +4,13 @@
 #' @importFrom methods new 
 #' @importFrom SingleCellExperiment colData rowData
 #' @importFrom SummarizedExperiment assays
+#' @importFrom methods callNextMethod
+#' @importFrom reticulate py_config py_run_string
+#' @importFrom utils packageVersion
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validity
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#' @importFrom reticulate py_config py_run_string
-#' @importFrom utils packageVersion
 #'
 check_package <- function(object){
 
@@ -105,13 +106,6 @@ check_package <- function(object){
 }
 
 
-#' RPackage
-#' 
-#' The base params object for R packages
-#'
-#' @slot package_name The package name
-#' @slot package_version The package version
-#'
 setClass(
 	'RPackage', 
 	representation(
@@ -121,13 +115,6 @@ setClass(
 )
 
 
-#' PythonPackage
-#' 
-#' The base params object for python packages
-#'
-#' @slot package_name The package name
-#' @slot package_version The package version
-#'
 setClass(
 	'PythonPackage', 
 	representation(
@@ -156,8 +143,6 @@ setClass(
 	)
 )
 
-#' @importFrom methods callNextMethod
-#'
 setMethod('initialize', 'BasePreprocess', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
@@ -196,8 +181,6 @@ setClass(
 	}
 )
 
-#' @importFrom methods callNextMethod
-#'
 setMethod('initialize', 'BaseNormalize', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
@@ -222,7 +205,6 @@ setClass(
 	)
 )
 
-#' @importFrom methods callNextMethod
 #'
 setMethod('initialize', 'BaseDoubletDetect', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
@@ -231,24 +213,6 @@ setMethod('initialize', 'BaseDoubletDetect', function(.Object, check_dependencie
 })
 
 
-#' The MethodList class
-#'
-#' @export
-#'
-#' @importFrom S4Vectors SimpleList
-#'
-setClass(
-	'MethodList',
-	contains = 'SimpleList'
-)
-
-#' The SeuratList class
-#'
-#' @export
-#'
-#' @importFrom S4Vectors SimpleList
-#' @importFrom methods is
-#'
 setClass(
 	'SeuratList',
 	contains = 'SimpleList',
@@ -263,17 +227,6 @@ setClass(
 
 		TRUE
 	}
-)
-
-
-setClass(
-	'Params', 
-	representation(
-		preprocess = 'BasePreprocess',
-		constituent = 'MethodList'
-	),
-	prototype(
-	)
 )
 
 
@@ -306,8 +259,6 @@ setClass(
 	}
 )
 
-#' @importFrom methods callNextMethod 
-#'
 setMethod('initialize', 'BaseMerge', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
@@ -318,8 +269,6 @@ setMethod('initialize', 'BaseMerge', function(.Object, check_dependencies = TRUE
 })
 
 
-#' The BaseEmbed class
-#'
 setClass(
 	'BaseEmbed',
 	representation(
@@ -340,8 +289,6 @@ setClass(
 	)
 )
 
-#' @importFrom methods callNextMethod
-#'
 setMethod('initialize', 'BaseEmbed', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
@@ -351,8 +298,6 @@ setMethod('initialize', 'BaseEmbed', function(.Object, check_dependencies = TRUE
 })
 
 
-#' The BaseCluster class
-#'
 setClass(
 	'BaseCluster',
 	representation(
@@ -370,8 +315,6 @@ setClass(
 	)
 )
 
-#' @importFrom methods callNextMethod
-#'
 setMethod('initialize', 'BaseCluster', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
