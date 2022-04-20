@@ -7,7 +7,8 @@
 #' @importFrom methods callNextMethod
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
-#' @importFrom Seurat CreateAssayObject
+#' @importFrom Seurat CreateAssayObject GetAssayData
+#' @importFrom grDevices png dev.off
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validity
@@ -177,6 +178,7 @@ setMethod('initialize', 'BaseNormalize', function(.Object, check_dependencies = 
 setClass(
 	'BaseDoubletDetect', 
 	representation(
+		dbr = 'numeric',
 		name = 'character',
 		normalize = 'BaseNormalize',
 		dependences = 'list',
@@ -184,6 +186,7 @@ setClass(
 	),
 	contains = 'VIRTUAL',				 
 	prototype(
+		dbr = 0.1,
 		check_dependencies = TRUE	
 	)
 )

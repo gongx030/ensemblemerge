@@ -28,7 +28,6 @@ setMethod(
 setClass(
 	'scDblFinderDoubletDetect',
 	representation(
-		dbr = 'numeric',
 		nfeatures = 'integer',
 		dims = 'integer',
 		includePCs = 'integer',
@@ -40,7 +39,6 @@ setClass(
 	),
 	contains = c('BaseDoubletDetect'),
 	prototype(
-		dbr = 0.1,
 		nfeatures = 1000L,
 		dims = 20L,
 		includePCs = 10L,
@@ -126,14 +124,12 @@ setMethod(
 setClass(
 	'DoubletFinderDoubletDetect',
 	representation(
-		dbr = 'numeric',
 		ndims = 'integer',
 		sct = 'logical',
 		pN = 'numeric'
 	),
 	contains = c('BaseDoubletDetect'),
 	prototype(
-		dbr = 0.1,
 		ndims = 10L,
 		pN = 0.25,
 		dependences = list(
@@ -207,6 +203,74 @@ setMethod(
 		x <- x[, is_singlet]
 		x
 
+	}
+)
+
+setClass(
+	'ScrubletDoubletDetect',
+	representation(
+		min_counts = 'integer',
+		min_cells = 'integer',
+		min_gene_variability_pctl = 'numeric',
+		ndims = 'integer'
+	),
+	contains = c('BaseDoubletDetect'),
+	prototype(
+		min_counts = 2L,
+		min_cells = 3L,
+		min_gene_variability_pctl = 85,
+		ndims = 10L,
+		dependences = list(
+			new('PythonPackage', package_name = 'scrublet', package_version = '0.2.3')
+		)
+	),
+)
+
+#' @importFrom methods callNextMethod is 
+#'
+setMethod('initialize', 'ScrubletDoubletDetect', function(.Object, ...){
+	.Object <- callNextMethod(.Object, ...)
+	.Object
+})
+
+#' Doublet detection by Scrublet (https://github.com/swolock/scrublet)
+#'
+#' @param x a Seurat object
+#' @param params a ScrubletDoubletDetect object
+#' @param ... Additional arguments
+#' @return returns a data object with doublet removed
+#' @references Wolock SL, Lopez R, Klein AM. Scrublet: Computational Identification of Cell Doublets in Single-Cell Transcriptomic Data. Cell Syst. 2019 Apr 24;8(4):281-291.e9. doi: 10.1016/j.cels.2018.11.005. Epub 2019 Apr 3. PMID: 30954476; PMCID: PMC6625319.
+#' @importFrom grDevices png dev.off
+#' @export
+#'
+
+setMethod(
+	'DetectDoublet',
+	signature(
+		x = 'Seurat',
+		params = 'ScrubletDoubletDetect'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+	  scr <- import("scrublet")
+
+		x@active.assay <- params@normalize@assay_name
+
+		scrub <- scr$Scrublet(t(GetAssayData(x, 'counts')), expected_doublet_rate = params@dbr)
+		results <- scrub$scrub_doublets(
+			min_counts = params@min_counts, 
+			min_cells = params@min_cells,
+			min_gene_variability_pctl = params@min_gene_variability_pctl, 
+			n_prin_comps = params@ndims
+		)
+		is_singlet <- !results[[2]]
+		sprintf('DetectDoublet | removing %d doublets', sum(!is_singlet)) %>% message()
+		x <- x[, is_singlet]
+		x
 	}
 )
 
