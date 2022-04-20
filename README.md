@@ -60,6 +60,16 @@ x <- RemoveAmbientRNA(x, params_ambientrna)
 # integration
 params_merge <- new('SeuratMerge', normalize = params_normalize)
 x_merged <- Merge(x, params_merge) # x_merged is a Seurat object
+
+# clustering
+params_cluster <- new('LouvainCluster', embedding = params_merge)
+x_merged <- Cluster(x_merged, params_cluster)
+
+# annotation
+params_genemarkers <- new('PanglaoDBGeneMarkers', genome = 'hg19')
+params_annotate <- new('clustifyrAnnotate', normalize = params_normalize, gene_marker = params_genemarkers, cluster = params_cluster)
+x_merged <- Annotate(x_merged, params_annotate)
+
 ```
 
 ## Preprocessing
