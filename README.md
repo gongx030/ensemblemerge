@@ -49,9 +49,13 @@ x <- Preprocess(x, params_preprocess)
 params_normalize <- new('SeuratNormalize', preprocess = params_preprocess)
 x <- Normalize(x, params_normalize) # the returned x is a SeuratList object
 
-# doublet removing 
+# doublet removing (optional)
 params_doubletdetect <- new('scDblFinderDoubletDetect',  normalize = params_normalize)
 x <- DetectDoublet(x, params_doubletdetect)
+
+# ambient RNA decomtamination (optional)
+params_ambientrna <- new('decontXRemoveAmbientRNA', normalize = params_normalize)
+x <- RemoveAmbientRNA(x, params_ambientrna)
 
 # integration
 params_merge <- new('SeuratMerge', normalize = params_normalize)
