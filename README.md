@@ -95,6 +95,7 @@ x_merged <- Annotate(x_merged, params_annotate)
 | --- | --- | --- |
 | `scDblFinderDoubletDetect` | [scDblFinder](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html) | [[Paper](https://f1000research.com/articles/10-979)] | 
 | `DoubletFinderDoubletDetect` | [DoubletFinder](https://github.com/chris-mcginnis-ucsf/DoubletFinder) | [[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/)] | 
+| `ScrubletDoubletDetect` | [Scrublet](https://github.com/swolock/scrublet) | [[Wolock et al. 2019](https://pubmed.ncbi.nlm.nih.gov/30954476/)] | 
 
 ## Ambient RNA removal
 
