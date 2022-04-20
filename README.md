@@ -4,7 +4,7 @@
 [![R-CMD-check](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-## 1. A simple scRNA-seq pipeline
+## 1. A minimalist scRNA-seq pipeline
 
 ```
 library(ensemblemerge)
@@ -17,10 +17,6 @@ x <- Preprocess(x, params_preprocess)
 # normalization
 params_normalize <- new('SeuratNormalize', preprocess = params_preprocess)
 x <- Normalize(x, params_normalize)
-
-# doublet removing 
-params_doubletdetect <- new('DoubletFinderDoubletDetect',  normalize = params_normalize)
-x <- DetectDoublet(x, params_doubletdetect)
 
 # dimension reduction
 params_embed <- new('PCAEmbed', normalize = params_normalize)
