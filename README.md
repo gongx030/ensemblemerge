@@ -86,6 +86,15 @@ x_merged <- Merge(x, params_merge) # x_merged is a Seurat object
 | `scDblFinderDoubletDetect` | [scDblFinder](https://bioconductor.org/packages/release/bioc/html/scDblFinder.html) | [[Paper](https://f1000research.com/articles/10-979)] | 
 | `DoubletFinderDoubletDetect` | [DoubletFinder](https://github.com/chris-mcginnis-ucsf/DoubletFinder) | [[Paper](https://pubmed.ncbi.nlm.nih.gov/30954475/)] | 
 
+## Ambient RNA removal
+
+* The adjusted counts will be used to replace the raw counts. 
+
+| Class | Method | Ref. |
+| --- | --- | --- |
+| `decontXRemoveAmbientRNA` | [celda](http://bioconductor.org/packages/release/bioc/vignettes/celda/inst/doc/decontX.html) | [[Yang et al. 2020](https://doi.org/10.1186/s13059-020-1950-6)] | 
+
+
 ## De novo integration
 | Class | Method | Ref. |
 | --- | --- | --- |
