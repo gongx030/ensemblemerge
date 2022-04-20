@@ -398,12 +398,12 @@ setMethod(
 	){
 
 		raw_assay <- params@normalize@assay_name
-		hvg <- x@assays[[raw_assay]]@var.features
+		features <- x@assays[[raw_assay]]@var.features
 
 		marker <- split(params@gene_marker@celltype[, 'gene'], list(params@gene_marker@celltype[, params@gene_marker@level]))
 
 		cor_mat <- clustifyr::clustify_lists(
-			input = x@assays[[raw_assay]]@data[hvg, ],	# requires normalized counts
+			input = x@assays[[raw_assay]]@data[features, ],	# requires normalized counts
 			metadata = x@meta.data,            # meta.data table containing cell clusters
 			cluster_col = params@cluster@cluster_name,
 			marker = marker,                 # list of known marker genes

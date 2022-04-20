@@ -4,8 +4,7 @@ setClass(
 	representation(
     k.weight = "numeric",
 		normalization.method = 'character',
-		reduction = 'character',
-		assay_name = 'character'
+		reduction = 'character'
 	),
 	contains = 'BaseMerge',
   prototype(
@@ -131,6 +130,9 @@ setMethod(
 			reduction.key = params@reduction_key,
 			verbose = FALSE
 		)
+
+		x@assays[[params@normalize@assay_name]]@var.features <- features
+
 		x
 	}
 )
@@ -278,6 +280,7 @@ setMethod(
 			key = params@reduction_key,
 			assay = params@normalize@assay_name
 		)
+		x@assays[[params@normalize@assay_name]]@var.features <- features
 		x
 	}
 )
@@ -358,6 +361,7 @@ setMethod(
 			assay =  params@normalize@assay_name,
 			key = params@reduction_key
 		)
+		x@assays[[params@normalize@assay_name]]@var.features <- features
 		x
 	}
 )
@@ -411,6 +415,12 @@ setMethod(
 		sc <- import("scanpy")
 		anndata <- import("anndata")
 
+		features <- SelectIntegrationFeatures(
+			object.list = x,
+			nfeatures = params@nfeatures,
+			verbose = FALSE
+		)
+
 		x <- Reduce('merge', x)
 
 		adata <- anndata$AnnData(
@@ -434,6 +444,7 @@ setMethod(
 			assay =  params@normalize@assay_name,
 			key = params@reduction_key
 		)
+		x@assays[[params@normalize@assay_name]]@var.features <- features
 		x
 	}
 )
@@ -521,6 +532,7 @@ setMethod(
 			key = params@reduction_key,
 			assay = params@normalize@assay_name
 		)
+		x@assays[[params@normalize@assay_name]]@var.features <- features
 		x	
 	}
 )
@@ -595,6 +607,7 @@ setMethod(
 			assay =  params@normalize@assay_name,
 			key = params@reduction_key
 		)
+		x@assays[[params@normalize@assay_name]]@var.features <- features
 		x	
 	}
 )

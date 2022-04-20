@@ -25,8 +25,8 @@ setClass(
 
 #' @importFrom methods callNextMethod
 #'
-setMethod('initialize', 'PanglaoDBGeneMarkers', function(.Object, check_dependencies = TRUE, ...){
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+setMethod('initialize', 'PanglaoDBGeneMarkers', function(.Object, ...){
+	.Object <- callNextMethod(.Object, ...)
 	if (.Object@genome == 'hg19'){
 		.Object@celltype <- local({get(load(system.file("data", "Human_PanglaoDB.Rdata", package = "scMRMA")))})
 	}else if (.Object@genome == 'mm10'){

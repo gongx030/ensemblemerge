@@ -26,7 +26,7 @@ setClass(
 
 #' @importFrom methods callNextMethod
 #'
-setMethod('initialize', 'SeuratNormalize', function(.Object, check_dependencies = TRUE, ...){
+setMethod('initialize', 'SeuratNormalize', function(.Object, ...){
 
 	if (.Object@selection.method == 'vst')
 		.Object@feature_field <- 'vst.variable'
@@ -37,7 +37,7 @@ setMethod('initialize', 'SeuratNormalize', function(.Object, check_dependencies 
 
 	.Object@assay_name <- .Object@preprocess@raw_assay
 
-	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+	callNextMethod(.Object, ...)
 
 })
 
@@ -128,8 +128,8 @@ setClass(
 
 #' @importFrom methods callNextMethod
 #'
-setMethod('initialize', 'SCTransformNormalize', function(.Object, check_dependencies = TRUE, ...){
-	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+setMethod('initialize', 'SCTransformNormalize', function(.Object, ...){
+	callNextMethod(.Object, ...)
 })
 
 

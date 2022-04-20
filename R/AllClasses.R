@@ -134,7 +134,7 @@ setClass(
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
-	contains = 'VIRTUAL',
+	contains = 'VIRTUAL',				 
   prototype(
     min_cells = 10L,
     min_genes = 300L,
@@ -167,7 +167,7 @@ setClass(
 		do.center = 'logical',
 		check_dependencies = 'logical'
 	),
-	contains = 'VIRTUAL',
+	contains = 'VIRTUAL',				 
 	prototype(
 		assay_name = 'RNA',
 		numHVG = 2000L,
@@ -184,8 +184,7 @@ setClass(
 setMethod('initialize', 'BaseNormalize', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
-	.Object
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
 })
 
 
@@ -199,7 +198,7 @@ setClass(
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
-	contains = 'VIRTUAL',
+	contains = 'VIRTUAL',				 
 	prototype(
 		check_dependencies = TRUE	
 	)
@@ -231,45 +230,6 @@ setClass(
 
 
 setClass(
-	'BaseMerge', 
-	representation(
-		normalize = 'BaseNormalize',
-		dependences = 'list',
-		name = 'character',
-		reduction_name = 'character',
-		reduction_key = 'character',
-		ndims = 'integer',
-		seed = 'integer',
-		check_dependencies = 'logical',
-		nfeatures = 'integer',
-		assay_name = 'character'
-	),
-	contains = 'VIRTUAL',
-  prototype(
-		ndims = 20L,
-		seed = 123L,
-		nfeatures = 2000L,
-		check_dependencies = TRUE
-	),
-	validity = function(object){
-		msg <- NULL
-		if (length(object@normalize@preprocess@batch) == 0)
-			msg <- 'object@normalize@preprocess@batch must be specified'
-		return(msg)
-	}
-)
-
-setMethod('initialize', 'BaseMerge', function(.Object, check_dependencies = TRUE, ...){
-	if (check_dependencies)
-		.check_dependences(.Object)
-	.Object@reduction_name <- .Object@name
-	.Object@reduction_key <- sprintf('%s_', .Object@name)
-	.Object@assay_name <- sprintf('%sAssay', .Object@name)
-	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
-})
-
-
-setClass(
 	'BaseEmbed',
 	representation(
 		name = 'character',
@@ -281,7 +241,7 @@ setClass(
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
-	contains = 'VIRTUAL',
+	contains = 'VIRTUAL',				 
 	prototype(
 		ndims = 20L,						
 		seed = 123L,
@@ -299,6 +259,30 @@ setMethod('initialize', 'BaseEmbed', function(.Object, check_dependencies = TRUE
 
 
 setClass(
+	'BaseMerge', 
+	representation(
+		nfeatures = 'integer',
+		assay_name = 'character'
+	),
+	contains = c('VIRTUAL', 'BaseEmbed'),
+  prototype(
+		nfeatures = 2000L
+	),
+	validity = function(object){
+		msg <- NULL
+		if (length(object@normalize@preprocess@batch) == 0)
+			msg <- 'object@normalize@preprocess@batch must be specified'
+		return(msg)
+	}
+)
+
+setMethod('initialize', 'BaseMerge', function(.Object, check_dependencies = TRUE, ...){
+	.Object@assay_name <- sprintf('%sAssay', .Object@name)
+	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+})
+
+
+setClass(
 	'BaseCluster',
 	representation(
 		name = 'character',
@@ -308,7 +292,6 @@ setClass(
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
-	contains = 'VIRTUAL',
 	prototype(
 		seed = 123L,
 		check_dependencies = TRUE

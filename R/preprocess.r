@@ -34,10 +34,9 @@ setClass(
 
 #' @importFrom methods callNextMethod
 #'
-setMethod('initialize', 'SeuratPreprocess', function(.Object, check_dependencies = TRUE, ...){
-	if (check_dependencies)
-		.check_dependences(.Object)
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+setMethod('initialize', 'SeuratPreprocess', function(.Object, ...){
+	print('SeuratPreprocess')
+	.Object <- callNextMethod(.Object, ...)
 	.Object
 })
 
