@@ -7,6 +7,7 @@
 #' @importFrom methods callNextMethod
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
+#' @importFrom Seurat CreateAssayObject
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validity
@@ -81,23 +82,6 @@ check_package <- function(object){
 		}
 	}
 	return(TRUE)
-}
-
-.check_method <- function(x){
-	available_methods <- c(
-		 "Seurat",
-		 "Scanorama",
-		 "Harmony",
-		 "Liger",
-		 "BBKNN",
-		 "Uncorrected",
-		 "fastMNN",
-		 "scVI"
-	 )
-  ### checking valid parameters ###
-  if(!all(x%in% available_methods)){
-		stop(sprintf("method must be the following: %s", paste(available_methods, collapse = ", ")))
-	}
 }
 
 .check_genome <- function(x){
@@ -330,8 +314,6 @@ setClass(
 	}
 )
 
-#' @importFrom methods callNextMethod
-#'
 setMethod('initialize', 'BaseAnnotate', function(.Object, check_dependencies = TRUE, ...){
 	if (check_dependencies)
 		.check_dependences(.Object)
@@ -353,3 +335,27 @@ setClass(
 		genome = 'hg19'
 	),
 )
+
+
+setClass(
+	'BaseAmbientRNARemoval', 
+	representation(
+		name = 'character',
+		seed = 'integer',
+		normalize = 'BaseNormalize',
+		dependences = 'list',
+		check_dependencies = 'logical',
+		assay_name = 'character'
+	),
+	contains = 'VIRTUAL',				 
+	prototype(
+		seed = 123L,
+		check_dependencies = TRUE	
+	)
+)
+
+setMethod('initialize', 'BaseAmbientRNARemoval', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+})

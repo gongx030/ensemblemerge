@@ -70,3 +70,11 @@ setGeneric("DetectDoublet", function(x, params, ...) standardGeneric("DetectDoub
 #'
 setGeneric("Normalize", function(x, params, ...) standardGeneric("Normalize"))
 
+#' The generic function of RemoveAmbientRNA 
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("RemoveAmbientRNA", function(x, params, ...) standardGeneric("RemoveAmbientRNA"))
+

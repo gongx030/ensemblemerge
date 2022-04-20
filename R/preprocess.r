@@ -35,7 +35,6 @@ setClass(
 #' @importFrom methods callNextMethod
 #'
 setMethod('initialize', 'SeuratPreprocess', function(.Object, ...){
-	print('SeuratPreprocess')
 	.Object <- callNextMethod(.Object, ...)
 	.Object
 })

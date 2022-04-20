@@ -1,3 +1,31 @@
+#' Normalize a SeuratList object 
+#'
+#' @param x a SeuratList object
+#' @param params a BaseNormalize object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with normalized read counts
+#' @export
+#'
+setMethod(
+	'Normalize',
+	signature(
+		x = 'SeuratList',
+		params = 'BaseNormalize'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+		for (i in 1:length(x)){
+			x[[i]] <- Normalize(x[[i]], params, ...)
+		}
+		x
+	}
+)
+
+
 setClass(
 	'SeuratNormalize',
 	representation(

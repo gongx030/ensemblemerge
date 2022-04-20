@@ -36,7 +36,6 @@ setClass(
 )
 
 setMethod('initialize', 'PCAEmbed', function(.Object, check_dependencies = TRUE, ...){
-	print('PCAEmbed')
 	callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 })
 
