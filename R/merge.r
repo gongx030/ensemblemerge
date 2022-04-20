@@ -36,6 +36,7 @@ setMethod('initialize', 'SeuratMerge', function(.Object, check_dependencies = TR
 #' @param params a SeuratMerge object 
 #' @param ... Additional arguments
 #' @return returns a data object with integrated data
+#' @export
 #' @importFrom methods is
 #' @importFrom Seurat SplitObject SelectIntegrationFeatures FindIntegrationAnchors PrepSCTIntegration IntegrateData
 #'
@@ -159,6 +160,7 @@ setClass(
 #' @param params a HarmonyMerge object 
 #' @param ... Additional arguments
 #' @return returns a Seurat object with integrated data
+#' @export
 #'
 setMethod(
 	'Merge',
@@ -243,6 +245,7 @@ setClass(
 #' @return returns a Seurat object with integrated data
 #' @importFrom Seurat VariableFeatures SplitObject RunPCA as.SingleCellExperiment CreateDimReducObject
 #' @importFrom SingleCellExperiment reducedDim
+#' @export
 #'
 setMethod(
 	'Merge',
@@ -305,6 +308,7 @@ setClass(
 #' @param ... Additional arguments
 #' @return returns a Seurat object with integrated data
 #' @importFrom Seurat GetAssayData
+#' @export
 #'
 setMethod(
 	'Merge',
@@ -387,6 +391,7 @@ setClass(
 #' @return returns a Seurat object with integrated data
 #' @importFrom reticulate import
 #' @importFrom Seurat RunPCA  CreateDimReducObject DefaultAssay GetAssayData
+#' @export
 #'
 setMethod(
 	'Merge',
@@ -460,6 +465,7 @@ setClass(
 #' @return returns a Seurat object with integrated data
 #' @importFrom reticulate import py_capture_output
 #' @importFrom Seurat SelectIntegrationFeatures VariableFeatures SplitObject GetAssayData CreateDimReducObject DefaultAssay
+#' @export
 #'
 setMethod(
 	'Merge',
@@ -546,6 +552,7 @@ setClass(
 #' @return returns a Seurat object with integrated data
 #' @importFrom Seurat VariableFeatures CreateDimReducObject DefaultAssay
 #' @importFrom reticulate import
+#' @export
 #'
 setMethod(
 	'Merge',
