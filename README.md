@@ -32,7 +32,7 @@ x <- Cluster(x, params_cluster)
 # x <- Annotate(x, params_annotate)
 ```
 
-## 2. An integration pipeline
+## 2. A *de novo* integration pipeline
 ```
 library(ensemblemerge)
 x # a Seurat object
