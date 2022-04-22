@@ -195,3 +195,53 @@ setMethod(
 	}
 )
 
+
+setClass(
+	'SeuratReferenceMap',
+	representation(
+	),
+	contains = c('BaseReferenceMap'),
+	prototype(
+		name = 'SeuratReferenceMap',
+		ndims = 20L,
+		dependences = list(
+			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
+		)
+	)
+)
+
+
+setMethod('initialize', 'symphonyReferenceMap', function(.Object, ...){
+	callNextMethod(.Object, ...)
+})
+
+
+#' Map a SeuratList object (query) onto another SeruatList object (atlas) by Seurat (https://satijalab.org/seurat/articles/integration_mapping.html)
+#'
+#' @param query a SeuratList object with multiple batches
+#' @param atlas a SeuratList object with multiple batches
+#' @param params a symphonyReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'SeuratList',
+		atlas = 'SeuratList',
+		params = 'SeuratReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+		browser()
+		query <- Reduce('merge', query)
+		atlas <- Reduce('merge', atlas)
+		ReferenceMap(query, atlas, params)
+	}
+)
+
