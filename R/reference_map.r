@@ -199,28 +199,42 @@ setMethod(
 setClass(
 	'SeuratReferenceMap',
 	representation(
+		normalization.method = 'character',
+		reduction_type = 'character',
+		reference_reduction = 'character'
 	),
 	contains = c('BaseReferenceMap'),
 	prototype(
 		name = 'SeuratReferenceMap',
 		ndims = 20L,
+		reduction_type = 'pcaproject',
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
 		)
-	)
+	),
+	validity = function(object){
+		msg <- NULL
+		if (class(object@normalize_query) != class(object@normalize_atlas))
+			msg <- 'The class of object@normalize_query and object@normalize_atlas must be the same'
+		return(msg)
+	}
 )
 
-
-setMethod('initialize', 'symphonyReferenceMap', function(.Object, ...){
-	callNextMethod(.Object, ...)
+setMethod('initialize', 'SeuratReferenceMap', function(.Object, ...){
+	.Object <- callNextMethod(.Object, ...)
+	if (is(.Object@normalize_atlas, 'SeuratNormalize'))
+		.Object@normalization.method <- 'LogNormalize'
+	else if (is(.Object@normalize_atlas, 'SCTransformNormalize'))
+		.Object@normalization.method <- 'SCT'
+	.Object
 })
 
 
-#' Map a SeuratList object (query) onto another SeruatList object (atlas) by Seurat (https://satijalab.org/seurat/articles/integration_mapping.html)
+#' Map a SeuratList object (query) onto another Seurat object (atlas) by Seurat (https://satijalab.org/seurat/articles/integration_mapping.html)
 #'
 #' @param query a SeuratList object with multiple batches
 #' @param atlas a SeuratList object with multiple batches
-#' @param params a symphonyReferenceMap object
+#' @param params a SeuratReferenceMap object
 #' @param ... Additional arguments
 #' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
 #' @export
@@ -238,10 +252,170 @@ setMethod(
 		params,
 		...
 	){
-		browser()
-		query <- Reduce('merge', query)
-		atlas <- Reduce('merge', atlas)
-		ReferenceMap(query, atlas, params)
+
+		params_merge <- new('SeuratMerge', normalize = params@normalize_query, ndims = params@ndims)
+		query <- Merge(query, params_merge)
+
+		params_merge <- new('SeuratMerge', normalize = params@normalize_atlas, ndims = params@ndims)
+		atlas <- Merge(atlas, params_merge)
+
+		params@reference_reduction <- params_merge@reduction_name
+
+		.seurat_referencemap_core(query, atlas, params, ...)
+
 	}
 )
 
+
+
+#' Map a Seurat object (query) onto another Seurat object (atlas) by Seurat (https://satijalab.org/seurat/articles/integration_mapping.html)
+#'
+#' @param query a Seurat object 
+#' @param atlas a Seurat object 
+#' @param params a SeuratReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'Seurat',
+		atlas = 'Seurat',
+		params = 'SeuratReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+
+		params_pca <- new('PCAEmbed', normalize = params@normalize_atlas, ndims = params@ndims)
+		atlas <- Embed(atlas, params_pca)
+
+		params@reference_reduction <- params_pca@reduction_name
+
+		.seurat_referencemap_core(query, atlas, params, ...)
+	}
+)
+
+
+#' Map a SeuratList object (query) onto another Seurat object (atlas) by Seurat (https://satijalab.org/seurat/articles/integration_mapping.html)
+#'
+#' @param query a SeuratList object (with batches)
+#' @param atlas a Seurat object 
+#' @param params a SeuratReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'SeuratList',
+		atlas = 'Seurat',
+		params = 'SeuratReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+
+		params_merge <- new('SeuratMerge', normalize = params@normalize_query, ndims = params@ndims)
+	  query <- Merge(query, params_merge)
+
+		params_pca <- new('PCAEmbed', normalize = params@normalize_atlas, ndims = params@ndims)
+		atlas <- Embed(atlas, params_pca)
+		params@reference_reduction <- params_pca@reduction_name
+
+		.seurat_referencemap_core(query, atlas, params, ...)
+	}
+)
+
+#' Map a Seurat object (query) onto another SeuratList object (atlas) by Seurat (https://satijalab.org/seurat/articles/integration_mapping.html)
+#'
+#' @param query a Seurat object
+#' @param atlas a SeuratList object  (with batches)
+#' @param params a SeuratReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'Seurat',
+		atlas = 'SeuratList',
+		params = 'SeuratReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+
+		params_merge <- new('SeuratMerge', normalize = params@normalize_atlas, ndims = params@ndims)
+		atlas <- Merge(atlas, params_merge)
+		params@reference_reduction <- params_merge@reduction_name
+
+		.seurat_referencemap_core(query, atlas, params, ...)
+	}
+)
+
+
+.seurat_referencemap_core <- function(query, atlas, params, ...){
+
+	x <- FindTransferAnchors(
+		reference = atlas, 
+		query = query,
+		normalization.method = params@normalization.method,
+		reference.assay = NULL,
+		reference.neighbors = NULL,
+		query.assay = NULL,
+		reduction = params@reduction_type,
+		reference.reduction = params@reference_reduction,
+		project.query = FALSE,
+		features = NULL,
+		scale = FALSE,
+		npcs = params@ndims,
+		l2.norm = TRUE,
+		dims = 1:params@ndims,
+		k.anchor = 5,
+		k.filter = 200,
+		k.score = 30,
+		max.features = 200,
+		nn.method = "annoy",
+		n.trees = 50,
+		eps = 0,
+		approx.pca = TRUE,
+		mapping.score.k = NULL,
+		verbose = TRUE
+	)
+
+	x <- IntegrateEmbeddings(
+		x,
+		reference = atlas,
+		query = query,
+		new.reduction.name = params@reduction_name,
+		reductions = params@reduction_type,
+		dims.to.integrate = NULL,
+		k.weight = 100,
+		weight.reduction = NULL,
+		reuse.weights.matrix = TRUE,
+		sd.weight = 1,
+		preserve.order = FALSE,
+		verbose = TRUE
+	)
+
+	atlas[[params@reduction_name]] <- CreateDimReducObject(
+		embeddings = atlas[[params@reference_reduction]]@cell.embeddings,
+		key = params@reduction_key,
+		assay = params@normalize_atlas@assay_name
+	)
+
+	new('SeuratList', list(query = x, atlas = atlas))
+}

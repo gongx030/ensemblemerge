@@ -17,10 +17,8 @@ setClass(
 	)
 )
 
-#' @importFrom methods is callNextMethod
-#'
-setMethod('initialize', 'SeuratMerge', function(.Object, check_dependencies = TRUE, ...){
-	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+setMethod('initialize', 'SeuratMerge', function(.Object, ...){
+	.Object <- callNextMethod(.Object, ...)
 	if (is(.Object@normalize, 'SeuratNormalize'))
 		.Object@normalization.method <- 'LogNormalize'
 	else if (is(.Object@normalize, 'SCTransformNormalize'))

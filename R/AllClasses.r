@@ -7,7 +7,7 @@
 #' @importFrom methods callNextMethod
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
-#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP ScaleData RunPCA
+#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP ScaleData RunPCA FindTransferAnchors IntegrateEmbeddings
 #' @importFrom grDevices png dev.off
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
