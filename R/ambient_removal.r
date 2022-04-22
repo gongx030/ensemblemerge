@@ -59,11 +59,11 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@normalize@assay_name
+		active_assay <- params@normalize@assay_name
 
 		sce <- SingleCellExperiment(
 			assays = list(
-				counts = x@assays[[raw_assay]]@counts 
+				counts = x@assays[[active_assay]]@counts 
 			)
 		)
 
@@ -93,7 +93,6 @@ setMethod(
 		x[[params@normalize@assay_name]] <- CreateAssayObject(
 			counts = assays(sce)$decontXcounts
 		)
-
 		x <- Normalize(x, params@normalize)
 		x
 	}
@@ -140,8 +139,8 @@ setMethod(
 	  params_cluster <- new('LouvainCluster', embedding = params_embed)
 		x <- Cluster(x, params_cluster)
 
-		raw_assay <- params@normalize@assay_name
-		toc <- x@assays[[raw_assay]]@counts
+		active_assay <- params@normalize@assay_name
+		toc <- x@assays[[active_assay]]@counts
 		sc <- SoupX::SoupChannel(toc, toc, calcSoupProfile = FALSE)
 
 		soupProf <- data.frame(row.names = rownames(toc), est = rowSums(toc)/sum(toc), counts = rowSums(toc))

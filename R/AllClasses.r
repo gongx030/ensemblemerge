@@ -144,7 +144,8 @@ setMethod('initialize', 'BasePreprocess', function(.Object, check_dependencies =
 setClass(
 	'BaseNormalize',
 	representation(
-		assay_name = 'character',
+		assay_name = 'character',	# output assay name
+		raw_assay = 'character',	# input assay name
 		preprocess = 'BasePreprocess',
 		numHVG = "integer",
 		dependences = 'list',
@@ -155,6 +156,7 @@ setClass(
 	contains = 'VIRTUAL',				 
 	prototype(
 		assay_name = 'RNA',
+		raw_assay = 'RNA',
 		numHVG = 2000L,
 		do.scale = TRUE,
 		do.center = TRUE,
@@ -347,8 +349,7 @@ setClass(
 		seed = 'integer',
 		normalize = 'BaseNormalize',
 		dependences = 'list',
-		check_dependencies = 'logical',
-		assay_name = 'character'
+		check_dependencies = 'logical'
 	),
 	contains = 'VIRTUAL',				 
 	prototype(
@@ -362,3 +363,5 @@ setMethod('initialize', 'BaseAmbientRNARemoval', function(.Object, check_depende
 		.check_dependences(.Object)
 	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
 })
+
+

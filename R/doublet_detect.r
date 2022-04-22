@@ -74,11 +74,11 @@ setMethod(
 		...
 	){
 
-		raw_assay <- params@normalize@assay_name
+		active_assay <- params@normalize@assay_name
 
 		sce <- SingleCellExperiment(
 			assays = list(
-				counts = x@assays[[raw_assay]]@counts 
+				counts = x@assays[[active_assay]]@counts 
 			)
 		)
 

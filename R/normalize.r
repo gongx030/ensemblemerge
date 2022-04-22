@@ -63,7 +63,8 @@ setMethod('initialize', 'SeuratNormalize', function(.Object, ...){
 	else if (.Object@selection.method == 'dispersion')
 		.Object@feature_field <- 'mvp.variable'
 
-	.Object@assay_name <- .Object@preprocess@raw_assay
+	.Object@raw_assay <- .Object@preprocess@raw_assay
+	.Object@assay_name <- .Object@raw_assay
 
 	callNextMethod(.Object, ...)
 
@@ -93,7 +94,7 @@ setMethod(
 		...
 	){
 
-		x@active.assay <- params@assay_name
+		x@active.assay <- params@raw_assay
 
 		if (params@preprocess@batchwise){
 			x <- SplitObject(x, split.by = params@preprocess@batch)
@@ -102,6 +103,8 @@ setMethod(
 		}
 
 		for (i in 1:length(x)){
+
+			sprintf('Normalize | input assay=%s | output assay=%s', params@raw_assay, params@assay_name) %>% message()
 
 			x[[i]] <- NormalizeData(
 				x[[i]],
@@ -157,6 +160,7 @@ setClass(
 #' @importFrom methods callNextMethod
 #'
 setMethod('initialize', 'SCTransformNormalize', function(.Object, ...){
+	.Object@raw_assay <- .Object@preprocess@raw_assay
 	callNextMethod(.Object, ...)
 })
 
@@ -193,9 +197,11 @@ setMethod(
 
 		for (i in 1:length(x)){
 
+			sprintf('Normalize | input assay=%s | output assay=%s', params@raw_assay, params@assay_name) %>% message()
+
 			x[[i]] <- SCTransform(
 				x[[i]],
-				assay = params@preprocess@raw_assay,
+				assay = params@raw_assay,
 				new.assay.name = params@assay_name,
 				reference.SCT.model = NULL,
 				do.correct.umi = params@do.correct.umi,
@@ -210,6 +216,7 @@ setMethod(
 				return.only.var.genes = TRUE,
 				verbose = FALSE 
 			)
+			sprintf('Normalize | set active assay to "%s"', params@assay_name) %>% message()
 		}
 
 		if (length(x) == 1){
