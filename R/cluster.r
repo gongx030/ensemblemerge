@@ -26,10 +26,6 @@ setMethod(
 )
 
 
-#' The LouvainCluster class
-#'
-#' @slot k_param Defines k for the k-nearest neighbor algorithm
-#'
 setClass(
 	'LouvainCluster',
 	representation(
@@ -250,18 +246,11 @@ setMethod(
 		raw_assay <- params@normalize@assay_name
 		hvg <- x@assays[[raw_assay]]@var.features
 
-		batch <- NULL
-		if (!is.null(x[[params@preprocess@batch]])){
-			if (length(unique(x[[params@preprocess@batch]][, 1])) > 1)
-				batch <- x[[params@preprocess@batch]][, 1]
-		}
-
     results <- scLCA::myscLCA(
 			x@assays[[raw_assay]]@data[hvg, ],
 			cor.thresh = params@cor_thresh,
 			clust.max = params@clust_max, 
 			trainingSetSize = params@training_set_size, 
-			datBatch = batch,
 			outlier.filter = FALSE, 
 			zerocorrection = params@zerocorrection
 		)
