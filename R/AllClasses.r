@@ -1,13 +1,13 @@
 #' @import Matrix
 #' @importFrom magrittr %>%
 #' @import dplyr
-#' @importFrom methods new 
+#' @importFrom methods new is
 #' @importFrom SingleCellExperiment colData rowData
 #' @importFrom SummarizedExperiment assays
 #' @importFrom methods callNextMethod
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
-#' @importFrom Seurat CreateAssayObject GetAssayData
+#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP ScaleData RunPCA
 #' @importFrom grDevices png dev.off
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -364,4 +364,29 @@ setMethod('initialize', 'BaseAmbientRNARemoval', function(.Object, check_depende
 	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
 })
 
+
+setClass(
+	'BaseReferenceMap',
+	representation(
+		reduction_key = 'character',
+		reduction_name = 'character',
+		normalize_query = 'BaseNormalize',
+		normalize_atlas = 'BaseNormalize',
+		dependences = 'list',
+		check_dependencies = 'logical',
+		name = 'character'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		check_dependencies = TRUE
+	),
+)
+
+setMethod('initialize', 'BaseReferenceMap', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object@reduction_key <- sprintf('%s_', .Object@name)
+	.Object@reduction_name <- .Object@name
+	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+})
 

@@ -46,8 +46,6 @@ setMethod('initialize', 'PCAEmbed', function(.Object, check_dependencies = TRUE,
 #' @param params a PCAEmbed object
 #' @param ... Additional arguments
 #' @return returns a data object with PCA embedding
-#' @importFrom methods is
-#' @importFrom Seurat ScaleData RunPCA
 #' @export
 #'
 setMethod(
@@ -113,7 +111,6 @@ setClass(
 #' @param params a scCCESSSEmbed object
 #' @param ... Additional arguments
 #' @return returns a data object with embedding results
-#' @importFrom Seurat CreateDimReducObject 
 #' @export
 #'
 setMethod(

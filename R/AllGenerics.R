@@ -78,3 +78,12 @@ setGeneric("Normalize", function(x, params, ...) standardGeneric("Normalize"))
 #'
 setGeneric("RemoveAmbientRNA", function(x, params, ...) standardGeneric("RemoveAmbientRNA"))
 
+#' The generic function of ReferenceMap 
+#'
+#' @param query a data object
+#' @param atlas a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("ReferenceMap", function(query, atlas, params, ...) standardGeneric("ReferenceMap"))
+

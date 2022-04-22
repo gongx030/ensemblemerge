@@ -26,10 +26,6 @@ setMethod(
 )
 
 
-#' The LouvainCluster class
-#'
-#' @slot k_param Defines k for the k-nearest neighbor algorithm
-#'
 setClass(
 	'LouvainCluster',
 	representation(
