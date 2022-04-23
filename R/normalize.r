@@ -52,8 +52,6 @@ setClass(
 	}
 )
 
-#' @importFrom methods callNextMethod
-#'
 setMethod('initialize', 'SeuratNormalize', function(.Object, ...){
 
 	if (.Object@selection.method == 'vst')
@@ -217,6 +215,122 @@ setMethod(
 				verbose = FALSE 
 			)
 			sprintf('Normalize | set active assay to "%s"', params@assay_name) %>% message()
+		}
+
+		if (length(x) == 1){
+			x[[1]]
+		}else{
+			new('SeuratList', x)
+		}
+	}
+)
+
+
+setClass(
+	'scranNormalize',
+	representation(
+		min_size = 'integer',
+		clustering_method = 'character',
+		ndims = 'integer',
+		graph_fun = 'character'
+	),
+	contains = 'BaseNormalize',
+	prototype(
+		min_size = 100L,
+		clustering_method = 'igraph',
+		ndims = 50L,
+		graph_fun = 'walktrap',
+		dependences = list(
+			new('RPackage', package_name = 'scran', package_version = '1.22.1'),
+			new('RPackage', package_name = 'scuttle', package_version = '1.4.0')
+		)
+	),
+	validity = function(object){
+		msg <- NULL
+		return(msg)	
+	}
+)
+
+setMethod('initialize', 'scranNormalize', function(.Object, ...){
+	.Object@raw_assay <- .Object@preprocess@raw_assay
+	callNextMethod(.Object, ...)
+})
+
+
+#' Normalize a Seurat objects by scran's devolution normalization (https://bioconductor.org/packages/devel/bioc/vignettes/scran/inst/doc/scran.html)
+#'
+#' @param x a Seurat object
+#' @param params a scranNormalize object 
+#' @param ... Additional arguments
+#' @return a Seurat object (if there is only one batch), or a SeuratList
+#' @export
+#' @references L. Lun, A.T., Bach, K. & Marioni, J.C. Pooling across cells to normalize single-cell RNA sequencing data with many zero counts. Genome Biol 17, 75 (2016). https://doi.org/10.1186/s13059-016-0947-7
+#'
+setMethod(
+	'Normalize',
+	signature(
+		x = 'Seurat',
+		params = 'scranNormalize'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+
+
+		if (params@preprocess@batchwise){
+			x <- SplitObject(x, split.by = params@preprocess@batch)
+		}else{
+			x <- list(x)
+		}
+
+		for (i in 1:length(x)){
+
+			sprintf('Normalize | input assay=%s | output assay=%s', params@raw_assay, params@assay_name) %>% message()
+
+			x[[i]]@active.assay <- params@assay_name
+
+			sce <- SingleCellExperiment(
+				assays = list(
+					counts = GetAssayData(x[[i]], 'counts')
+				),
+			)
+
+			clusters <- scran::quickCluster(
+				sce,
+				min.size = params@min_size,
+				method = params@clustering_method,
+				use.ranks = FALSE,
+				d = params@ndims,
+				subset.row = NULL,
+				min.mean = NULL,
+				graph.fun = params@graph_fun,
+				block = NULL
+			)
+
+			sce <- scran::computeSumFactors(sce, clusters = clusters)
+			sce <- scuttle::logNormCounts(sce)
+			dec <- scran::modelGeneVar(sce)
+			features <- scran::getTopHVGs(
+				dec, 
+				n = params@numHVG,
+				prop = NULL,
+				var.threshold = 0,
+				fdr.field = "FDR",
+				fdr.threshold = NULL
+			)
+
+			x[[i]]@assays[[x[[i]]@active.assay]]@var.features <- features
+
+			x[[i]] <- ScaleData(
+				x[[i]],
+				vars.to.regress = NULL,
+				do.scale = params@do.scale,
+				do.center = params@do.center,
+				use.umi = FALSE,
+				verbose = FALSE
+			)
 		}
 
 		if (length(x) == 1){

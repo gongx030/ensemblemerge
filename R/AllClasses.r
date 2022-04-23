@@ -1,13 +1,12 @@
 #' @import Matrix
 #' @importFrom magrittr %>%
 #' @import dplyr
-#' @importFrom methods new is
+#' @importFrom methods new is callNextMethod
 #' @importFrom SingleCellExperiment colData rowData
 #' @importFrom SummarizedExperiment assays
-#' @importFrom methods callNextMethod
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
-#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP ScaleData RunPCA FindTransferAnchors IntegrateEmbeddings
+#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP ScaleData RunPCA FindTransferAnchors IntegrateEmbeddings SplitObject SCTransform SelectIntegrationFeatures
 #' @importFrom grDevices png dev.off
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -145,8 +145,6 @@ setClass(
 	),
 )
 
-#' @importFrom methods callNextMethod 
-#'
 setMethod('initialize', 'SCINAAnnotate', function(.Object, check_dependencies = TRUE, ...){
 	.Object <- callNextMethod(.Object, check_dependencies = check_dependencies, ...)
 	if (.Object@genome == 'mm10'){
