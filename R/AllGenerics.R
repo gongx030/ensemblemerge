@@ -87,3 +87,11 @@ setGeneric("RemoveAmbientRNA", function(x, params, ...) standardGeneric("RemoveA
 #'
 setGeneric("ReferenceMap", function(query, atlas, params, ...) standardGeneric("ReferenceMap"))
 
+#' The generic function of DETest
+#'
+#' @param x a data object
+#' @param params a parameter object
+#' @param ... Other arguments
+#'
+setGeneric("DETest", function(x, params, ...) standardGeneric("DETest"))
+

@@ -6,8 +6,10 @@
 #' @importFrom SummarizedExperiment assays
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
-#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP ScaleData RunPCA FindTransferAnchors IntegrateEmbeddings SplitObject SCTransform SelectIntegrationFeatures
+#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP RunPCA FindTransferAnchors IntegrateEmbeddings SplitObject SCTransform SelectIntegrationFeatures NormalizeData FindVariableFeatures ScaleData FindMarkers
 #' @importFrom grDevices png dev.off
+
+setClassUnion('characterOrNULL', c("character", "NULL"))
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validity
@@ -280,6 +282,7 @@ setClass(
 		dependences = 'list',
 		check_dependencies = 'logical'
 	),
+	contains = 'VIRTUAL',
 	prototype(
 		seed = 123L,
 		check_dependencies = TRUE
@@ -386,6 +389,35 @@ setMethod('initialize', 'BaseReferenceMap', function(.Object, check_dependencies
 		.check_dependences(.Object)
 	.Object@reduction_key <- sprintf('%s_', .Object@name)
 	.Object@reduction_name <- .Object@name
+	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
+})
+
+
+setClass(
+	'BaseDETest',
+	representation(
+		cluster = 'BaseCluster',
+		control = 'characterOrNULL',
+		treatment = 'characterOrNULL',
+		seed = 'integer',
+		dependences = 'list',
+		check_dependencies = 'logical',
+		name = 'character',
+		fc_name = 'character'
+	),
+	contains = 'VIRTUAL',
+	prototype(
+		control = NULL,
+		treatment = NULL,
+		seed = 1L,
+		check_dependencies = TRUE
+	),
+)
+
+setMethod('initialize', 'BaseDETest', function(.Object, check_dependencies = TRUE, ...){
+	if (check_dependencies)
+		.check_dependences(.Object)
+	.Object@fc_name <- .Object@name
 	 callNextMethod(.Object, check_dependencies = check_dependencies, ...)	
 })
 
