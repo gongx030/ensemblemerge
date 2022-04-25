@@ -6,7 +6,7 @@
 
 ## Examples
 
-| Task | Colab | Jupyter | Version |
+| Task | Colab | Jupyter | Tag |
 | --- | --- | --- | --- |
 | scRNA-seq normalization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/normalization.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/normalization.ipynb) | `v2.1.21-001` |
 | Reference-based scRNA-seq integration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | `v2.1.21-001` |
