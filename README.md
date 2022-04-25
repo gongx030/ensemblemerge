@@ -68,6 +68,11 @@ x_merged <- Annotate(x_merged, params_annotate)
 
 ```
 
+| Name <img width=180> | Task |
+| --- | --- |
+| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/master/vignettes/reference_based_integration.ipynb) | Reference-based scRNA-seq integration |
+
+
 ## Preprocessing
 
 * cell and gene filtering 
