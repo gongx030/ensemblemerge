@@ -4,37 +4,11 @@
 [![R-CMD-check](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-## 1. A minimalist scRNA-seq pipeline
-
-```
-library(ensemblemerge)
-x # a Seurat object
-
-# preprocessing
-params_preprocess <- new('SeuratPreprocess')
-x <- Preprocess(x, params_preprocess)
-
-# normalization
-params_normalize <- new('SeuratNormalize', preprocess = params_preprocess)
-x <- Normalize(x, params_normalize)
-
-# dimension reduction
-params_embed <- new('PCAEmbed', normalize = params_normalize)
-x <- Embed(x, params_embed)
-
-# clustering
-params_cluster <- new('LouvainCluster', embedding = params_embed)
-x <- Cluster(x, params_cluster)
-
-# annotation
-# params_genemarkers <- new('PanglaoDBGeneMarkers', genome = 'hg19')
-# params_annotate <- new('clustifyrAnnotate', normalize = params_normalize, gene_marker = params_genemarkers, cluster = params_cluster)
-# x <- Annotate(x, params_annotate)
-```
-
+## Examples
 
 | Task | Colab | Jupyter | Version |
 | --- | --- | --- | --- |
+| scRNA-seq normalization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/normalization.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/normalization.ipynb) | `v2.1.21-001` |
 | Reference-based scRNA-seq integration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | `v2.1.21-001` |
 | *de novo* scRNA-seq integration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/de_novo_integration.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/de_novo_integration.ipynb) | `v2.1.21-001` |
 
