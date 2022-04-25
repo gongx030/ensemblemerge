@@ -32,45 +32,11 @@ x <- Cluster(x, params_cluster)
 # x <- Annotate(x, params_annotate)
 ```
 
-## 2. A *de novo* integration pipeline
-```
-library(ensemblemerge)
-x # a Seurat object
 
-# preprocessing
-params_preprocess <- new('SeuratPreprocess', batch = 'batch')
-x <- Preprocess(x, params_preprocess)
-
-# normalization
-params_normalize <- new('SeuratNormalize', preprocess = params_preprocess)
-x <- Normalize(x, params_normalize) # the returned x is a SeuratList object
-
-# doublet removing (optional)
-params_doubletdetect <- new('scDblFinderDoubletDetect',  normalize = params_normalize)
-x <- DetectDoublet(x, params_doubletdetect)
-
-# ambient RNA decomtamination (optional)
-params_ambientrna <- new('decontXRemoveAmbientRNA', normalize = params_normalize)
-x <- RemoveAmbientRNA(x, params_ambientrna)
-
-# integration
-params_merge <- new('SeuratMerge', normalize = params_normalize)
-x_merged <- Merge(x, params_merge) # x_merged is a Seurat object
-
-# clustering
-params_cluster <- new('LouvainCluster', embedding = params_merge)
-x_merged <- Cluster(x_merged, params_cluster)
-
-# annotation
-params_genemarkers <- new('PanglaoDBGeneMarkers', genome = 'hg19')
-params_annotate <- new('clustifyrAnnotate', normalize = params_normalize, gene_marker = params_genemarkers, cluster = params_cluster)
-x_merged <- Annotate(x_merged, params_annotate)
-
-```
-
-| Task | Colab | Jupyter |
-| --- | --- | --- |
-| Reference-based scRNA-seq integration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) |
+| Task | Colab | Jupyter | Version |
+| --- | --- | --- | --- |
+| Reference-based scRNA-seq integration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/reference_based_integration.ipynb) | `v2.1.21-001` |
+| *de novo* scRNA-seq integration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongx030/ensemblemerge/blob/main/vignettes/de_novo_integration.ipynb) | [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://github.com/gongx030/ensemblemerge/blob/main/vignettes/de_novo_integration.ipynb) | `v2.1.21-001` |
 
 
 ## Preprocessing
