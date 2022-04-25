@@ -33,16 +33,14 @@ setClass(
 		norm_method = 'character',
     scaling = "logical",
     scale_factor = "numeric",
-		feature_field = 'character',
-		output = 'character'
+		feature_field = 'character'
 	),
 	contains = 'BaseNormalize',
 	prototype(
 		selection.method = 'vst',
 		norm_method = "LogNormalize",
 		scaling = TRUE,
-		scale_factor = 10000,
-		output = 'Seurat'
+		scale_factor = 10000
 	),
 	validity = function(object){
 		msg <- NULL
@@ -78,7 +76,6 @@ setMethod('initialize', 'SeuratNormalize', function(.Object, ...){
 #' @param ... Additional arguments
 #' @return a Seurat object (if there is only one batch), or a SeuratList
 #' @export
-#' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures
 #'
 setMethod(
 	'Normalize',

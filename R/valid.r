@@ -111,3 +111,38 @@ setMethod(
 	}
 )
 
+#' Validate a Seurat object before DE test
+#'
+#' @param x a Seurat object
+#' @param params a BaseDETest object
+#' @param ... Additional arguments
+#
+setMethod(
+	'valid',
+	signature(
+		x = 'Seurat',
+		params = 'BaseDETest'
+	),
+	function(
+		x,
+		params,
+		...
+	){
+		if (!is.null(params@treatment)){
+			is_valid <- params@treatment %in% x[[params@cluster@cluster_name]][, 1]
+			if (any(!is_valid)){
+				sprintf('the following in params@treatment is not present in x[[%s]]: %s', params@cluster@cluster_name, paste(params@treatment[!is_valid], collapse = ',')) %>% message()
+			}
+		}
+
+		if (!is.null(params@control)){
+			is_valid <- params@control %in% x[[params@cluster@cluster_name]][, 1]
+			if (any(!is_valid)){
+				sprintf('the following in params@control is not present in x[[%s]]: %s', params@cluster@cluster_name, paste(params@control[!is_valid], collapse = ',')) %>% message()
+			}
+		}
+
+		return(TRUE)
+	}
+)
+
