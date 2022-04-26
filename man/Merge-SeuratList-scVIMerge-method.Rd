@@ -19,3 +19,8 @@ returns a Seurat object with integrated data
 \description{
 Merge Seurat objects by using scVI
 }
+\references{
+https://scarches.readthedocs.io/en/latest/reference_building_from_scratch.html
+
+Lopez, R., Regier, J., Cole, M.B. et al. Deep generative modeling for single-cell transcriptomics. Nat Methods 15, 1053–1058 (2018). https://doi.org/10.1038/s41592-018-0229-2
+}

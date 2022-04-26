@@ -374,12 +374,14 @@ setClass(
 		reduction_name = 'character',
 		normalize_query = 'BaseNormalize',
 		normalize_atlas = 'BaseNormalize',
+		ndims = 'integer',
 		dependences = 'list',
 		check_dependencies = 'logical',
 		name = 'character'
 	),
 	contains = 'VIRTUAL',
 	prototype(
+		ndims = 20L,
 		check_dependencies = TRUE
 	),
 )

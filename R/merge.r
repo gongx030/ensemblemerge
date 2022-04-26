@@ -539,10 +539,32 @@ setMethod(
 setClass(
 	'scVIMerge',
 	representation(
+		n_layers = 'integer',								 
+		encode_covariates = 'logical',
+		deeply_inject_covariates = 'logical',
+		use_layer_norm = "character",
+		use_batch_norm = "character",
+		max_epochs = 'integer',
+		early_stopping = 'list'
 	),
 	contains = c('BaseMerge'),
   prototype(
 		name = "scVI",
+		n_layers = 2L,
+		encode_covariates = TRUE,
+		deeply_inject_covariates = FALSE,
+		use_layer_norm = "both",
+		use_batch_norm = "none",
+		max_epochs = 500L,
+		early_stopping = list(
+			early_stopping_metric = 'elbo',
+			"save_best_state_metric"= "elbo",
+			"patience"= 10,
+			"threshold"= 0,
+			"reduce_lr_on_plateau"= TRUE,
+			"lr_patience"= 8,
+			"lr_factor"= 0.1
+		),
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
 			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
@@ -563,6 +585,8 @@ setClass(
 #' @importFrom Seurat VariableFeatures CreateDimReducObject DefaultAssay
 #' @importFrom reticulate import
 #' @export
+#' @references https://scarches.readthedocs.io/en/latest/reference_building_from_scratch.html
+#' @references Lopez, R., Regier, J., Cole, M.B. et al. Deep generative modeling for single-cell transcriptomics. Nat Methods 15, 1053–1058 (2018). https://doi.org/10.1038/s41592-018-0229-2
 #'
 setMethod(
 	'Merge',
@@ -594,10 +618,8 @@ setMethod(
 			obs = x[[params@normalize@preprocess@batch]]
 		)
 
-	  scvi$settings$seed <- params@seed
- 	 	scvi$model$SCVI$setup_anndata(adata, batch_key = params@normalize@preprocess@batch)
-		model <- scvi$model$SCVI(adata, n_latent = params@ndims)
-		model$train()
+		model <- .train_scvi_model(adata, params)
+
 		latent <- model$get_latent_representation()
 		rownames(latent) <- colnames(x)
 		x[[params@reduction_name]] <- CreateDimReducObject(
@@ -610,4 +632,23 @@ setMethod(
 	}
 )
 
+.train_scvi_model <- function(adata, params){
+	scvi <- import('scvi')
+  scvi$settings$seed <- params@seed
+ 	scvi$model$SCVI$setup_anndata(adata, batch_key = params@normalize@preprocess@batch)
+	model <- scvi$model$SCVI(
+		adata, 
+		n_latent = params@ndims,
+		n_layers = params@n_layers,
+		encode_covariates = params@encode_covariates,
+		deeply_inject_covariates = params@deeply_inject_covariates,
+		use_layer_norm = params@use_layer_norm,
+		use_batch_norm = params@use_batch_norm
+	)
+	model$train(
+		max_epochs = params@max_epochs,
+		early_stopping = params@early_stopping
+	)
+	model
+}
 
