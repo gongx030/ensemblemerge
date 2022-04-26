@@ -4,7 +4,6 @@ setClass(
 		k = 'integer',
 		vargenes_method = 'character',
 		theta = 'numeric',
-		ndims = 'integer',
 		sigma = 'numeric'
 	),
 	contains = c('BaseReferenceMap'),
@@ -13,7 +12,6 @@ setClass(
 		k = 100L,
 		vargenes_method = 'vst',
 		theta = 2,
-		ndims = 20L,
 		sigma = 0.1,
 		dependences = list(
 			new('RPackage', package_name = 'symphony', package_version = '0.1.0')
@@ -206,7 +204,6 @@ setClass(
 	contains = c('BaseReferenceMap'),
 	prototype(
 		name = 'SeuratReferenceMap',
-		ndims = 20L,
 		reduction_type = 'pcaproject',
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0')
@@ -419,3 +416,206 @@ setMethod(
 
 	new('SeuratList', list(query = x, atlas = atlas))
 }
+
+setClass(
+	'scArchesReferenceMap',
+	representation(
+		scvi = 'scVIMerge',
+		min_features = 'integer'
+	),
+	contains = c('BaseReferenceMap'),
+	prototype(
+		name = 'scArchesReferenceMap',
+		min_features = 200L,
+		dependences = list(
+			new('PythonPackage', package_name = 'scarches', package_version = '0.5.2')
+		)
+	),
+	validity = function(object){
+		msg <- NULL
+		if (class(object@normalize_query) != class(object@normalize_atlas))
+			msg <- 'The class of object@normalize_query and object@normalize_atlas must be the same'
+		return(msg)
+	}
+)
+
+setMethod('initialize', 'scArchesReferenceMap', function(.Object, ...){
+	.Object <- callNextMethod(.Object, ...)
+	.Object@scvi@normalize <- .Object@normalize_atlas
+	.Object@ndims <- .Object@scvi@ndims
+	.Object
+})
+
+
+#' Map a SeuratList object (query) onto another SeuratList object (atlas) by scArches (https://scarches.readthedocs.io/en/latest/reference_building_from_scratch.html)
+#'
+#' @param query a SeuratList object with multiple batches
+#' @param atlas a SeuratList object with multiple batches
+#' @param params a scArchesReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#' @references Lotfollahi, M., Naghipourfar, M., Luecken, M.D. et al. Mapping single-cell data to reference atlases by transfer learning. Nat Biotechnol 40, 121–130 (2022). https://doi.org/10.1038/s41587-021-01001-7
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'SeuratList',
+		atlas = 'SeuratList',
+		params = 'scArchesReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+
+
+		scvi <- import('scvi')
+		anndata <- import("anndata")
+
+		features <- SelectIntegrationFeatures(
+			object.list = atlas,
+			nfeatures = params@scvi@nfeatures,
+			verbose = FALSE
+		)
+
+		atlas <- Reduce('merge', atlas)
+		query <- Reduce('merge', query)
+
+		# make sure that selected features are also present in the query data
+		# also need to check if the number of features are too small
+		features <- features[features %in% rownames(query)]
+
+		if (length(features) < params@min_features)
+			stop(sprintf('# of features is less than %d (params@min_features)', params@min_features))
+
+		atlas_adata <- anndata$AnnData(
+			X = t(GetAssayData(atlas, 'counts')[features, ]),
+			obs = atlas[[params@normalize_atlas@preprocess@batch]]
+		)
+
+		model <- .train_scvi_model(atlas_adata, params@scvi)
+
+		query_adata <- anndata$AnnData(
+			X = t(GetAssayData(query, 'counts')[features, ]),
+			obs = query[[params@normalize_query@preprocess@batch]]
+		)
+
+		model_query <-  scvi$model$SCVI$load_query_data(
+			query_adata,
+			model,
+			freeze_dropout = TRUE
+		)
+
+		model_query$train(
+			max_epochs = params@scvi@max_epochs,
+			early_stopping = params@scvi@early_stopping
+		)
+
+
+		atlas_latent <- model$get_latent_representation()
+		rownames(atlas_latent) <- colnames(atlas)
+		atlas[[params@reduction_name]] <- CreateDimReducObject(
+			embeddings = atlas_latent,
+			assay =  params@normalize_atlas@assay_name,
+			key = params@reduction_key
+		)
+		
+		query_latent <- model_query$get_latent_representation()
+		rownames(query_latent) <- colnames(query)
+		query[[params@reduction_name]] <- CreateDimReducObject(
+			embeddings = query_latent,
+			assay =  params@normalize_query@assay_name,
+			key = params@reduction_key
+		)
+
+		new('SeuratList', list(query = query, atlas = atlas))
+
+	}
+)
+
+
+#' Map a Seurat object (query) onto another Seurat object (atlas) by scArches (https://scarches.readthedocs.io/en/latest/reference_building_from_scratch.html)
+#'
+#' @param query a Seurat object 
+#' @param atlas a Seurat object 
+#' @param params a scArchesReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#' @references Lotfollahi, M., Naghipourfar, M., Luecken, M.D. et al. Mapping single-cell data to reference atlases by transfer learning. Nat Biotechnol 40, 121–130 (2022). https://doi.org/10.1038/s41587-021-01001-7
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'Seurat',
+		atlas = 'Seurat',
+		params = 'scArchesReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+		.NotYetImplemented()
+	}
+)
+
+
+#' Map a Seurat object (query) onto a SeuratList object (atlas) by scArches (https://scarches.readthedocs.io/en/latest/reference_building_from_scratch.html)
+#'
+#' @param query a Seurat object 
+#' @param atlas a SeuratList object with multiple batches
+#' @param params a scArchesReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#' @references Lotfollahi, M., Naghipourfar, M., Luecken, M.D. et al. Mapping single-cell data to reference atlases by transfer learning. Nat Biotechnol 40, 121–130 (2022). https://doi.org/10.1038/s41587-021-01001-7
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'Seurat',
+		atlas = 'SeuratList',
+		params = 'scArchesReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+		.NotYetImplemented()
+	}
+)
+
+#' Map a SeuratList object (query) onto a Seurat object (atlas) by scArches (https://scarches.readthedocs.io/en/latest/reference_building_from_scratch.html)
+#'
+#' @param query a SeuratList object with multiple batches
+#' @param atlas a Seurat object 
+#' @param params a scArchesReferenceMap object
+#' @param ... Additional arguments
+#' @return returns a SeuratList object with query and atlas data with integrated dimension reduction
+#' @export
+#' @references Lotfollahi, M., Naghipourfar, M., Luecken, M.D. et al. Mapping single-cell data to reference atlases by transfer learning. Nat Biotechnol 40, 121–130 (2022). https://doi.org/10.1038/s41587-021-01001-7
+#'
+setMethod(
+	'ReferenceMap',
+	signature(
+		query = 'SeuratList',
+		atlas = 'Seurat',
+		params = 'scArchesReferenceMap'
+	),
+	function(
+		query,
+		atlas,
+		params,
+		...
+	){
+		.NotYetImplemented()
+	}
+)
+
