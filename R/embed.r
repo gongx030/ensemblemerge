@@ -59,6 +59,17 @@ setMethod(
 		params,
 		...
 	){
+
+		x <- ScaleData(
+			object = x, 
+			assay = params@normalize@assay_name,
+			vars.to.regress = NULL,
+			do.scale = params@normalize@do.scale,
+			do.center = params@normalize@do.center,
+			use.umi = FALSE,
+			verbose = FALSE
+		)
+
 		x <- RunPCA(
 			x,
 			assay = params@normalize@assay_name,
