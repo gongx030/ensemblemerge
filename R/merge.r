@@ -545,7 +545,8 @@ setClass(
 		use_layer_norm = "character",
 		use_batch_norm = "character",
 		max_epochs = 'integer',
-		early_stopping = 'list'
+		early_stopping = 'list',
+		use_gpu = 'logical'
 	),
 	contains = c('BaseMerge'),
   prototype(
@@ -565,6 +566,7 @@ setClass(
 			"lr_patience"= 8,
 			"lr_factor"= 0.1
 		),
+		use_gpu = TRUE,
 		dependences = list(
 			new('RPackage', package_name = 'Seurat', package_version = '4.1.0'),
 			new('PythonPackage', package_name = 'anndata', package_version = '0.7.8'),
@@ -647,7 +649,8 @@ setMethod(
 	)
 	model$train(
 		max_epochs = params@max_epochs,
-		early_stopping = params@early_stopping
+		early_stopping = params@early_stopping,
+		use_gpu = params@use_gpu
 	)
 	model
 }

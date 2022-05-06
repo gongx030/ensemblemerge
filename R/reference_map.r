@@ -328,6 +328,7 @@ setMethod(
 		atlas <- Embed(atlas, params_pca)
 		params@reference_reduction <- params_pca@reduction_name
 
+
 		.seurat_referencemap_core(query, atlas, params, ...)
 	}
 )
