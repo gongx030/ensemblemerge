@@ -6,7 +6,7 @@
 #' @importFrom SummarizedExperiment assays
 #' @importFrom reticulate py_config py_run_string
 #' @importFrom utils packageVersion
-#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP RunPCA FindTransferAnchors IntegrateEmbeddings SplitObject SCTransform SelectIntegrationFeatures NormalizeData FindVariableFeatures ScaleData FindMarkers
+#' @importFrom Seurat CreateAssayObject GetAssayData FindClusters FindNeighbors CreateDimReducObject RunUMAP RunPCA FindTransferAnchors IntegrateEmbeddings SplitObject SCTransform SelectIntegrationFeatures NormalizeData FindVariableFeatures ScaleData FindMarkers CreateSeuratObject
 #' @importFrom grDevices png dev.off
 
 setClassUnion('characterOrNULL', c("character", "NULL"))
