@@ -779,3 +779,61 @@ setMethod(
 
 	}
 )
+
+#' The KMeansCluster class
+#' 
+setClass(
+        'KMeansCluster',
+        representation(
+                embedding = 'BaseEmbed',
+                centers = 'integer'
+        ),
+        contains = c('BaseCluster'),
+        prototype(
+              name = 'KMeansCluster',
+              centers = 10L
+        )
+)
+
+#' @importFrom methods callNextMethod
+#'
+setMethod('initialize', 'KMeansCluster', function(.Object, check_dependencies = TRUE, ...){
+  callNextMethod(.Object, check_dependencies = check_dependencies, ...)
+})
+
+#' Cluster a Seurat object by K-means 
+#' 
+#' @param x a Seurat object
+#' @param params a KMeansCluster object
+#' @param ... Additional arguments
+#' @return returns a data object with clustering results in meta data
+#' @importFrom methods is 
+#' @importFrom stats kmeans
+#' @export
+#' 
+setMethod(
+        'Cluster',
+        signature(
+                x = 'Seurat',
+                params = 'KMeansCluster'
+        ),
+        function(
+                x,
+                params,
+                ...
+        ){
+          
+                # to be implemented
+                # 1. whether the embedding is available
+                # stopifnot(valid(x, params))
+          
+                reduction_method <- params@embedding@reduction_name
+                k <- kmeans(
+                        x@reductions[[reduction_method]]@cell.embeddings,
+                        centers = params@centers
+                )
+                        
+                x[[params@cluster_name]] <- k[[1]]
+                x
+        }
+)
