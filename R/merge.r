@@ -621,6 +621,12 @@ setMethod(
 		)
 
 		model <- .train_scvi_model(adata, params)
+		
+		model$get_normalized_expression()
+		corrected <- model$get_normalized_expression()
+		x[[params@assay_name]] <- CreateAssayObject(
+ 		data = t(as(as.matrix(corrected), 'sparseMatrix'))
+		)				
 
 		latent <- model$get_latent_representation()
 		rownames(latent) <- colnames(x)
