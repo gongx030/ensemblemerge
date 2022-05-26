@@ -507,14 +507,15 @@ setMethod(
 		model_query <-  scvi$model$SCVI$load_query_data(
 			query_adata,
 			model,
-			freeze_dropout = TRUE
+			freeze_dropout = TRUE,
+			use_gpu = params@scvi@use_gpu
 		)
 
 		model_query$train(
 			max_epochs = params@scvi@max_epochs,
-			early_stopping = params@scvi@early_stopping
+			early_stopping = params@scvi@early_stopping,
+			use_gpu = params@scvi@use_gpu
 		)
-
 
 		atlas_latent <- model$get_latent_representation()
 		rownames(atlas_latent) <- colnames(atlas)
@@ -561,7 +562,10 @@ setMethod(
 		params,
 		...
 	){
-		.NotYetImplemented()
+
+		query <- new('SeuratList', list(query = query))
+		atlas <- new('SeuratList', list(atlas = atlas))
+		ReferenceMap(query, atlas, params, ...)
 	}
 )
 

@@ -93,8 +93,6 @@ setMethod(
 #' @param ... Additional arguments
 #' @return a Seurat object (if there is only one batch), or a SeuratList
 #' @export
-#' @importFrom Seurat SplitObject NormalizeData FindVariableFeatures ScaleData SelectIntegrationFeatures CreateSeuratObject
-#' @importFrom SingleCellExperiment colData
 #'
 setMethod(
 	'Preprocess',
