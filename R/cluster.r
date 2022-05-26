@@ -786,12 +786,20 @@ setClass(
         'KMeansCluster',
         representation(
                 embedding = 'BaseEmbed',
-                centers = 'integer'
+                centers = 'integer',
+		nstart = 'integer',
+		trace = 'logical',
+		algorithm = 'character',
+		iter = 'numeric'
         ),
         contains = c('BaseCluster'),
         prototype(
               name = 'KMeansCluster',
-              centers = 10L
+              centers = 10L,
+	      nstart = 1L,
+	      algorithm = 'Hartigan-Wong',
+	      trace = FALSE,
+	      iter = 10
         )
 )
 
@@ -830,7 +838,11 @@ setMethod(
                 reduction_method <- params@embedding@reduction_name
                 k <- kmeans(
                         x@reductions[[reduction_method]]@cell.embeddings,
-                        centers = params@centers
+                        centers = params@centers,
+			nstart = params@nstart,
+			algorithm = params@algorithm,
+			trace = params@trace,
+			iter.max = params@iter
                 )
                         
                 x[[params@cluster_name]] <- k[[1]]
