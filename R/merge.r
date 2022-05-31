@@ -624,6 +624,7 @@ setMethod(
 
 		model$get_normalized_expression()
 		corrected <- model$get_normalized_expression()
+		colnames(corrected) <- features
 		x[[params@assay_name]] <- CreateAssayObject(
  		data = t(as(as.matrix(corrected), 'sparseMatrix'))
 		)	
