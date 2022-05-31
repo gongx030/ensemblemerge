@@ -622,6 +622,13 @@ setMethod(
 
 		model <- .train_scvi_model(adata, params)
 
+		model$get_normalized_expression()
+		corrected <- model$get_normalized_expression()
+		colnames(corrected) <- features
+		x[[params@assay_name]] <- CreateAssayObject(
+ 		data = t(as(as.matrix(corrected), 'sparseMatrix'))
+		)	
+
 		latent <- model$get_latent_representation()
 		rownames(latent) <- colnames(x)
 		x[[params@reduction_name]] <- CreateDimReducObject(
@@ -630,6 +637,11 @@ setMethod(
 			key = params@reduction_key
 		)
 		x@assays[[params@normalize@assay_name]]@var.features <- features
+		
+		raw <-  GetAssayData(object = x, slot = 'counts')
+
+                x@assays[[params@assay_name]]@counts <- raw[features,]
+
 		x	
 	}
 )
