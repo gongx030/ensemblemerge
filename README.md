@@ -2,7 +2,10 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/erikjskie/ensemblemerge/actions/workflows/check-standard.yaml)
+[![Build and Push Docker Image](https://github.com/gongx030/ensemblemerge/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/gongx030/ensemblemerge/actions/workflows/docker-publish.yml)
 <!-- badges: end -->
+
+
 
 ## Examples
 
