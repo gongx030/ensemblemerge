@@ -3,12 +3,12 @@ FROM mambaorg/micromamba:latest
 
 RUN micromamba install --yes --name base --channel conda-forge --channel bioconda --channel r \
 			python=3.7 \
-    	numpy=1.21 \
-    	scanpy>=1.9 \
-    	scvi-tools=0.19 \
-    	anndata=0.8 \
 			r-base=4.2.2 \
 	   	r-seurat=4.3 \
+    	numpy>=1.21 \
+    	scanpy>=1.9 \
+    	scvi-tools>=0.19 \
+    	anndata>=0.8 \
 	    r-matrix \
  	   	r-dplyr \
 	    r-magrittr \
