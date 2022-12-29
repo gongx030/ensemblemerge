@@ -2,8 +2,8 @@
 FROM mambaorg/micromamba:latest
 
 RUN micromamba install --yes --name base --channel conda-forge --channel bioconda --channel r \
-			python=3.7 \
-			r-base=4.2.2 \
+			python=3.7 && \
+#			r-base=4.2.2 \
 #	   	r-seurat=4.3 \
 #   	numpy>=1.21 \
 #    	scanpy>=1.9 \
@@ -37,7 +37,7 @@ RUN micromamba install --yes --name base --channel conda-forge --channel biocond
 # 	  	bioconductor-celda >=1.10.0 \
 #	    bioconductor-scuttle >=1.4.0 \
 #	   	bioconductor-s4vectors \
-			r-reticulate && \
+#			r-reticulate && \
 		micromamba clean --all --yes
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  
