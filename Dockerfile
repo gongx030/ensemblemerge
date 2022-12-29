@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM mambaorg/micromamba:latest
+FROM --platform=linux/amd64 mambaorg/micromamba:latest
 
 RUN micromamba install --yes --name base --channel conda-forge --channel bioconda --channel r \
 			python=3.7 \
