@@ -23,7 +23,7 @@ RUN micromamba install --yes --name base --channel conda-forge --channel biocond
     	r-cluster \
     	r-clue \
     	r-parallelly \
-    	r-soupx \
+#    	r-soupx \
     	bioconductor-singlecellexperiment \
     	bioconductor-summarizedexperiment \
     	bioconductor-basilisk \
