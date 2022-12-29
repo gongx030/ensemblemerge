@@ -3,7 +3,7 @@ FROM mambaorg/micromamba:latest
 
 RUN micromamba install --yes --name base --channel conda-forge --channel bioconda --channel r \
 			python=3.7 \
-			r-base=4.2 \
+			r-base>=4 \
 	   	r-seurat=4.3 \
     	scanpy>=1.9 \
     	scvi-tools>=0.19 \
