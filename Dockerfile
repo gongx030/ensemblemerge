@@ -15,27 +15,27 @@ RUN micromamba install --yes --name base --channel conda-forge --channel biocond
 	    r-rlang \
 	    r-uwot \
 	    r-harmony \
-	    r-liger >=0.5.0 \
-	    r-sceasy >=0.0.6 \
-			r-scina >=1.2.0 \
+	    r-liger \
+	    r-sceasy \
+			r-scina \
     	r-rmtstat \
-    	r-mclust >=5.4.9 \
-    	r-cluster >=2.1.2 \
-    	r-clue >=0.3.60 \
+    	r-mclust \
+    	r-cluster \
+    	r-clue \
     	r-parallelly \
-    	r-soupx >=1.5.2 \
+    	r-soupx \
     	bioconductor-singlecellexperiment \
     	bioconductor-summarizedexperiment \
     	bioconductor-basilisk \
     	bioconductor-biocgenerics \
     	bioconductor-zellkonverter \
-    	bioconductor-sc3 >=1.22.0 \
-    	bioconductor-simlr >=1.18.0 \
-    	bioconductor-scran >=1.22.1 \
+    	bioconductor-sc3 \
+    	bioconductor-simlr \
+    	bioconductor-scran \
     	bioconductor-clustifyr \
-    	bioconductor-scdblfinder >=1.8.0 \
- 	  	bioconductor-celda >=1.10.0 \
-	    bioconductor-scuttle >=1.4.0 \
+    	bioconductor-scdblfinder \
+ 	  	bioconductor-celda \
+	    bioconductor-scuttle \
 	   	bioconductor-s4vectors \
 			r-reticulate && \
 		micromamba clean --all --yes
