@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1
 FROM --platform=linux/amd64 mambaorg/micromamba:latest
 
+RUN  apt-get update \
+  && apt-get install -y wget \
+  && rm -rf /var/lib/apt/lists/*
+
 RUN micromamba install --yes --name base --channel conda-forge --channel bioconda --channel r \
 			python=3.7 \
 			r-base=4.2.2 \
